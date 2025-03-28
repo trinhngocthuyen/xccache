@@ -1,0 +1,36 @@
+# User settings
+xcuserdata/
+
+# Obj-C/Swift specific
+*.hmap
+
+# App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+Packages/
+Package.pins
+Package.resolved
+.swiftpm
+
+DerivedData/
+.build/
+Pods/
+*.xcworkspace
+
+# fastlane
+fastlane/README.md
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+.spm.pods/
+.logs/
+.xcconfigs/
