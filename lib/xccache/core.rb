@@ -1,0 +1,5 @@
+require "xccache/core/config"
+require "xccache/core/error"
+require "xccache/core/dir"
+require "xccache/core/log"
+require "xccache/core/sh"

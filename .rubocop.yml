@@ -1,1 +1,9 @@
 inherit_from: https://raw.githubusercontent.com/trinhngocthuyen/templates/main/config/rubocop/default.yml
+
+Style/ParallelAssignment:
+  Enabled: false
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+Lint/EmptyClass:
+  Enabled: false
