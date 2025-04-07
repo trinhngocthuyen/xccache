@@ -15,7 +15,7 @@ module XCCache
 
       def build(options = {})
         targets = options.delete(:target) || regular_targets
-        targets = [targets] if targets.is_a?(String)
+        targets = targets.split(",") if targets.is_a?(String)
         targets.each do |t|
           build_target(target: t, **options)
         end

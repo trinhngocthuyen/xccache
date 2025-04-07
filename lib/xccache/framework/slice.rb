@@ -1,21 +1,25 @@
 module XCCache
   class Framework
     class Slice
-      attr_reader :name, :sdk, :config, :path
+      attr_reader :name, :pkg_dir, :sdk, :config, :path
 
       def initialize(options = {})
         @name = options[:name]
+        @pkg_dir = Pathname(options[:pkg_dir] || ".").expand_path
         @sdk = options[:sdk]
         @config = options[:config] || "debug"
         @path = options[:path]
       end
 
       def build
-        UI.info "Building target: #{name} (#{config})..."
-        cmd = ["swift", "build", "--target", name] + swift_build_args
+        UI.info("Building target: #{name} (#{config})...".bold.magenta)
+        cmd = ["swift", "build"] + swift_build_args
+        cmd << "--package-path" << pkg_dir
+        cmd << "--target" << name
         cmd << "--sdk" << sdk.sdk_path
         # Workaround for swiftinterface emission
         # https://github.com/swiftlang/swift/issues/64669#issuecomment-1535335601
+        cmd << "-Xswiftc" << "-enable-library-evolution"
         cmd << "-Xswiftc" << "-alias-module-names-in-module-interface"
         cmd << "-Xswiftc" << "-emit-module-interface-path"
         cmd << "-Xswiftc" << "#{products_dir}/swiftinterfaces/#{name}.swiftinterface"
@@ -56,7 +60,7 @@ module XCCache
       end
 
       def products_dir
-        @products_dir ||= Pathname(".build").expand_path / sdk.triple / config
+        @products_dir ||= pkg_dir / ".build" / sdk.triple / config
       end
 
       def swift_build_args
