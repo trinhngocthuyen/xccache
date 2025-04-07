@@ -1,0 +1,10 @@
+// swift-tools-version: <%= swift_version %>
+
+import PackageDescription
+
+let package = Package(
+  name: "xccache-umbrella",
+  dependencies: [
+<%= dependencies %>
+  ]
+)

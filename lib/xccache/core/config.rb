@@ -27,6 +27,14 @@ module XCCache
       @spm_binaries_sandbox ||= Dir.prepare(spm_sandbox / "binaries")
     end
 
+    def spm_binaries_frameworks_dir
+      @spm_binaries_frameworks_dir ||= spm_binaries_sandbox / "binaries"
+    end
+
+    def spm_umbrella_sandbox
+      @spm_umbrella_sandbox ||= Dir.prepare(spm_sandbox / "umbrella")
+    end
+
     def lockfile
       @lockfile ||= Lockfile.new(Pathname("xccache.lock"))
     end

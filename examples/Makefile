@@ -6,7 +6,8 @@ cache.use:
 cache.build:
 	bundle exec xccache build $(XCCACHE_ARGS)
 
-cache.b_u: cache.build cache.use
+cache.b_u:
+	bundle exec xccache build --use $(XCCACHE_ARGS)
 
 cache.init:
 	bundle exec xccache init $(XCCACHE_ARGS)

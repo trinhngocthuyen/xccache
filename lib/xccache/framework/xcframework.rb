@@ -1,10 +1,11 @@
 module XCCache
   class Framework
     class XCFramework
-      attr_reader :name, :config, :sdks, :path
+      attr_reader :name, :pkg_dir, :config, :sdks, :path
 
-      def initialize(name: nil, config: nil, sdks: [], path: nil)
+      def initialize(name: nil, pkg_dir: nil, config: nil, sdks: [], path: nil)
         @name = name
+        @pkg_dir = pkg_dir
         @config = config
         @sdks = sdks
         @path = path
@@ -32,6 +33,7 @@ module XCCache
           sdk = Swift::Sdk.new(s)
           Framework::Slice.new(
             name: name,
+            pkg_dir: pkg_dir,
             sdk: sdk,
             config: config,
             path: Dir.prepare(tmpdir / sdk.triple / "#{name}.framework"),
