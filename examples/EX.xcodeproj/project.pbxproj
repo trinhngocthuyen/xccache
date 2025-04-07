@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F50E7E8C2DA38AFA00D96A31 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 0E435C4E0F7DEC79B9A07770 /* Moya */; };
 		F577C6A92D96A3BD00C83C96 /* config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F577C6A82D96A3BD00C83C96 /* config.xcconfig */; };
 /* End PBXBuildFile section */
 
@@ -38,7 +37,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F50E7E8C2DA38AFA00D96A31 /* Moya in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,8 +89,7 @@
 			);
 			name = EX;
 			packageProductDependencies = (
-				0E435C4E0F7DEC79B9A07770 /* Moya */,
-				87DEE07164A76CDF9E5A293C /* SwiftyBeaver */,
+				0C8F47BD43CFF382D3D95D6C /* EX.binary */,
 			);
 			productName = EX;
 			productReference = F577C62F2D96971200C83C96 /* EX.app */;
@@ -124,8 +121,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				ABD613E8832D0A5E13493FCC /* XCLocalSwiftPackageReference "xccache/packages/binaries" */,
-				895D3BED97764346D88C78AD /* XCRemoteSwiftPackageReference "Moya" */,
 				BBDDF4E330BD997C70103FB5 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
+				4911533B4DA300B9A6ABCADF /* XCRemoteSwiftPackageReference "Moya" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F577C6302D96971200C83C96 /* Products */;
@@ -367,7 +364,7 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		895D3BED97764346D88C78AD /* XCRemoteSwiftPackageReference "Moya" */ = {
+		4911533B4DA300B9A6ABCADF /* XCRemoteSwiftPackageReference "Moya" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Moya/Moya";
 			requirement = {
@@ -386,15 +383,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0E435C4E0F7DEC79B9A07770 /* Moya */ = {
+		0C8F47BD43CFF382D3D95D6C /* EX.binary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 895D3BED97764346D88C78AD /* XCRemoteSwiftPackageReference "Moya" */;
-			productName = Moya;
-		};
-		87DEE07164A76CDF9E5A293C /* SwiftyBeaver */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BBDDF4E330BD997C70103FB5 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
-			productName = SwiftyBeaver;
+			package = ABD613E8832D0A5E13493FCC /* XCLocalSwiftPackageReference "xccache/packages/binaries" */;
+			productName = EX.binary;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
