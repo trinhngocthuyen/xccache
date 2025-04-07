@@ -2,12 +2,12 @@ require "xccache/core/json"
 
 module XCCache
   class Lockfile < JSONRepresentable
-    def pkgs_by_projects
-      raw["packages"]
+    def [](key)
+      raw[key]
     end
 
-    def dependencies_by_projects
-      raw["dependencies"]
+    def hash_for_project(project)
+      raw[project.display_name]
     end
 
     def merge!(hash)
