@@ -18,6 +18,10 @@ module XCCache
       config.lockfile
     end
 
+    def cachemap
+      config.cachemap
+    end
+
     def projects
       config.projects
     end

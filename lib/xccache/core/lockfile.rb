@@ -7,7 +7,7 @@ module XCCache
     end
 
     def hash_for_project(project)
-      raw[project.display_name]
+      raw[project.display_name] || {}
     end
 
     def merge!(hash)

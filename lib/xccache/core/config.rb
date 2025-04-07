@@ -15,8 +15,24 @@ module XCCache
     attr_accessor :verbose
     alias verbose? verbose
 
+    def sandbox
+      @sandbox = Dir.prepare("xccache").expand_path
+    end
+
+    def spm_sandbox
+      @spm_sandbox ||= Dir.prepare(sandbox / "packages").expand_path
+    end
+
+    def spm_binaries_sandbox
+      @spm_binaries_sandbox ||= Dir.prepare(spm_sandbox / "binaries")
+    end
+
     def lockfile
       @lockfile ||= Lockfile.new(Pathname("xccache.lock"))
+    end
+
+    def cachemap
+      @cachemap ||= Cache::Cachemap.new(sandbox / "cachemap.json")
     end
 
     def projects
