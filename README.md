@@ -19,7 +19,9 @@ $ gem install xccache
 
 ## Usage
 
-TBU
+### Workflows
+
+Check out this doc: [Workflows](docs/workflows.md)
 
 ## Contribution
 

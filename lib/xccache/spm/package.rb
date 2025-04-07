@@ -26,6 +26,7 @@ module XCCache
         sdks = (sdk || "iphonesimulator").split(",")
         Framework::XCFramework.new(
           name: target,
+          pkg_dir: root_dir,
           config: config,
           sdks: sdks,
           path: out_dir / "#{target}.xcframework",

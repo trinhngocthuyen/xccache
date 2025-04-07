@@ -31,7 +31,7 @@ module XCCache
           if options[:capture]
             err << line
           else
-            puts line.red
+            puts line.strip.yellow
           end
         end
 

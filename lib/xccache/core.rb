@@ -1,5 +1,1 @@
-require "xccache/core/config"
-require "xccache/core/error"
-require "xccache/core/dir"
-require "xccache/core/log"
-require "xccache/core/sh"
+Dir["#{__dir__}/core/*.rb"].sort.each { |f| require f }

@@ -1,3 +1,5 @@
+require "xcodeproj"
+
 module XCCache
   class Config
     module Mixin
@@ -12,5 +14,15 @@ module XCCache
 
     attr_accessor :verbose
     alias verbose? verbose
+
+    def lockfile
+      @lockfile ||= Lockfile.new(Pathname("xccache.lock"))
+    end
+
+    def projects
+      @projects ||= Pathname(".").glob("*.xcodeproj").map do |p|
+        Xcodeproj::Project.open(p)
+      end
+    end
   end
 end
