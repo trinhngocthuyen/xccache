@@ -9,7 +9,7 @@ module XCCache
     def sync_lockfile
       UI.message("Syncing lockfile...")
       update_projects do |project|
-        lockfile.merge!(project.relative_path.to_s => lockfile_hash_for(project))
+        lockfile.merge!(project.display_name => lockfile_hash_for_project(project))
       end
       lockfile.save
     end
@@ -36,7 +36,7 @@ module XCCache
 
     private
 
-    def lockfile_hash_for(project)
+    def lockfile_hash_for_project(project)
       deps_by_targets = project.targets.to_h do |target|
         deps = target.non_xccache_pkg_product_dependencies.map { |d| "#{d.pkg.slug}/#{d.product_name}" }
         [target.name, deps]

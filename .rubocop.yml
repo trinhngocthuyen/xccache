@@ -10,3 +10,5 @@ Lint/EmptyClass:
 
 Naming/PredicateName:
   Enabled: false
+Naming/MethodParameterName:
+  MinNameLength: 1

@@ -14,26 +14,10 @@
           "kind": "upToNextMajorVersion",
           "minimumVersion": "15.0.3"
         }
-      },
-      {
-        "repositoryURL": "https://github.com/SwiftyBeaver/SwiftyBeaver",
-        "requirement": {
-          "kind": "upToNextMajorVersion",
-          "minimumVersion": "2.1.1"
-        }
-      },
-      {
-        "repositoryURL": "https://github.com/Moya/Moya",
-        "requirement": {
-          "kind": "upToNextMajorVersion",
-          "minimumVersion": "15.0.3"
-        }
       }
     ],
     "dependencies": {
       "EX": [
-        "SwiftyBeaver/SwiftyBeaver",
-        "Moya/Moya",
         "SwiftyBeaver/SwiftyBeaver",
         "Moya/Moya"
       ]
