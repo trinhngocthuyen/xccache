@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F577C6A92D96A3BD00C83C96 /* config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F577C6A82D96A3BD00C83C96 /* config.xcconfig */; };
-		F577C8B82D9C0C3E00C83C96 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = F577C8B72D9C0C3E00C83C96 /* SwiftyBeaver */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,11 +18,15 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F577C6312D96971200C83C96 /* EX */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = EX;
 			sourceTree = "<group>";
 		};
 		F577C70A2D96CD1C00C83C96 /* .xcconfigs */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = .xcconfigs;
 			sourceTree = "<group>";
 		};
@@ -34,7 +37,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F577C8B82D9C0C3E00C83C96 /* SwiftyBeaver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,7 +89,8 @@
 			);
 			name = EX;
 			packageProductDependencies = (
-				F577C8B72D9C0C3E00C83C96 /* SwiftyBeaver */,
+				826A7A9005406B810F894C57 /* SwiftyBeaver */,
+				FF936E8C2E90C50FD734D90F /* Moya */,
 			);
 			productName = EX;
 			productReference = F577C62F2D96971200C83C96 /* EX.app */;
@@ -118,7 +121,9 @@
 			mainGroup = F577C6262D96971200C83C96;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F577C82E2D9AE0D000C83C96 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
+				ABD613E8832D0A5E13493FCC /* XCLocalSwiftPackageReference "binaries" */,
+				25744CD867893F7E07B74822 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
+				65FE774CC30CEB36B30E2C75 /* XCRemoteSwiftPackageReference "Moya" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F577C6302D96971200C83C96 /* Products */;
@@ -352,8 +357,15 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		ABD613E8832D0A5E13493FCC /* XCLocalSwiftPackageReference "binaries" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = xccache/packages/binaries;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
-		F577C82E2D9AE0D000C83C96 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
+		25744CD867893F7E07B74822 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver";
 			requirement = {
@@ -361,13 +373,26 @@
 				minimumVersion = 2.1.1;
 			};
 		};
+		65FE774CC30CEB36B30E2C75 /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F577C8B72D9C0C3E00C83C96 /* SwiftyBeaver */ = {
+		826A7A9005406B810F894C57 /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F577C82E2D9AE0D000C83C96 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			package = 25744CD867893F7E07B74822 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
 			productName = SwiftyBeaver;
+		};
+		FF936E8C2E90C50FD734D90F /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 65FE774CC30CEB36B30E2C75 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

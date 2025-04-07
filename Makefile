@@ -8,3 +8,6 @@ format:
 
 test:
 	bundle exec rspec
+
+ex.%:
+	cd examples && make $*

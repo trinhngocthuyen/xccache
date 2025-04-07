@@ -7,3 +7,6 @@ Style/TrailingCommaInArguments:
 
 Lint/EmptyClass:
   Enabled: false
+
+Naming/PredicateName:
+  Enabled: false

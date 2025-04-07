@@ -1,4 +1,3 @@
 require "pry" if ENV["XCCACHE_IMPORT_PRY"] == "true"
 require "pathname"
-require "xccache/core"
-require "xccache/command"
+Dir["#{__dir__}/*.rb"].sort.each { |f| require f unless f == __FILE__ }
