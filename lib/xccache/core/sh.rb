@@ -17,21 +17,21 @@ module XCCache
 
       def run(cmd, options = {})
         cmd = cmd.join(" ") if cmd.is_a?(Array)
-        UI.message("$ #{cmd}".cyan) if config.verbose? && options[:log_cmd] != false
+        UI.message("$ #{cmd}".cyan.dark) if config.verbose? && options[:log_cmd] != false
 
         out, err = [], []
         handle_out = proc do |line|
           if options[:capture]
             out << line
           else
-            puts line
+            UI.puts line
           end
         end
         handle_err = proc do |line|
           if options[:capture]
             err << line
           else
-            puts line.strip.yellow
+            UI.puts line.strip.yellow unless options[:suppress_err]&.match(line)
           end
         end
 

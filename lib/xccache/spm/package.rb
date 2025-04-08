@@ -17,7 +17,9 @@ module XCCache
         targets = options.delete(:target) || regular_targets
         targets = targets.split(",") if targets.is_a?(String)
         targets.each do |t|
-          build_target(target: t, **options)
+          UI.section("\n▶ Building target: #{t}".bold.magenta) do
+            build_target(target: t, **options)
+          end
         end
       end
 
