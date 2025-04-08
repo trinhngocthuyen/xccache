@@ -4,13 +4,13 @@ module XCCache
   class JSONRepresentable
     attr_reader :path, :raw
 
-    def initialize(path)
+    def initialize(path, raw: nil)
       @path = path
-      @raw = load_json
+      @raw = raw || load_json || {}
     end
 
     def load_json
-      JSON.parse(path.read)
+      JSON.parse(path.read) if path.exist?
     rescue StandardError
       {}
     end
@@ -19,8 +19,8 @@ module XCCache
       raw.merge!(other)
     end
 
-    def save
-      path.write(JSON.pretty_generate(raw))
+    def save(to: nil)
+      (to || path).write(JSON.pretty_generate(raw))
     end
   end
 end

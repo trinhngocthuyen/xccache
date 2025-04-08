@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F50E87C62DA4F86200D96A31 /* EX.binary in Frameworks */ = {isa = PBXBuildFile; productRef = 0C8F47BD43CFF382D3D95D6C /* EX.binary */; };
+		F50E87D62DA4F87100D96A31 /* Swizzler in Frameworks */ = {isa = PBXBuildFile; productRef = F50E87D52DA4F87100D96A31 /* Swizzler */; };
 		F577C6A92D96A3BD00C83C96 /* config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F577C6A82D96A3BD00C83C96 /* config.xcconfig */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +39,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F50E87D62DA4F87100D96A31 /* Swizzler in Frameworks */,
+				F50E87C62DA4F86200D96A31 /* EX.binary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +94,7 @@
 			name = EX;
 			packageProductDependencies = (
 				0C8F47BD43CFF382D3D95D6C /* EX.binary */,
+				F50E87D52DA4F87100D96A31 /* Swizzler */,
 			);
 			productName = EX;
 			productReference = F577C62F2D96971200C83C96 /* EX.app */;
@@ -123,6 +128,7 @@
 				ABD613E8832D0A5E13493FCC /* XCLocalSwiftPackageReference "xccache/packages/binaries" */,
 				BBDDF4E330BD997C70103FB5 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
 				4911533B4DA300B9A6ABCADF /* XCRemoteSwiftPackageReference "Moya" */,
+				F50E87D42DA4F86A00D96A31 /* XCLocalSwiftPackageReference "LocalPackages/core-utils" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F577C6302D96971200C83C96 /* Products */;
@@ -361,6 +367,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = xccache/packages/binaries;
 		};
+		F50E87D42DA4F86A00D96A31 /* XCLocalSwiftPackageReference "LocalPackages/core-utils" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "LocalPackages/core-utils";
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -387,6 +397,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ABD613E8832D0A5E13493FCC /* XCLocalSwiftPackageReference "xccache/packages/binaries" */;
 			productName = EX.binary;
+		};
+		F50E87D52DA4F87100D96A31 /* Swizzler */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F50E87D42DA4F86A00D96A31 /* XCLocalSwiftPackageReference "LocalPackages/core-utils" */;
+			productName = Swizzler;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

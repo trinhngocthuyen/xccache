@@ -1,0 +1,9 @@
+{
+  "EX.xcodeproj": {
+    "EX": [
+      "SwiftyBeaver/SwiftyBeaver",
+      "Moya/Moya",
+      "Alamofire/Alamofire"
+    ]
+  }
+}

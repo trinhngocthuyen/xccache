@@ -1,4 +1,4 @@
-require "xccache/spm/package"
+require "xccache/spm"
 
 module XCCache
   class Command

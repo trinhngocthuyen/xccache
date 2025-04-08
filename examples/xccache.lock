@@ -14,12 +14,17 @@
           "kind": "upToNextMajorVersion",
           "minimumVersion": "15.0.3"
         }
+      },
+      {
+        "relative_path": "LocalPackages/core-utils",
+        "path": null
       }
     ],
     "dependencies": {
       "EX": [
         "SwiftyBeaver/SwiftyBeaver",
-        "Moya/Moya"
+        "Moya/Moya",
+        "core-utils/Swizzler"
       ]
     }
   }
