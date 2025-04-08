@@ -20,8 +20,9 @@ module XCCache
     end
 
     def resolve
-      UI.message("Resolving umbrella package dependencies...")
-      Sh.run("swift package resolve --package-path #{path} 2>&1")
+      UI.section("Resolving umbrella package dependencies") do
+        Sh.run("swift package resolve --package-path #{path} 2>&1")
+      end
     end
 
     def build(options = {})

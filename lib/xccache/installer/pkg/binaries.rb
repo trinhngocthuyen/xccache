@@ -19,7 +19,7 @@ module XCCache
     private
 
     def create!
-      UI.message("Create binary package at #{path}".cyan)
+      UI.message("Create binary package at #{path}")
       Template.new("binaries.Package.swift").render(
         {
           :json => JSON.pretty_generate(manifest_data),

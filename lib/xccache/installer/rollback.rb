@@ -3,14 +3,15 @@ module XCCache
     class Rollback < Installer
       def install!
         update_projects do |project|
-          rollback_for_project(project)
+          UI.section("Rolling back cache for project #{project.display_name}".bold.green) do
+            rollback_for_project(project)
+          end
         end
       end
 
       private
 
       def rollback_for_project(project)
-        UI.info("Rolling back cache for project #{project.display_name}...".bold.green)
         hash = lockfile.hash_for_project(project)
         pkgs, deps_by_targets = hash["packages"], hash["dependencies"]
 

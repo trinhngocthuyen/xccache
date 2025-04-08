@@ -25,6 +25,10 @@ module Xcodeproj
       pkgs.any? { |p| p.id == id }
     end
 
+    def has_xccache_pkg?
+      pkgs.any?(&:xccache_pkg?)
+    end
+
     def add_pkg(hash)
       key = pkg_key_in_hash(hash)
       is_local = ["relative_path", "path"].include?(key)
@@ -35,6 +39,11 @@ module Xcodeproj
       hash.each { |k, v| ref.send("#{k}=", v) }
       root_object.package_references << ref
       ref
+    end
+
+    def add_xccache_pkg
+      sandbox_path = XCCache::Config.instance.spm_binaries_sandbox
+      add_pkg("relative_path" => sandbox_path.relative_path_from(path.parent).to_s)
     end
 
     def get_target(name)

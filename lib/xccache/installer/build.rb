@@ -22,14 +22,6 @@ module XCCache
 
       private
 
-      def umbrella_pkg
-        @umbrella_pkg ||= UmbrellaPkg.new(
-          path: config.spm_umbrella_sandbox,
-          projects: projects,
-          cachemap: cachemap,
-        )
-      end
-
       def infer_targets
         # FIXME: Hardcoded for POC
         ["SwiftyBeaver", "Moya", "Alamofire"]

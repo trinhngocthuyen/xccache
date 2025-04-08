@@ -7,7 +7,7 @@ module XCCache
     def initialize(*args, **kwargs); end
 
     def sync_lockfile
-      UI.message("Syncing lockfile...")
+      UI.message("Syncing lockfile")
       update_projects do |project|
         lockfile.merge!(project.display_name => lockfile_hash_for_project(project))
       end
@@ -36,6 +36,22 @@ module XCCache
         yield project if block_given?
         project.save
       end
+    end
+
+    def binaries_pkg
+      @binaries_pkg ||= BinariesPkg.new(
+        path: Dir.prepare(config.spm_binaries_sandbox),
+        projects: projects,
+        cachemap: cachemap,
+      )
+    end
+
+    def umbrella_pkg
+      @umbrella_pkg ||= UmbrellaPkg.new(
+        path: config.spm_umbrella_sandbox,
+        projects: projects,
+        cachemap: cachemap,
+      )
     end
 
     private
