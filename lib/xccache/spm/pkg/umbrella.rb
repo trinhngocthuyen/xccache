@@ -15,8 +15,10 @@ module XCCache
     end
 
     def prepare
-      create!
-      resolve
+      UI.section("Preparing umbrella package".bold) do
+        create!
+        resolve
+      end
     end
 
     def resolve
@@ -32,7 +34,7 @@ module XCCache
     private
 
     def create!
-      UI.message("Create umbrella package at #{path}".cyan)
+      UI.message("Creating umbrella package at #{path}".cyan)
       Template.new("umbrella.Package.swift").render(
         {
           :dependencies => pkg_dependencies,

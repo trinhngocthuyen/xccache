@@ -13,13 +13,15 @@ module XCCache
     end
 
     def prepare
-      create!
+      UI.section("Preparing binaries package".bold) do
+        create!
+      end
     end
 
     private
 
     def create!
-      UI.message("Create binary package at #{path}")
+      UI.message("Creating binary package at #{path}")
       Template.new("binaries.Package.swift").render(
         {
           :json => JSON.pretty_generate(manifest_data),

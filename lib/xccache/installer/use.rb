@@ -1,4 +1,4 @@
-require "xccache/installer/pkg/binaries"
+require "xccache/spm/pkg/binaries"
 
 module XCCache
   class Installer

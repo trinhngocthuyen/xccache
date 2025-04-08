@@ -1,8 +1,9 @@
+require "xccache/spm/pkg"
 Dir["#{__dir__}/installer/*.rb"].sort.each { |f| require f }
 
 module XCCache
   class Installer
-    include Config::Mixin
+    include PkgMixin
 
     def initialize(*args, **kwargs); end
 
@@ -36,22 +37,6 @@ module XCCache
         yield project if block_given?
         project.save
       end
-    end
-
-    def binaries_pkg
-      @binaries_pkg ||= BinariesPkg.new(
-        path: Dir.prepare(config.spm_binaries_sandbox),
-        projects: projects,
-        cachemap: cachemap,
-      )
-    end
-
-    def umbrella_pkg
-      @umbrella_pkg ||= UmbrellaPkg.new(
-        path: config.spm_umbrella_sandbox,
-        projects: projects,
-        cachemap: cachemap,
-      )
     end
 
     private
