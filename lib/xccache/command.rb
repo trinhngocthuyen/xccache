@@ -4,7 +4,7 @@ require "xccache/core/config"
 module XCCache
   class Command < CLAide::Command
     include Config::Mixin
-    Dir["#{__dir__}/command/*.rb"].sort.each { |f| require f }
+    Dir[__FILE__.sub(".rb", "/*.rb")].sort.each { |f| require f }
 
     self.abstract_command = true
     self.summary = "xccache - a build caching tool"

@@ -1,5 +1,3 @@
-Dir["#{__dir__}/pkg/*.rb"].sort.each { |f| require f }
-
 module XCCache
   module PkgMixin
     include Config::Mixin
@@ -17,6 +15,7 @@ module XCCache
         path: config.spm_umbrella_sandbox,
         projects: config.projects,
         cachemap: config.cachemap,
+        metadata_dir: config.spm_metadata_dir,
       )
     end
   end

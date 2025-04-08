@@ -24,6 +24,10 @@ module XCCache
         UI.puts(message)
       end
 
+      def warn(message)
+        UI.puts(message.yellow)
+      end
+
       def error(message)
         UI.puts("[ERROR] #{message}".red)
       end

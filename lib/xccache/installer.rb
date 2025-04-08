@@ -1,5 +1,5 @@
-require "xccache/spm/pkg"
-Dir["#{__dir__}/installer/*.rb"].sort.each { |f| require f }
+require "xccache/spm"
+Dir[__FILE__.sub(".rb", "/*.rb")].sort.each { |f| require f }
 
 module XCCache
   class Installer

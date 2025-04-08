@@ -1,4 +1,4 @@
-require "xccache/spm/pkg"
+require "xccache/spm"
 
 module XCCache
   module Cache
@@ -6,7 +6,7 @@ module XCCache
       include PkgMixin
 
       def run
-        umbrella_pkg.prepare
+        umbrella_pkg.prepare(gen_metadata: true)
         # TODO: Resolve recursive dependencies
       end
     end

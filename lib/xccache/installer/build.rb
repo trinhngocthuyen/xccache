@@ -1,4 +1,4 @@
-require "xccache/spm/pkg/umbrella"
+require "xccache/spm"
 
 module XCCache
   class Installer

@@ -35,6 +35,10 @@ module XCCache
       @spm_umbrella_sandbox ||= Dir.prepare(spm_sandbox / "umbrella")
     end
 
+    def spm_metadata_dir
+      @spm_metadata_dir ||= Dir.prepare(spm_sandbox / "metadata")
+    end
+
     def lockfile
       @lockfile ||= Lockfile.new(Pathname("xccache.lock"))
     end
