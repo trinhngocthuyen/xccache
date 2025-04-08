@@ -14,6 +14,10 @@ module XCCache
         @name = name
       end
 
+      def to_s
+        name
+      end
+
       def triple
         NAME_TO_TRIPLE[name.to_sym]
       end

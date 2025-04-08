@@ -6,6 +6,7 @@ module XCCache
       def initialize(options = {})
         super
         @target = options[:target]
+        @sdk = options[:sdk]
       end
 
       def install!
@@ -13,6 +14,7 @@ module XCCache
         umbrella_pkg.prepare
         umbrella_pkg.build(
           target: @target || infer_targets,
+          sdk: @sdk,
           out_dir: config.spm_binaries_frameworks_dir,
         )
         update_cachemap

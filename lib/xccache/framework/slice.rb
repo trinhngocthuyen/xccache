@@ -12,19 +12,20 @@ module XCCache
       end
 
       def build
-        UI.info("Building target: #{name} (#{config})...".bold.magenta)
-        cmd = ["swift", "build"] + swift_build_args
-        cmd << "--package-path" << pkg_dir
-        cmd << "--target" << name
-        cmd << "--sdk" << sdk.sdk_path
-        # Workaround for swiftinterface emission
-        # https://github.com/swiftlang/swift/issues/64669#issuecomment-1535335601
-        cmd << "-Xswiftc" << "-enable-library-evolution"
-        cmd << "-Xswiftc" << "-alias-module-names-in-module-interface"
-        cmd << "-Xswiftc" << "-emit-module-interface-path"
-        cmd << "-Xswiftc" << "#{products_dir}/swiftinterfaces/#{name}.swiftinterface"
-        Sh.run(cmd)
-        create_framework
+        UI.section("Building slice: #{name} (#{config}, #{sdk})".bold) do
+          cmd = ["swift", "build"] + swift_build_args
+          cmd << "--package-path" << pkg_dir
+          cmd << "--target" << name
+          cmd << "--sdk" << sdk.sdk_path
+          # Workaround for swiftinterface emission
+          # https://github.com/swiftlang/swift/issues/64669#issuecomment-1535335601
+          cmd << "-Xswiftc" << "-enable-library-evolution"
+          cmd << "-Xswiftc" << "-alias-module-names-in-module-interface"
+          cmd << "-Xswiftc" << "-emit-module-interface-path"
+          cmd << "-Xswiftc" << "#{products_dir}/swiftinterfaces/#{name}.swiftinterface"
+          Sh.run(cmd, suppress_err: /dependency '.*' is not used by any target/)
+          create_framework
+        end
       end
 
       def create_framework

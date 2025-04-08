@@ -18,5 +18,9 @@ cache.rollback:
 build:
 	cicd ios build
 
+check:
+	rm -rf xccache/packages/umbrella/.build
+	make cache.b_u build
+
 ex.%:
 	make $*
