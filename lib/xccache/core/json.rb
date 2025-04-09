@@ -22,5 +22,13 @@ module XCCache
     def save(to: nil)
       (to || path).write(JSON.pretty_generate(raw))
     end
+
+    def [](key)
+      raw[key]
+    end
+
+    def []=(key, value)
+      raw[key] = value
+    end
   end
 end

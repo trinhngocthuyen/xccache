@@ -13,16 +13,17 @@ module XCCache
       @cachemap = options[:cachemap]
       @pkg = SPM::Package.new(root_dir: @path)
       @metadata_dir = options[:metadata_dir]
-      @descs = []
+      @pkg_descs = []
+      @pkg_descs_by_name = {}
+      @dependencies ||= {}
     end
 
-    def prepare(options = {})
+    def prepare
       UI.section("Preparing umbrella package".bold) do
         create!
         create_symlinks_to_local_pkgs
         resolve
       end
-      gen_metadata if options[:gen_metadata]
     end
 
     def resolve
@@ -38,15 +39,41 @@ module XCCache
     def gen_metadata
       UI.section("Generating metadata of packages".bold) do
         checkouts_dirs.each do |dir|
-          UI.message("Generating metadata of #{dir.basename}")
-          desc = SPM::Package::Description.in_dir(dir)
-          next if desc.nil?
+          UI.message("-> Package: #{dir.basename}".dark)
+          pkg_desc = SPM::Package::Description.in_dir(dir)
+          next if pkg_desc.nil?
 
-          @descs << desc
-          desc.save
-          desc.save(to: desc.path.parent / "#{desc.name}.json") if desc.name != dir.basename.to_s
+          pkg_desc.retrieve_pkg_desc = proc { |name| @pkg_descs_by_name[name] }
+          pkg_desc.save
+          pkg_desc.save(to: pkg_desc.path.parent / "#{pkg_desc.name}.json") if pkg_desc.name != dir.basename.to_s
+          @pkg_descs << pkg_desc
+          @pkg_descs_by_name[pkg_desc.name] = pkg_desc
+          @pkg_descs_by_name[dir.basename.to_s] = pkg_desc
         end
       end
+    end
+
+    def resolve_recursive_dependencies
+      gen_metadata
+      UI.section("Resolving recursive dependencies".bold) do
+        @pkg_descs.each do |pkg_desc|
+          UI.message("-> Package: #{pkg_desc.name}".dark)
+          @dependencies.merge!(pkg_desc.resolve_recursive_dependencies)
+        end
+      end
+      @raw_dependencies = @dependencies.to_h { |k, v| [k.full_name, v.map(&:full_name)] }
+    end
+
+    def gen_cachemap(lockfile)
+      UI.section("Generating cachemap".bold)
+      projects.each do |project|
+        target_deps = lockfile[project.display_name]["dependencies"].to_h do |target_name, products|
+          deps = products.flat_map { |p| @raw_dependencies[p] || [] }
+          [target_name, deps]
+        end
+        cachemap[project.display_name] = target_deps
+      end
+      cachemap.save
     end
 
     private

@@ -6,8 +6,9 @@ module XCCache
       include PkgMixin
 
       def run
-        umbrella_pkg.prepare(gen_metadata: true)
-        # TODO: Resolve recursive dependencies
+        umbrella_pkg.prepare
+        umbrella_pkg.resolve_recursive_dependencies
+        # TODO: Render graph
       end
     end
   end
