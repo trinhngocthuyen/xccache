@@ -8,6 +8,7 @@ module XCCache
         [
           ["--target=foo", "Targets to build"],
           ["--sdk=iphonesimulator", "SDKs to build (comma separated)"],
+          ["--integrate/no-integrate", "Whether to integrate after building target"],
         ].concat(super)
       end
 
@@ -15,12 +16,12 @@ module XCCache
         super
         @target = argv.option("target")
         @sdk = argv.option("sdk")
-        @should_use = argv.flag?("use")
+        @should_integrate = argv.flag?("integrate", true)
       end
 
       def run
         Installer::Build.new(target: @target, sdk: @sdk).install!
-        Installer::Use.new.install! if @should_use
+        Installer::Use.new.install! if @should_integrate
       end
     end
   end

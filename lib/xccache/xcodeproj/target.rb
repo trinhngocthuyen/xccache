@@ -6,10 +6,6 @@ module Xcodeproj
       class PBXNativeTarget
         alias pkg_product_dependencies package_product_dependencies
 
-        def xccache_binary_name
-          "#{product_name}.binary"
-        end
-
         def non_xccache_pkg_product_dependencies
           pkg_product_dependencies.reject { |d| d.pkg.xccache_pkg? }
         end
@@ -30,7 +26,7 @@ module Xcodeproj
         end
 
         def add_xccache_product_dependency
-          add_pkg_product_dependency("binaries/#{xccache_binary_name}")
+          add_pkg_product_dependency("umbrella/#{product_name}.xccache")
         end
 
         def remove_xccache_product_dependencies

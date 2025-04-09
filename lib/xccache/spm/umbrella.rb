@@ -5,11 +5,12 @@ require "xccache/spm/build"
 
 module XCCache
   class UmbrellaPkg
-    attr_reader :path, :projects, :cachemap, :metadata_dir
+    attr_reader :path, :projects, :lockfile, :cachemap, :metadata_dir
 
     def initialize(options)
       @path = options[:path]
       @projects = options[:projects]
+      @lockfile = options[:lockfile]
       @cachemap = options[:cachemap]
       @pkg = SPM::Package.new(root_dir: @path)
       @metadata_dir = options[:metadata_dir]
@@ -18,12 +19,14 @@ module XCCache
       @dependencies ||= {}
     end
 
-    def prepare
-      UI.section("Preparing umbrella package".bold) do
-        create!
+    def prepare(options = {})
+      UI.section("Preparing umbrella package") do
+        create
         create_symlinks_to_local_pkgs
         resolve
       end
+      resolve_recursive_dependencies if options.fetch(:resolve_recursive_dependencies, true)
+      gen_initial_cachemap_if_not_exist
     end
 
     def resolve
@@ -33,13 +36,25 @@ module XCCache
     end
 
     def build(options = {})
-      @pkg.build(options)
+      to_build = targets_to_build(options)
+      UI.info("Targets to build: #{to_build}")
+      UI.warn("No targets to build. Possibly because cache was all hit") if to_build.empty?
+      cachemap.commit(to_build) do
+        @pkg.build(options.merge(:targets => to_build))
+      end
+    end
+
+    def targets_to_build(options)
+      items = options[:targets] || cachemap.missed
+      items = items.split(",") if items.is_a?(String)
+      items.map do |name|
+        @pkg_descs.flat_map(&:targets).find { |p| p.name == name }.full_name
+      end
     end
 
     def gen_metadata
-      UI.section("Generating metadata of packages".bold) do
+      UI.section("Generating metadata of packages") do
         checkouts_dirs.each do |dir|
-          UI.message("-> Package: #{dir.basename}".dark)
           pkg_desc = SPM::Package::Description.in_dir(dir)
           next if pkg_desc.nil?
 
@@ -55,20 +70,26 @@ module XCCache
 
     def resolve_recursive_dependencies
       gen_metadata
-      UI.section("Resolving recursive dependencies".bold) do
+      UI.section("Resolving recursive dependencies") do
         @pkg_descs.each do |pkg_desc|
-          UI.message("-> Package: #{pkg_desc.name}".dark)
           @dependencies.merge!(pkg_desc.resolve_recursive_dependencies)
         end
       end
       @raw_dependencies = @dependencies.to_h { |k, v| [k.full_name, v.map(&:full_name)] }
     end
 
-    def gen_cachemap(lockfile)
-      UI.section("Generating cachemap".bold)
+    def gen_initial_cachemap_if_not_exist
+      update_cachemap(ctx: "initial") unless cachemap.path.exist?
+    end
+
+    def update_cachemap(ctx: nil)
+      title = ctx.nil? ? "Updating cachemap" : "Updating cachemap (#{ctx})"
+      UI.section(title)
       projects.each do |project|
         target_deps = lockfile[project.display_name]["dependencies"].to_h do |target_name, products|
-          deps = products.flat_map { |p| @raw_dependencies[p] || [] }
+          deps = products.flat_map { |p| @raw_dependencies[p] || [] }.map do |d|
+            cachemap.hit?(d) ? "#{d}.binary" : d
+          end
           [target_name, deps]
         end
         cachemap[project.display_name] = target_deps
@@ -92,15 +113,22 @@ module XCCache
       end
     end
 
-    def create!
+    def create
       UI.message("Creating umbrella package at #{path}".cyan)
       Template.new("umbrella.Package.swift").render(
         {
+          :json => JSON.pretty_generate(manifest_data),
           :dependencies => pkg_dependencies,
           :swift_version => Swift::Swiftc.version_without_patch,
         },
         save_to: path / "Package.swift",
       )
+
+      # Create dummy sources dirs prefixed with `.` so that they do not show up in Xcode
+      projects.flat_map(&:targets).each do |target|
+        dir = Dir.prepare(path / ".Sources" / "#{target.product_name}.xccache")
+        (dir / "dummy.swift").write("")
+      end
     end
 
     def create_symlinks_to_local_pkgs
@@ -111,9 +139,20 @@ module XCCache
       end
     end
 
+    # FIXME
+    def manifest_data
+      targets = cachemap.raw.values.flat_map do |hash|
+        hash.map do |target_name, deps|
+          deps = deps.reject { |d| cachemap.miss?(d) && lockfile.implicit_dependency?(d) }
+          ["#{target_name}.xccache", deps]
+        end
+      end.to_h
+      { "products" => { "libraries" => targets.keys }, "targets" => targets }
+    end
+
     def pkg_dependencies
       decl = proc do |pkg|
-        next "    .package(path: \"#{pkg.absolute_path}\")" if pkg.local?
+        next ".package(path: \"#{pkg.absolute_path}\")" if pkg.local?
 
         requirement = pkg.requirement
         case requirement["kind"]
@@ -130,10 +169,10 @@ module XCCache
         when "versionRange"
           opt = "\"#{pkg.requirement['minimumVersion']}\"..<\"#{pkg.requirement['maximumVersion']}\""
         end
-        "    .package(url: \"#{pkg.repositoryURL}\", #{opt}),"
+        ".package(url: \"#{pkg.repositoryURL}\", #{opt}),"
       end
 
-      projects.flat_map(&:non_xccache_pkgs).map { |x| decl.call(x) }.join("\n")
+      projects.flat_map(&:non_xccache_pkgs).map { |x| "  #{decl.call(x)}" }.join("\n")
     end
   end
 end

@@ -14,9 +14,9 @@ module XCCache
       end
 
       def build(options = {})
-        targets = options.delete(:target) || regular_targets
+        targets = options.delete(:targets) || regular_targets
         targets = targets.split(",") if targets.is_a?(String)
-        targets.each do |t|
+        targets.map { |t| t.split("/")[-1] }.each do |t|
           UI.section("\n▶ Building target: #{t}".bold.magenta) do
             build_target(target: t, **options)
           end
@@ -46,7 +46,7 @@ module XCCache
       def raw
         return @raw unless @raw.nil?
 
-        @raw = JSON.parse(Sh.capture_output("swift package dump-package"))
+        @raw = JSON.parse(Sh.capture_output("swift package dump-package --package-path #{root_dir}"))
         @raw
       end
     end
