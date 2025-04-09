@@ -41,7 +41,7 @@ extension Array<Target> {
     func targetDependency(_ name: String) -> Target.Dependency {
       if name.hasSuffix(".binary") { return .target(name: name) }
       let cmps = name.split(separator: "/").map(String.init)
-      return .product(name: cmps[0], package: cmps[1])
+      return .product(name: cmps[1], package: cmps[0])
     }
 
     let targetsDict = dict as? [String: [String]] ?? [:]

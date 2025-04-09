@@ -14,7 +14,7 @@ module XCCache
         end
 
         def full_name
-          is_a?(Description) ? name : "#{pkg_name}/#{name}"
+          is_a?(Description) ? name : "#{pkg_slug}/#{name}"
         end
 
         def to_s
@@ -23,6 +23,10 @@ module XCCache
 
         def pkg_name
           @pkg_name ||= root.name
+        end
+
+        def pkg_slug
+          @pkg_slug ||= root.path.basename(".json").to_s
         end
 
         def fetch(key, dtype)

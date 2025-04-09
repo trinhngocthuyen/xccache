@@ -19,7 +19,7 @@ module XCCache
         project.add_xccache_pkg unless project.has_xccache_pkg?
         project.targets.each do |target|
           target.add_xccache_product_dependency unless target.has_xccache_product_dependency?
-          target.remove_pkg_product_dependencies { |d| cachemap.hit?(d.full_name) }
+          target.remove_pkg_product_dependencies { |d| !d.pkg.xccache_pkg? }
         end
       end
     end

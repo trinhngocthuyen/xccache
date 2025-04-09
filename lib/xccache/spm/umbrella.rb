@@ -17,6 +17,7 @@ module XCCache
       @pkg_descs = []
       @pkg_descs_by_name = {}
       @dependencies ||= {}
+      @raw_dependencies ||= {}
     end
 
     def prepare(options = {})
