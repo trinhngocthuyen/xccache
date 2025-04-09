@@ -23,12 +23,8 @@ module XCCache
       @spm_sandbox ||= Dir.prepare(sandbox / "packages").expand_path
     end
 
-    def spm_binaries_sandbox
-      @spm_binaries_sandbox ||= Dir.prepare(spm_sandbox / "binaries")
-    end
-
     def spm_binaries_frameworks_dir
-      @spm_binaries_frameworks_dir ||= spm_binaries_sandbox / "binaries"
+      @spm_binaries_frameworks_dir ||= spm_umbrella_sandbox / "binaries"
     end
 
     def spm_umbrella_sandbox

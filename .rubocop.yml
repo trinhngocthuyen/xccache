@@ -8,6 +8,9 @@ Style/TrailingCommaInArguments:
 Lint/EmptyClass:
   Enabled: false
 
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
 Naming/PredicateName:
   Enabled: false
 Naming/MethodParameterName:

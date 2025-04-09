@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F50E87C62DA4F86200D96A31 /* EX.binary in Frameworks */ = {isa = PBXBuildFile; productRef = 0C8F47BD43CFF382D3D95D6C /* EX.binary */; };
 		F50E87D62DA4F87100D96A31 /* Swizzler in Frameworks */ = {isa = PBXBuildFile; productRef = F50E87D52DA4F87100D96A31 /* Swizzler */; };
+		F50E8E3C2DA668CA00D96A31 /* EX.xccache in Frameworks */ = {isa = PBXBuildFile; productRef = 72815BF879FB306E2CE3E550 /* EX.xccache */; };
 		F577C6A92D96A3BD00C83C96 /* config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F577C6A82D96A3BD00C83C96 /* config.xcconfig */; };
 /* End PBXBuildFile section */
 
@@ -39,8 +39,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F50E8E3C2DA668CA00D96A31 /* EX.xccache in Frameworks */,
 				F50E87D62DA4F87100D96A31 /* Swizzler in Frameworks */,
-				F50E87C62DA4F86200D96A31 /* EX.binary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,8 +93,8 @@
 			);
 			name = EX;
 			packageProductDependencies = (
-				0C8F47BD43CFF382D3D95D6C /* EX.binary */,
 				F50E87D52DA4F87100D96A31 /* Swizzler */,
+				72815BF879FB306E2CE3E550 /* EX.xccache */,
 			);
 			productName = EX;
 			productReference = F577C62F2D96971200C83C96 /* EX.app */;
@@ -125,10 +125,10 @@
 			mainGroup = F577C6262D96971200C83C96;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				ABD613E8832D0A5E13493FCC /* XCLocalSwiftPackageReference "xccache/packages/binaries" */,
 				BBDDF4E330BD997C70103FB5 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
 				4911533B4DA300B9A6ABCADF /* XCRemoteSwiftPackageReference "Moya" */,
 				F50E87D42DA4F86A00D96A31 /* XCLocalSwiftPackageReference "LocalPackages/core-utils" */,
+				B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F577C6302D96971200C83C96 /* Products */;
@@ -363,9 +363,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		ABD613E8832D0A5E13493FCC /* XCLocalSwiftPackageReference "xccache/packages/binaries" */ = {
+		B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = xccache/packages/binaries;
+			relativePath = xccache/packages/umbrella;
 		};
 		F50E87D42DA4F86A00D96A31 /* XCLocalSwiftPackageReference "LocalPackages/core-utils" */ = {
 			isa = XCLocalSwiftPackageReference;
@@ -393,10 +393,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0C8F47BD43CFF382D3D95D6C /* EX.binary */ = {
+		72815BF879FB306E2CE3E550 /* EX.xccache */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ABD613E8832D0A5E13493FCC /* XCLocalSwiftPackageReference "xccache/packages/binaries" */;
-			productName = EX.binary;
+			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */;
+			productName = EX.xccache;
 		};
 		F50E87D52DA4F87100D96A31 /* Swizzler */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -42,7 +42,7 @@ module Xcodeproj
     end
 
     def add_xccache_pkg
-      sandbox_path = XCCache::Config.instance.spm_binaries_sandbox
+      sandbox_path = XCCache::Config.instance.spm_umbrella_sandbox
       add_pkg("relative_path" => sandbox_path.relative_path_from(path.parent).to_s)
     end
 

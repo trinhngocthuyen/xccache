@@ -17,7 +17,7 @@ module Xcodeproj
         end
 
         def xccache_pkg?
-          local? && id == "xccache/packages/binaries"
+          local? && id == "xccache/packages/umbrella"
         end
 
         def create_pkg_product_dependency_ref(product)

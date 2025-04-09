@@ -1,10 +1,68 @@
-// swift-tools-version: <%= swift_version %>
+// swift-tools-version: 6.0
 
+import Foundation
 import PackageDescription
 
-let package = Package(
-  name: "xccache-umbrella",
-  dependencies: [
+let json = """
+<%= json %>
+"""
+
+let xccacheDependencies: [Package.Dependency] = [
 <%= dependencies %>
-  ]
+]
+
+var xccacheProducts = [Product]()
+var xccacheTargets = [Target]()
+
+if let data = json.data(using: .utf8),
+   let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+  xccacheProducts = .fromDict(dict["products"] as? [String: Any] ?? [:])
+  xccacheTargets = .fromDict(dict["targets"] as? [String: Any] ?? [:])
+}
+
+let package = Package(
+  name: "xccache",
+  products: xccacheProducts,
+  dependencies: xccacheDependencies,
+  targets: xccacheTargets
 )
+
+// MARK: Helpers
+extension Array<Product> {
+  static func fromDict(_ dict: [String: Any]) -> [Product] {
+    let libraryNames = dict["libraries"] as? [String] ?? []
+    let libraries = libraryNames.map { Product.library(name: $0, targets: [$0]) }
+    return libraries
+  }
+}
+
+extension Array<Target> {
+  static func fromDict(_ dict: [String: Any]) -> [Target] {
+    func targetDependency(_ name: String) -> Target.Dependency {
+      if name.hasSuffix(".binary") { return .target(name: name) }
+      let cmps = name.split(separator: "/").map(String.init)
+      return .product(name: cmps[0], package: cmps[1])
+    }
+
+    let targetsDict = dict as? [String: [String]] ?? [:]
+    let binaryNames = Set(targetsDict.values.flatMap { $0 }).filter { $0.hasSuffix(".binary") }
+    let regularTargets = targetsDict.map { targetName, deps in
+      Target.target(
+        name: targetName,
+        dependencies: deps.map { targetDependency($0) },
+        path: ".Sources/\(targetName)"
+      )
+    }
+    let binaryTargets = binaryNames.map { name in
+      let xcframeworkName = name.basename.replacing(".binary", with: ".xcframework")
+      return Target.binaryTarget(name: name, path: "binaries/\(xcframeworkName)")
+    }
+    return regularTargets + binaryTargets
+  }
+}
+
+extension String {
+  var basename: String {
+    split(separator: "/").map(String.init).last ?? ""
+  }
+}
