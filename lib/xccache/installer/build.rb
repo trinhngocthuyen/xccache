@@ -12,23 +12,20 @@ module XCCache
       def install!
         sync_lockfile
         umbrella_pkg.prepare
+        umbrella_pkg.resolve_recursive_dependencies
+        umbrella_pkg.gen_cachemap(lockfile)
         umbrella_pkg.build(
           target: @target || infer_targets,
           sdk: @sdk,
           out_dir: config.spm_binaries_frameworks_dir,
         )
-        update_cachemap
       end
 
       private
 
       def infer_targets
         # FIXME: Hardcoded for POC
-        ["SwiftyBeaver", "Moya", "Alamofire"]
-      end
-
-      def update_cachemap
-        # TODO: Implement this
+        ["SwiftyBeaver"]
       end
     end
   end

@@ -5,7 +5,7 @@ module Xcodeproj
     Log = XCCache::UI
 
     def display_name
-      relative_path.basename.to_s
+      relative_path.to_s
     end
 
     def relative_path
