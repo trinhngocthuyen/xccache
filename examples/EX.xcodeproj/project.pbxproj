@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F50E87D62DA4F87100D96A31 /* Swizzler in Frameworks */ = {isa = PBXBuildFile; productRef = F50E87D52DA4F87100D96A31 /* Swizzler */; };
 		F50E8E3C2DA668CA00D96A31 /* EX.xccache in Frameworks */ = {isa = PBXBuildFile; productRef = 72815BF879FB306E2CE3E550 /* EX.xccache */; };
 		F577C6A92D96A3BD00C83C96 /* config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F577C6A82D96A3BD00C83C96 /* config.xcconfig */; };
 /* End PBXBuildFile section */
@@ -40,7 +39,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F50E8E3C2DA668CA00D96A31 /* EX.xccache in Frameworks */,
-				F50E87D62DA4F87100D96A31 /* Swizzler in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,7 +91,6 @@
 			);
 			name = EX;
 			packageProductDependencies = (
-				F50E87D52DA4F87100D96A31 /* Swizzler */,
 				72815BF879FB306E2CE3E550 /* EX.xccache */,
 			);
 			productName = EX;
@@ -397,11 +394,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */;
 			productName = EX.xccache;
-		};
-		F50E87D52DA4F87100D96A31 /* Swizzler */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F50E87D42DA4F86A00D96A31 /* XCLocalSwiftPackageReference "LocalPackages/core-utils" */;
-			productName = Swizzler;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

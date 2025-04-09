@@ -3,7 +3,8 @@
     "EX": [
       "SwiftyBeaver/SwiftyBeaver.binary",
       "Moya/Moya.binary",
-      "Alamofire/Alamofire.binary"
+      "Alamofire/Alamofire.binary",
+      "core-utils/Swizzler.binary"
     ]
   }
 }
