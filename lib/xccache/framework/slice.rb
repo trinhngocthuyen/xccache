@@ -21,9 +21,8 @@ module XCCache
           # https://github.com/swiftlang/swift/issues/64669#issuecomment-1535335601
           cmd << "-Xswiftc" << "-enable-library-evolution"
           cmd << "-Xswiftc" << "-alias-module-names-in-module-interface"
-          cmd << "-Xswiftc" << "-emit-module-interface-path"
-          cmd << "-Xswiftc" << "#{products_dir}/swiftinterfaces/#{name}.swiftinterface"
-          Sh.run(cmd, suppress_err: /dependency '.*' is not used by any target/)
+          cmd << "-Xswiftc" << "-emit-module-interface"
+          Sh.run(cmd, suppress_err: /(dependency '.*' is not used by any target|unable to create symbolic link)/)
           create_framework
         end
       end
@@ -53,7 +52,7 @@ module XCCache
 
       def copy_swiftmodules
         swiftmodule_dir = Dir.prepare("#{path}/Modules/#{name}.swiftmodule")
-        swiftinterfaces = products_dir.glob("swiftinterfaces/#{name}.swiftinterface")
+        swiftinterfaces = products_dir.glob("#{name}.build/#{name}.swiftinterface")
         to_copy = products_dir.glob("Modules/#{name}.*") + swiftinterfaces
         to_copy.each do |p|
           FileUtils.copy_entry(p, swiftmodule_dir / p.basename.sub(name, sdk.triple))
