@@ -11,6 +11,9 @@ let JSON = """
 let DEPENDENCIES: [Package.Dependency] = [
 <%= dependencies %>
 ]
+let PLATFORMS: [SupportedPlatform] = [
+<%= platforms %>
+]
 // ------------------------------------------------------------------------------------
 
 // MARK: Main
@@ -45,6 +48,7 @@ enum XCCache {
       let binaryTargets = targets.flatMap { x in x.deps.compactMap { $0.toSPMBinaryTarget() }}
       return .init(
         name: "xccache",
+        platforms: PLATFORMS,
         products: targets.map { $0.toSPMProduct() },
         dependencies: DEPENDENCIES,
         targets: regularTargets + binaryTargets
