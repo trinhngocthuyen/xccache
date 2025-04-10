@@ -162,10 +162,10 @@ module XCCache
         when "versionRange"
           opt = "\"#{requirement['minimumVersion']}\"..<\"#{requirement['maximumVersion']}\""
         end
-        ".package(url: \"#{pkg.repositoryURL}\", #{opt}),"
+        ".package(url: \"#{pkg.repositoryURL}\", #{opt})"
       end
 
-      projects.flat_map(&:non_xccache_pkgs).map { |x| "  #{decl.call(x)}" }.join("\n")
+      projects.flat_map(&:non_xccache_pkgs).map { |x| "  #{decl.call(x)}," }.join("\n")
     end
   end
 end
