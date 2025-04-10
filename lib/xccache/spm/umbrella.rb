@@ -23,7 +23,7 @@ module XCCache
     def prepare(options = {})
       UI.section("Preparing umbrella package") do
         create
-        create_symlinks_to_local_pkgs
+        create_symlinks
         resolve
       end
       resolve_recursive_dependencies if options.fetch(:resolve_recursive_dependencies, true)
@@ -132,12 +132,14 @@ module XCCache
       end
     end
 
-    def create_symlinks_to_local_pkgs
+    def create_symlinks
+      # Symlinks to local packages
       projects.flat_map(&:pkgs).select(&:local?).reject(&:xccache_pkg?).uniq(&:slug).each do |pkg|
-        symlink_dir = local_checkouts_dir / File.basename(pkg.absolute_path)
-        symlink_dir.rmtree if symlink_dir.exist?
-        File.symlink(pkg.absolute_path, symlink_dir)
+        pkg.absolute_path.symlink_to(local_checkouts_dir / File.basename(pkg.absolute_path))
       end
+      # Symlinks for convenience
+      (path / "binaries").symlink_to(path.parent / "binaries")
+      (path / ".build").symlink_to(path.parent / ".build")
     end
 
     # FIXME
