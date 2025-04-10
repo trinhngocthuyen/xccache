@@ -2,7 +2,8 @@ require "json"
 
 module XCCache
   class JSONRepresentable
-    attr_reader :path, :raw
+    attr_reader :path
+    attr_accessor :raw
 
     def initialize(path, raw: nil)
       @path = path

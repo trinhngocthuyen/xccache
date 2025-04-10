@@ -7,7 +7,6 @@ module XCCache
 
       def run
         umbrella_pkg.prepare
-        umbrella_pkg.resolve_recursive_dependencies
         # TODO: Render graph
       end
     end

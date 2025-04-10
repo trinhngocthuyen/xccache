@@ -4,7 +4,7 @@ cache.use:
 	bundle exec xccache use $(XCCACHE_ARGS)
 
 cache.build:
-	bundle exec xccache build $(XCCACHE_ARGS)
+	bundle exec xccache build --target=$(TARGET) $(XCCACHE_ARGS)
 
 cache.init:
 	bundle exec xccache init $(XCCACHE_ARGS)

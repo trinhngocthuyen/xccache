@@ -4,11 +4,11 @@ module XCCache
   class Installer
     class Use < Installer
       def install!
-        sync_lockfile
-        umbrella_pkg.prepare(resolve_recursive_dependencies: false)
-        update_projects do |project|
-          UI.section("Using cache for project #{project.display_name}".bold.green) do
-            replace_binaries_for_project(project)
+        perform_install do
+          update_projects do |project|
+            UI.section("Using cache for project #{project.display_name}".bold.green) do
+              replace_binaries_for_project(project)
+            end
           end
         end
       end

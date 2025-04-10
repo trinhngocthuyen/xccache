@@ -20,14 +20,14 @@ module XCCache
       @raw_dependencies ||= {}
     end
 
-    def prepare(options = {})
+    def prepare
       UI.section("Preparing umbrella package") do
         create
         create_symlinks
         resolve
       end
-      resolve_recursive_dependencies if options.fetch(:resolve_recursive_dependencies, true)
-      gen_initial_cachemap_if_not_exist
+      resolve_recursive_dependencies
+      sync_cachemap
     end
 
     def resolve
@@ -40,13 +40,18 @@ module XCCache
       to_build = targets_to_build(options)
       UI.info("Targets to build: #{to_build}")
       UI.warn("No targets to build. Possibly because cache was all hit") if to_build.empty?
-      cachemap.commit(to_build) do
-        @pkg.build(options.merge(:targets => to_build))
-      end
+      @pkg.build(options.merge(:targets => to_build))
+      sync_cachemap unless to_build.empty?
+    end
+
+    def sync_cachemap
+      UI.section("Syncing cachemap")
+      cachemap.sync!(lockfile, projects, @raw_dependencies)
     end
 
     def targets_to_build(options)
-      items = options[:targets] || cachemap.missed
+      items = options[:targets]
+      items = cachemap.missed if items.nil? || items.empty?
       items = items.split(",") if items.is_a?(String)
       items.map do |name|
         @pkg_descs.flat_map(&:targets).find { |p| p.name == name }.full_name
@@ -79,23 +84,19 @@ module XCCache
       @raw_dependencies = @dependencies.to_h { |k, v| [k.full_name, v.map(&:full_name)] }
     end
 
-    def gen_initial_cachemap_if_not_exist
-      update_cachemap(ctx: "initial") unless cachemap.path.exist?
-    end
+    def write_manifest(force: false)
+      return if @did_write_manifest && !force
 
-    def update_cachemap(ctx: nil)
-      title = ctx.nil? ? "Updating cachemap" : "Updating cachemap (#{ctx})"
-      UI.section(title)
-      projects.each do |project|
-        target_deps = lockfile[project.display_name]["dependencies"].to_h do |target_name, products|
-          deps = products.flat_map { |p| @raw_dependencies[p] || [] }.map do |d|
-            cachemap.hit?(d) ? "#{d}.binary" : d
-          end
-          [target_name, deps]
-        end
-        cachemap[project.display_name] = target_deps
-      end
-      cachemap.save
+      UI.message("Writing umbrella manifest Package.swift")
+      Template.new("umbrella.Package.swift").render(
+        {
+          :json => JSON.pretty_generate("targets" => manifest_targets_data),
+          :dependencies => manifest_pkg_dependencies,
+          :swift_version => Swift::Swiftc.version_without_patch,
+        },
+        save_to: path / "Package.swift",
+      )
+      @did_write_manifest = true
     end
 
     private
@@ -115,16 +116,7 @@ module XCCache
     end
 
     def create
-      UI.message("Creating umbrella package at #{path}".cyan)
-      Template.new("umbrella.Package.swift").render(
-        {
-          :json => JSON.pretty_generate(manifest_data),
-          :dependencies => pkg_dependencies,
-          :swift_version => Swift::Swiftc.version_without_patch,
-        },
-        save_to: path / "Package.swift",
-      )
-
+      write_manifest
       # Create dummy sources dirs prefixed with `.` so that they do not show up in Xcode
       projects.flat_map(&:targets).each do |target|
         dir = Dir.prepare(path / ".Sources" / "#{target.product_name}.xccache")
@@ -142,18 +134,16 @@ module XCCache
       (path / ".build").symlink_to(path.parent / ".build")
     end
 
-    # FIXME
-    def manifest_data
-      targets = cachemap.raw.values.flat_map do |hash|
+    def manifest_targets_data
+      cachemap.cache_data.values.flat_map do |hash|
         hash.map do |target_name, deps|
           deps = deps.reject { |d| cachemap.miss?(d) && lockfile.implicit_dependency?(d) }
           ["#{target_name}.xccache", deps]
         end
       end.to_h
-      { "products" => { "libraries" => targets.keys }, "targets" => targets }
     end
 
-    def pkg_dependencies
+    def manifest_pkg_dependencies
       decl = proc do |pkg|
         next ".package(path: \"#{pkg.absolute_path}\")" if pkg.local?
 
@@ -162,15 +152,15 @@ module XCCache
         when "upToNextMajorVersion"
           opt = ".upToNextMajor(from: \"#{requirement['minimumVersion']}\")"
         when "upToNextMinorVersion"
-          opt = ".upToNextMinor(from: \"#{pkg.requirement['minimumVersion']}\")"
+          opt = ".upToNextMinor(from: \"#{requirement['minimumVersion']}\")"
         when "exactVersion"
-          opt = "exact: #{pkg.requirement['version']}"
+          opt = "exact: #{requirement['version']}"
         when "branch"
-          opt = "branch: \"#{pkg.requirement['branch']}\""
+          opt = "branch: \"#{requirement['branch']}\""
         when "revision"
-          opt = "revision: #{pkg.requirement['revision']}"
+          opt = "revision: #{requirement['revision']}"
         when "versionRange"
-          opt = "\"#{pkg.requirement['minimumVersion']}\"..<\"#{pkg.requirement['maximumVersion']}\""
+          opt = "\"#{requirement['minimumVersion']}\"..<\"#{requirement['maximumVersion']}\""
         end
         ".package(url: \"#{pkg.repositoryURL}\", #{opt}),"
       end

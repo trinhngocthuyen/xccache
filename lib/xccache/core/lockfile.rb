@@ -6,7 +6,7 @@ module XCCache
       raw[project.display_name] || {}
     end
 
-    def merge!(hash)
+    def deep_merge!(hash)
       raw.deep_merge!(hash)
     end
 

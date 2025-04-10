@@ -20,8 +20,10 @@ module XCCache
       end
 
       def run
-        Installer::Build.new(target: @target, sdk: @sdk).install!
-        Installer::Use.new.install! if @should_integrate
+        installer = Installer::Build.new(target: @target, sdk: @sdk)
+        installer.install!
+        # Reuse umbrella_pkg from previous installers
+        Installer::Use.new(umbrella_pkg: installer.umbrella_pkg).install! if @should_integrate
       end
     end
   end

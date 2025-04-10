@@ -3,16 +3,29 @@ require "xccache/core/json"
 module XCCache
   module Cache
     class Cachemap < JSONRepresentable
-      def hash_for_project(project)
-        raw[project.display_name] || {}
+      def deps_data
+        raw["_deps_"]
       end
 
-      def all_items
-        raw.values.flat_map { |h| h.values.flatten }
+      def cache_data
+        raw.reject { |k, _| k == "_deps_" }
+      end
+
+      def sync!(lockfile, projects, depmap)
+        # FIXME: Handle upstream/downstream cache invalidation
+        raw["_deps_"] = depmap
+        projects.each do |project|
+          target_deps = lockfile[project.display_name]["dependencies"].to_h do |target_name, products|
+            deps = products.flat_map { |p| depmap[p] || [p] }.map { |d| hit?(d) ? "#{d}.binary" : d }
+            [target_name, deps]
+          end
+          raw[project.display_name] = target_deps
+        end
+        save
       end
 
       def hit?(name)
-        name.end_with?(".binary")
+        binary_path(name).exist?
       end
 
       def miss?(name)
@@ -20,31 +33,13 @@ module XCCache
       end
 
       def missed
+        all_items = cache_data.values.flat_map { |h| h.values.flatten }
         all_items.select { |x| miss?(x) }.map { |x| x.split("/")[-1] }
       end
 
-      def commit(items)
-        mark(missed: items)
-        yield
-        mark(hit: items)
-      end
-
-      def mark(options = {})
-        hits, missed = options[:hit] || [], options[:missed] || []
-        UI.message("Mark as missed: #{missed}".yellow.dark) unless missed.empty?
-        UI.message("Mark as hit: #{hits}".green.dark) unless hits.empty?
-        raw.each_value do |project_hash|
-          project_hash.each do |name, deps|
-            project_hash[name] = deps.map do |d|
-              d_regular = d.sub(".binary", "")
-              d_binary = "#{d_regular}.binary"
-              next d_regular if missed.include?(d) || missed.include?(d_binary)
-              next d_binary if hits.include?(d) || hits.include?(d_regular)
-              d
-            end
-          end
-        end
-        save
+      def binary_path(name)
+        basename = File.basename(name, ".binary")
+        XCCache::Config.instance.spm_binaries_frameworks_dir / "#{basename}.xcframework"
       end
     end
   end

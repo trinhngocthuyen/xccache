@@ -5,12 +5,20 @@ module XCCache
   class Installer
     include PkgMixin
 
-    def initialize(*args, **kwargs); end
+    def initialize(options = {})
+      @umbrella_pkg = options[:umbrella_pkg]
+    end
+
+    def perform_install
+      sync_lockfile if @umbrella_pkg.nil?
+      umbrella_pkg.prepare if @umbrella_pkg.nil?
+      yield
+    end
 
     def sync_lockfile
       UI.message("Syncing lockfile")
       update_projects do |project|
-        lockfile.merge!(project.display_name => lockfile_hash_for_project(project))
+        lockfile.deep_merge!(project.display_name => lockfile_hash_for_project(project))
       end
       lockfile.save
     end

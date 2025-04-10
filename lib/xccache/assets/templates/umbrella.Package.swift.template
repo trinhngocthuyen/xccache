@@ -3,66 +3,122 @@
 import Foundation
 import PackageDescription
 
-let json = """
+// MARK: GENERATED
+// ------------------------------------------------------------------------------------
+let JSON = """
 <%= json %>
 """
-
-let xccacheDependencies: [Package.Dependency] = [
+let DEPENDENCIES: [Package.Dependency] = [
 <%= dependencies %>
 ]
+// ------------------------------------------------------------------------------------
 
-var xccacheProducts = [Product]()
-var xccacheTargets = [Target]()
-
-if let data = json.data(using: .utf8),
-   let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-  xccacheProducts = .fromDict(dict["products"] as? [String: Any] ?? [:])
-  xccacheTargets = .fromDict(dict["targets"] as? [String: Any] ?? [:])
+// MARK: Main
+if let data = JSON.data(using: .utf8),
+   let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+   let dict = dict["targets"] as? [String: [String]] {
+  _ = XCCache.Package(dict).toSPM()
+} else {
+  _ = Package(name: "xccache")
 }
 
-let package = Package(
-  name: "xccache",
-  products: xccacheProducts,
-  dependencies: xccacheDependencies,
-  targets: xccacheTargets
-)
-
-// MARK: Helpers
-extension Array<Product> {
-  static func fromDict(_ dict: [String: Any]) -> [Product] {
-    let libraryNames = dict["libraries"] as? [String] ?? []
-    let libraries = libraryNames.map { Product.library(name: $0, targets: [$0]) }
-    return libraries
+// MARK: XCCache
+enum XCCache {
+  // MARK: Config
+  @MainActor
+  struct Config {
+    static let pkgDir = URL(filePath: #filePath).deletingLastPathComponent()
+    static let binariesDir = pkgDir.appending(path: "binaries")
+    static let knownSlugs: [String] = DEPENDENCIES.map(\.slug)
   }
-}
 
-extension Array<Target> {
-  static func fromDict(_ dict: [String: Any]) -> [Target] {
-    func targetDependency(_ name: String) -> Target.Dependency {
-      if name.hasSuffix(".binary") { return .target(name: name) }
-      let cmps = name.split(separator: "/").map(String.init)
-      return .product(name: cmps[1], package: cmps[0])
+  // MARK: Package
+  @MainActor
+  final class Package {
+    let targets: [XCCache.Target]
+    init(_ dict: [String: [String]]) {
+      targets = dict.map { XCCache.Target($0, $1) }
     }
 
-    let targetsDict = dict as? [String: [String]] ?? [:]
-    let binaryNames = Set(targetsDict.values.flatMap { $0 }).filter { $0.hasSuffix(".binary") }
-    let regularTargets = targetsDict.map { targetName, deps in
-      Target.target(
-        name: targetName,
-        dependencies: deps.map { targetDependency($0) },
-        path: ".Sources/\(targetName)"
+    func toSPM() -> PackageDescription.Package {
+      let regularTargets = targets.map { $0.toSPM() }
+      let binaryTargets = targets.flatMap { x in x.deps.compactMap { $0.toSPMBinaryTarget() }}
+      return .init(
+        name: "xccache",
+        products: targets.map { $0.toSPMProduct() },
+        dependencies: DEPENDENCIES,
+        targets: regularTargets + binaryTargets
       )
     }
-    let binaryTargets = binaryNames.map { name in
-      let xcframeworkName = name.basename.replacing(".binary", with: ".xcframework")
-      return Target.binaryTarget(name: name, path: "binaries/\(xcframeworkName)")
-    }
-    return regularTargets + binaryTargets
   }
+
+  // MARK: Target
+  @MainActor
+  final class Target {
+    let name: String
+    let deps: [XCCache.Dependency]
+    init(_ name: String, _ deps: [String]) {
+      self.name = name
+      self.deps = deps.map { XCCache.Dependency($0) }
+    }
+
+    func toSPMProduct() -> PackageDescription.Product {
+      .library(name: name, targets: [name])
+    }
+
+    func toSPM() -> PackageDescription.Target {
+      .target(
+        name: name,
+        dependencies: deps.compactMap { $0.toSPM() },
+        path: ".Sources/\(name)"
+      )
+    }
+  }
+
+  // MARK: Dependency
+  @MainActor
+  class Dependency {
+    let name: String
+    private let binaryName: String
+
+    init(_ name: String) {
+      self.name = name
+      self.binaryName = name.basename.withoutExtenstion + ".xcframework"
+    }
+
+    private var isBinary: Bool { name.hasSuffix(".binary") }
+    private var binaryExist: Bool { Config.binariesDir.appending(path: binaryName).exist }
+    private var isKnownSlug: Bool { Config.knownSlugs.contains(name.slug) }
+
+    func toSPM() -> PackageDescription.Target.Dependency? {
+      if isBinary { return binaryExist ? .byName(name: name) : nil }
+      if isKnownSlug { return .product(name: name.basename, package: name.slug) }
+      return nil
+    }
+    func toSPMBinaryTarget() -> PackageDescription.Target? {
+      isBinary && binaryExist ? .binaryTarget(name: name, path: "binaries/\(binaryName)") : nil
+    }
+  }
+}
+
+// MARK: Helpers
+extension Package.Dependency {
+  var slug: String {
+    switch kind {
+    case let .registry(id: id, _): id
+    case let .sourceControl(_, location: location, _): location.basename.withoutExtenstion
+    case let .fileSystem(_, path: path): path.basename
+    @unknown default: ""
+    }
+  }
+}
+
+extension URL {
+  var exist: Bool { FileManager.default.fileExists(atPath: path()) }
 }
 
 extension String {
-  var basename: String {
-    split(separator: "/").map(String.init).last ?? ""
-  }
+  var slug: String { (self as NSString).deletingLastPathComponent.basename }
+  var basename: String { (self as NSString).lastPathComponent }
+  var withoutExtenstion: String { (self as NSString).deletingPathExtension }
 }
