@@ -90,7 +90,8 @@ module XCCache
       UI.message("Writing umbrella manifest Package.swift")
       Template.new("umbrella.Package.swift").render(
         {
-          :json => JSON.pretty_generate("targets" => manifest_targets_data),
+          :json => manifest_targets_json,
+          :platforms => manifest_platforms,
           :dependencies => manifest_pkg_dependencies,
           :swift_version => Swift::Swiftc.version_without_patch,
         },
@@ -134,13 +135,14 @@ module XCCache
       (path / ".build").symlink_to(path.parent / ".build")
     end
 
-    def manifest_targets_data
-      cachemap.cache_data.values.flat_map do |hash|
+    def manifest_targets_json
+      data = cachemap.cache_data.values.flat_map do |hash|
         hash.map do |target_name, deps|
           deps = deps.reject { |d| cachemap.miss?(d) && lockfile.implicit_dependency?(d) }
           ["#{target_name}.xccache", deps]
         end
       end.to_h
+      JSON.pretty_generate("targets" => data)
     end
 
     def manifest_pkg_dependencies
@@ -166,6 +168,25 @@ module XCCache
       end
 
       projects.flat_map(&:non_xccache_pkgs).map { |x| "  #{decl.call(x)}," }.join("\n")
+    end
+
+    def manifest_platforms
+      @manifest_platforms ||= begin
+        hash = projects.flat_map(&:targets).to_h { |t| [t.platform_name, t.deployment_target] }
+        items = hash.map do |name, version|
+          major_version = version.split(".")[0]
+          platform = {
+            :ios => "iOS",
+            :macos => "macOS",
+            :osx => "macOS",
+            :tvos => "tvOS",
+            :watchos => "watchOS",
+            :visionos => "visionOS",
+          }[name]
+          ".#{platform}(.v#{major_version})"
+        end
+        items.map { |x| "  #{x}," }.join("\n")
+      end
     end
   end
 end

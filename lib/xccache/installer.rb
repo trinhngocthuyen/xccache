@@ -12,6 +12,7 @@ module XCCache
     def perform_install
       sync_lockfile if @umbrella_pkg.nil?
       umbrella_pkg.prepare if @umbrella_pkg.nil?
+      umbrella_pkg.write_manifest(force: true)
       yield
     end
 

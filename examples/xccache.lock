@@ -18,13 +18,21 @@
       {
         "relative_path": "LocalPackages/core-utils",
         "path": null
+      },
+      {
+        "repositoryURL": "https://github.com/googlemaps/ios-maps-sdk.git",
+        "requirement": {
+          "kind": "upToNextMajorVersion",
+          "minimumVersion": "9.4.0"
+        }
       }
     ],
     "dependencies": {
       "EX": [
         "SwiftyBeaver/SwiftyBeaver",
         "Moya/Moya",
-        "core-utils/Swizzler"
+        "core-utils/Swizzler",
+        "ios-maps-sdk/GoogleMaps"
       ]
     }
   }
