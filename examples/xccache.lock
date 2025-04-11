@@ -25,6 +25,13 @@
           "kind": "upToNextMajorVersion",
           "minimumVersion": "9.4.0"
         }
+      },
+      {
+        "repositoryURL": "https://github.com/SDWebImage/SDWebImage",
+        "requirement": {
+          "kind": "upToNextMajorVersion",
+          "minimumVersion": "5.21.0"
+        }
       }
     ],
     "dependencies": {
@@ -32,7 +39,8 @@
         "SwiftyBeaver/SwiftyBeaver",
         "Moya/Moya",
         "core-utils/Swizzler",
-        "ios-maps-sdk/GoogleMaps"
+        "ios-maps-sdk/GoogleMaps",
+        "SDWebImage/SDWebImage"
       ]
     }
   }
