@@ -1,7 +1,8 @@
 require "xcodeproj"
+require "xccache/core/syntax/yml"
 
 module XCCache
-  class Config
+  class Config < YAMLRepresentable
     module Mixin
       def config
         Config.instance
@@ -9,7 +10,7 @@ module XCCache
     end
 
     def self.instance
-      @instance ||= new
+      @instance ||= new(Pathname("xccache.yml").expand_path)
     end
 
     attr_accessor :verbose
@@ -47,6 +48,14 @@ module XCCache
       @projects ||= Pathname(".").glob("*.xcodeproj").map do |p|
         Xcodeproj::Project.open(p)
       end
+    end
+
+    def ignore_list
+      raw["ignore"] || []
+    end
+
+    def ignore?(item)
+      ignore_list.any? { |p| File.fnmatch(p, item) }
     end
   end
 end

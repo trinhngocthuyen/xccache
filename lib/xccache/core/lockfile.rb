@@ -1,4 +1,4 @@
-require "xccache/core/json"
+require "xccache/core/syntax/json"
 
 module XCCache
   class Lockfile < JSONRepresentable

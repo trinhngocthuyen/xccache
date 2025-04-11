@@ -5,15 +5,16 @@ require "xccache/spm/build"
 
 module XCCache
   class UmbrellaPkg
+    include Config::Mixin
     attr_reader :path, :projects, :lockfile, :cachemap, :metadata_dir
 
-    def initialize(options)
-      @path = options[:path]
-      @projects = options[:projects]
-      @lockfile = options[:lockfile]
-      @cachemap = options[:cachemap]
+    def initialize
+      @path = config.spm_umbrella_sandbox
+      @projects = config.projects
+      @lockfile = config.lockfile
+      @cachemap = config.cachemap
       @pkg = SPM::Package.new(root_dir: @path)
-      @metadata_dir = options[:metadata_dir]
+      @metadata_dir = config.spm_metadata_dir
       @pkg_descs = []
       @pkg_descs_by_name = {}
       @dependencies ||= {}
@@ -38,7 +39,7 @@ module XCCache
 
     def build(options = {})
       to_build = targets_to_build(options)
-      UI.info("Targets to build: #{to_build}")
+      UI.info("-> Targets to build: #{to_build.to_s.bold}")
       UI.warn("No targets to build. Possibly because cache was all hit") if to_build.empty?
       @pkg.build(options.merge(:targets => to_build))
       sync_cachemap unless to_build.empty?
@@ -53,6 +54,12 @@ module XCCache
       items = options[:targets]
       items = cachemap.missed if items.nil? || items.empty?
       items = items.split(",") if items.is_a?(String)
+      to_discard = items.select { |x| config.ignore?(x) }
+      unless to_discard.empty?
+        UI.message("Don't build #{to_discard.to_s.dark} (reason: ignored in the config)")
+        items = items.difference(to_discard)
+      end
+
       items.map do |name|
         @pkg_descs.flat_map(&:targets).find { |p| p.name == name }.full_name
       end

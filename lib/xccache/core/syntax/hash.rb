@@ -1,19 +1,15 @@
-require "json"
-
 module XCCache
-  class JSONRepresentable
+  class HashRepresentable
     attr_reader :path
     attr_accessor :raw
 
     def initialize(path, raw: nil)
       @path = path
-      @raw = raw || load_json || {}
+      @raw = raw || load || {}
     end
 
-    def load_json
-      JSON.parse(path.read) if path.exist?
-    rescue StandardError
-      {}
+    def load
+      raise NotImplementedError
     end
 
     def merge!(other)
@@ -21,7 +17,7 @@ module XCCache
     end
 
     def save(to: nil)
-      (to || path).write(JSON.pretty_generate(raw))
+      raise NotImplementedError
     end
 
     def [](key)

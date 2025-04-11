@@ -12,8 +12,9 @@ module XCCache
       def section(title)
         UI.puts(title)
         self.indent += 2
-        yield if block_given?
+        res = yield if block_given?
         self.indent -= 2
+        res
       end
 
       def message(message)

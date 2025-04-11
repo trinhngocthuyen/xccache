@@ -1,5 +1,4 @@
-require "xccache/core/json"
-require "xccache/core/config"
+require "xccache/core"
 
 module XCCache
   module SPM

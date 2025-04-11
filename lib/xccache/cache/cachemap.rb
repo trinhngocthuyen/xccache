@@ -1,4 +1,4 @@
-require "xccache/core/json"
+require "xccache/core"
 
 module XCCache
   module Cache
