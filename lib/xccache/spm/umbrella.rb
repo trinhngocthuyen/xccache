@@ -69,7 +69,7 @@ module XCCache
     def gen_metadata
       UI.section("Generating metadata of packages") do
         checkouts_dirs.each do |dir|
-          pkg_desc = SPM::Package::Description.in_dir(dir)
+          pkg_desc = SPM::Package::Description.in_dir(dir, save_to_dir: config.spm_metadata_dir)
           next if pkg_desc.nil?
 
           pkg_desc.retrieve_pkg_desc = proc { |name| @pkg_descs_by_name[name] }

@@ -4,8 +4,8 @@ module XCCache
   module SPM
     class Package
       class Description < BaseObject
-        def self.in_dir(dir)
-          path = Config.instance.spm_metadata_dir / "#{dir.basename}.json"
+        def self.in_dir(dir, save_to_dir: nil)
+          path = save_to_dir / "#{dir.basename}.json" unless save_to_dir.nil?
           begin
             raw = JSON.parse(Sh.capture_output("swift package dump-package --package-path #{dir}"))
             Description.new(path, raw: raw)

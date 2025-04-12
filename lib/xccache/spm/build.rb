@@ -37,9 +37,12 @@ module XCCache
         ).create
       end
 
-      def resolve
-        UI.message("Resolving package dependencies")
+      def resolve(force: false)
+        return if @resolved && !force
+
+        UI.message("Resolving package dependencies of package #{root_dir.basename.to_s.dark}")
         Sh.run("swift package resolve --package-path #{root_dir} 2>&1")
+        @resolved = true
       end
 
       private
@@ -51,8 +54,8 @@ module XCCache
           return pkg_desc if pkg_desc.has_target?(name)
 
           UI.message(
-            "Target #{name.yellow} does not belong to the given package. " \
-            "It's possibly in one of the dependencies"
+            "#{name.yellow.dark} is not a direct target of package #{root_dir.basename.to_s.dark} " \
+            "-> trigger from dependencies"
           )
           # Otherwise, it's inside one of the dependencies. Need to resolve then find it
           resolve
