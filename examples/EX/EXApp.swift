@@ -5,6 +5,9 @@ struct EXApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView()
+        .onAppear {
+          _ = Playground()
+        }
     }
   }
 }

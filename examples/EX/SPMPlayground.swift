@@ -3,6 +3,7 @@ import Moya
 import Alamofire
 import Swizzler
 import GoogleMaps
+import SDWebImage
 
 struct Playground {
   init() {
@@ -11,5 +12,6 @@ struct Playground {
     print(AFError.self) // Alamofire
     print(Swizzler.self) // core-utils
     print(GMSAddress.self) // GoogleMaps
+    print(SDImageCacheOptions.self) // SDWebImage
   }
 }

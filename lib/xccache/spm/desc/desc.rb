@@ -26,6 +26,14 @@ module XCCache
           @targets ||= fetch("targets", Target)
         end
 
+        def has_target?(name)
+          targets.any? { |t| t.name == name }
+        end
+
+        def get_target(name)
+          targets.find { |t| t.name == name }
+        end
+
         def targets_of_product(name)
           matched_products = products.select { |p| p.name == name }
           matched_products

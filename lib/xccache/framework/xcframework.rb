@@ -1,14 +1,15 @@
 module XCCache
   class Framework
     class XCFramework
-      attr_reader :name, :pkg_dir, :config, :sdks, :path
+      attr_reader :name, :pkg_dir, :pkg_desc, :config, :sdks, :path
 
-      def initialize(name: nil, pkg_dir: nil, config: nil, sdks: [], path: nil)
-        @name = name
-        @pkg_dir = pkg_dir
-        @config = config
-        @sdks = sdks
-        @path = path
+      def initialize(options = {})
+        @name = options[:name]
+        @pkg_dir = options[:pkg_dir]
+        @pkg_desc = options[:pkg_desc]
+        @config = options[:config]
+        @sdks = options[:sdks]
+        @path = options[:path]
       end
 
       def create
@@ -21,12 +22,13 @@ module XCCache
           slices.each { |slice| cmd << "-framework" << slice.path }
           Sh.run(cmd)
         end
-      ensure
         tmpdir.rmtree
+
+        # TODO: Should we dispose tmpdir here as well?
       end
 
       def tmpdir
-        @tmpdir ||= Pathname(Dir.mktmpdir("xccache"))
+        @tmpdir ||= Dir.create_tmpdir
       end
 
       def slices
@@ -35,9 +37,11 @@ module XCCache
           Framework::Slice.new(
             name: name,
             pkg_dir: pkg_dir,
+            pkg_desc: pkg_desc,
             sdk: sdk,
             config: config,
             path: Dir.prepare(tmpdir / sdk.triple / "#{name}.framework"),
+            tmpdir: tmpdir,
           )
         end
       end

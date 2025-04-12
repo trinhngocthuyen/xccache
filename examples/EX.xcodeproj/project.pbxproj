@@ -127,6 +127,7 @@
 				F50E87D42DA4F86A00D96A31 /* XCLocalSwiftPackageReference "LocalPackages/core-utils" */,
 				B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */,
 				F5339D5C2DA7D32200F7312D /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
+				F533A0C82DA8CB1500F7312D /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F577C6302D96971200C83C96 /* Products */;
@@ -394,6 +395,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 9.4.0;
+			};
+		};
+		F533A0C82DA8CB1500F7312D /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.21.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
