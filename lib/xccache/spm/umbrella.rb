@@ -6,7 +6,7 @@ require "xccache/spm/build"
 module XCCache
   class UmbrellaPkg
     include Config::Mixin
-    attr_reader :path, :projects, :lockfile, :cachemap, :metadata_dir
+    attr_reader :path, :projects, :lockfile, :cachemap, :pkg, :metadata_dir
 
     def initialize
       @path = config.spm_umbrella_sandbox
@@ -33,16 +33,17 @@ module XCCache
 
     def resolve
       UI.section("Resolving umbrella package dependencies") do
-        Sh.run("swift package resolve --package-path #{path} 2>&1")
+        pkg.resolve
       end
     end
 
     def build(options = {})
       to_build = targets_to_build(options)
+      return UI.warn("No targets to build. Possibly because cache was all hit") if to_build.empty?
+
       UI.info("-> Targets to build: #{to_build.to_s.bold}")
-      UI.warn("No targets to build. Possibly because cache was all hit") if to_build.empty?
-      @pkg.build(options.merge(:targets => to_build))
-      sync_cachemap unless to_build.empty?
+      pkg.build(options.merge(:targets => to_build))
+      sync_cachemap
     end
 
     def sync_cachemap

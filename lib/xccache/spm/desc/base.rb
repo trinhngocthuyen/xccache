@@ -40,6 +40,13 @@ module XCCache
         def pkg_desc_of(name)
           retrieve_pkg_desc.call(name)
         end
+
+        def src_dir
+          @src_dir ||= begin
+            path = raw.fetch("packageKind", {}).fetch("root", [])[0]
+            Pathname.new(path) unless path.nil?
+          end
+        end
       end
     end
   end

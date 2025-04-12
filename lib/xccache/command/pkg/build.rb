@@ -25,7 +25,7 @@ module XCCache
         def run
           pkg = SPM::Package.new
           pkg.build(
-            target: @target,
+            targets: @target,
             sdk: @sdk,
             config: @config,
             out_dir: @out_dir,

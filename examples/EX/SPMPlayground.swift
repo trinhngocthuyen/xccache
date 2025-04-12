@@ -12,6 +12,6 @@ struct Playground {
     print(AFError.self) // Alamofire
     print(Swizzler.self) // core-utils
     print(GMSAddress.self) // GoogleMaps
-    print(SDImageCache.self) // SDWebImage
+    print(SDImageCacheOptions.self) // SDWebImage
   }
 }
