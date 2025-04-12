@@ -18,6 +18,10 @@ module XCCache
           self
         end
 
+        def dependencies
+          @dependencies ||= fetch("dependencies", Dependency)
+        end
+
         def products
           @products ||= fetch("products", Product)
         end

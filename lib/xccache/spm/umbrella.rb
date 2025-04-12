@@ -24,7 +24,6 @@ module XCCache
     def prepare
       UI.section("Preparing umbrella package") do
         create
-        create_symlinks
         resolve
       end
       resolve_recursive_dependencies
@@ -32,9 +31,8 @@ module XCCache
     end
 
     def resolve
-      UI.section("Resolving umbrella package dependencies") do
-        pkg.resolve
-      end
+      pkg.resolve
+      create_symlinks
     end
 
     def build(options = {})
@@ -95,7 +93,7 @@ module XCCache
     def write_manifest(force: false)
       return if @did_write_manifest && !force
 
-      UI.message("Writing umbrella manifest Package.swift")
+      UI.message("Writing Package.swift (package: #{path.basename.to_s.dark})")
       Template.new("umbrella.Package.swift").render(
         {
           :json => manifest_targets_json,
@@ -114,14 +112,8 @@ module XCCache
       @checkouts_dir ||= path / ".build" / "checkouts"
     end
 
-    def local_checkouts_dir
-      @local_checkouts_dir ||= Dir.prepare(path / ".local")
-    end
-
     def checkouts_dirs
-      (checkouts_dir.glob("*") + local_checkouts_dir.glob("*")).reject do |p|
-        p.glob("Package*.swift").empty?
-      end
+      checkouts_dir.glob("*").reject { |p| p.glob("Package*.swift").empty? }
     end
 
     def create
@@ -134,13 +126,10 @@ module XCCache
     end
 
     def create_symlinks
-      # Symlinks to local packages
-      projects.flat_map(&:pkgs).select(&:local?).reject(&:xccache_pkg?).uniq(&:slug).each do |pkg|
-        pkg.absolute_path.symlink_to(local_checkouts_dir / File.basename(pkg.absolute_path))
-      end
       # Symlinks for convenience
       (path / "binaries").symlink_to(path.parent / "binaries")
       (path / ".build").symlink_to(path.parent / ".build")
+      (path / ".build/checkouts").symlink_to(path.parent / "checkouts")
     end
 
     def manifest_targets_json
