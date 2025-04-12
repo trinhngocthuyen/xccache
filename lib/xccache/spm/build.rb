@@ -40,8 +40,9 @@ module XCCache
       def resolve(force: false)
         return if @resolved && !force
 
-        UI.message("Resolving package dependencies of package #{root_dir.basename.to_s.dark}")
+        UI.message("Resolving package dependencies (package: #{root_dir.basename.to_s.dark})")
         Sh.run("swift package resolve --package-path #{root_dir} 2>&1")
+        create_symlinks_to_local_pkgs
         @resolved = true
       end
 
@@ -59,7 +60,6 @@ module XCCache
           )
           # Otherwise, it's inside one of the dependencies. Need to resolve then find it
           resolve
-          # FIXME: Handle local packages
           root_dir.glob(".build/checkouts/*").each do |dir|
             desc = Description.in_dir(dir)
             return desc if desc.has_target?(name)
@@ -74,6 +74,12 @@ module XCCache
 
       def pkg_desc
         @pkg_desc ||= Description.in_dir(root_dir)
+      end
+
+      def create_symlinks_to_local_pkgs
+        pkg_desc.dependencies.select(&:local?).each do |dep|
+          dep.path.symlink_to(root_dir / ".build/checkouts/#{dep.slug}")
+        end
       end
     end
   end
