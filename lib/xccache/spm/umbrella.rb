@@ -135,7 +135,7 @@ module XCCache
     def manifest_targets_json
       data = cachemap.cache_data.values.flat_map do |hash|
         hash.map do |target_name, deps|
-          deps = deps.reject { |d| cachemap.miss?(d) && lockfile.implicit_dependency?(d) }
+          deps = deps.reject { |d| cachemap.miss?(d) && lockfile.implicit_dependency?(d) }.uniq
           ["#{target_name}.xccache", deps]
         end
       end.to_h

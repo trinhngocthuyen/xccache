@@ -16,7 +16,7 @@ module XCCache
         raw["_deps_"] = depmap
         projects.each do |project|
           target_deps = lockfile[project.display_name]["dependencies"].to_h do |target_name, products|
-            deps = products.flat_map { |p| depmap[p] || [p] }.map { |d| hit?(d) ? "#{d}.binary" : d }
+            deps = products.flat_map { |p| depmap[p] || [p] }.map { |d| hit?(d) ? "#{d}.binary" : d }.uniq
             [target_name, deps]
           end
           raw[project.display_name] = target_deps
