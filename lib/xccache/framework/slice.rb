@@ -137,8 +137,20 @@ module XCCache
       end
 
       def copy_resource_bundles
+        resolve_resource_symlinks
         UI.message("Copy resource bundle to framework: #{resource_bundle_product_path.basename}")
         resource_bundle_product_path.copy(to_dir: path)
+      end
+
+      def resolve_resource_symlinks
+        # Well, Xcode seems to well handle symlinks in resources. In xcodebuild log, you would see something like:
+        #   CpResource: builtin-copy ... -resolve-src-symlinks
+        # But this is not the case if we build with `swift build`. Here, we have to manually handle it
+        resource_bundle_product_path.glob("**/*").select(&:symlink?).reject(&:exist?).each do |p|
+          UI.message("Resolve resource symlink: #{p}")
+          original = pkg_target.resource_paths.find { |rp| rp.symlink? && rp.readlink == p.readlink }
+          original&.realpath&.copy(to: p)
+        end
       end
 
       def products_dir

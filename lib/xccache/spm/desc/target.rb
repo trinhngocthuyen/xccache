@@ -53,6 +53,16 @@ module XCCache
           end
         end
 
+        def resource_paths
+          @resource_paths ||= begin
+            res = raw.fetch("resources", []).map { |h| sources_path / h["path"] }
+            # Refer to the following link for the implicit resources
+            # https://developer.apple.com/documentation/xcode/bundling-resources-with-a-swift-package#Add-resource-files
+            implicit = sources_path.glob("*.{xcassets,xib,storyboard,xcdatamodeld,lproj}")
+            res + implicit
+          end
+        end
+
         def recursive_targets(platform: nil)
           raw["dependencies"].flat_map do |hash|
             dep_type = ["byName", "target", "product"].find { |k| hash.key?(k) }

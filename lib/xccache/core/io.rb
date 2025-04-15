@@ -22,6 +22,7 @@ class Pathname
 
   def copy(to: nil, to_dir: nil)
     dst = to || (Pathname(to_dir) / basename)
+    dst.rmtree if dst.exist? || dst.symlink?
     FileUtils.copy_entry(self, dst)
     dst
   end
