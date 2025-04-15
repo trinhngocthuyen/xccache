@@ -30,9 +30,12 @@ enum XCCache {
   // MARK: Config
   @MainActor
   struct Config {
-    static let pkgDir = URL(filePath: #filePath).deletingLastPathComponent()
-    static let binariesDir = pkgDir.appending(path: "binaries")
     static let knownSlugs: [String] = DEPENDENCIES.map(\.slug)
+    static let pkgDir = URL(filePath: #filePath).deletingLastPathComponent()
+
+    // NOTE: Do NOT change `binariesDir` to `static let`
+    // Somehow, incremental resolution doesnt work causing the `binaryExist` wrongly cached
+    static var binariesDir: URL { pkgDir.appending(path: "binaries") }
   }
 
   // MARK: Package
@@ -95,8 +98,8 @@ enum XCCache {
     private var isKnownSlug: Bool { Config.knownSlugs.contains(name.slug) }
 
     func toSPM() -> PackageDescription.Target.Dependency? {
-      if isBinary { return binaryExist ? .byName(name: name) : nil }
-      if isKnownSlug { return .product(name: name.basename, package: name.slug) }
+      if isBinary && binaryExist { return .byName(name: name) }
+      if isKnownSlug { return .product(name: name.basename.withoutBinary, package: name.slug) }
       return nil
     }
     func toSPMBinaryTarget() -> PackageDescription.Target? {
@@ -125,4 +128,5 @@ extension String {
   var slug: String { (self as NSString).deletingLastPathComponent.basename }
   var basename: String { (self as NSString).lastPathComponent }
   var withoutExtenstion: String { (self as NSString).deletingPathExtension }
+  var withoutBinary: String { replacing(#/\.binary$/#, with: "") }
 }
