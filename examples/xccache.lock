@@ -38,6 +38,7 @@
       "EX": [
         "SwiftyBeaver/SwiftyBeaver",
         "Moya/Moya",
+        "core-utils/DebugKit",
         "core-utils/ResourceKit",
         "core-utils/Swizzler",
         "ios-maps-sdk/GoogleMaps",

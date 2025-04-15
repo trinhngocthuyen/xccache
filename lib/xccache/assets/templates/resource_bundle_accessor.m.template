@@ -1,0 +1,27 @@
+#import <Foundation/Foundation.h>
+
+@interface BundleFinder : NSObject
+@end
+
+@implementation BundleFinder
+@end
+
+NSBundle* <%= target %>_SWIFTPM_MODULE_BUNDLE() {
+  NSString *bundleName = @"<%= pkg %>_<%= target %>";
+  NSArray<NSURL *> *candidates = @[
+    NSBundle.mainBundle.resourceURL,
+    [NSBundle bundleForClass:[BundleFinder class]].resourceURL,
+    NSBundle.mainBundle.bundleURL,
+    [NSBundle.mainBundle.bundleURL URLByAppendingPathComponent:@"Frameworks/<%= target %>.framework"]
+  ];
+
+  for (NSURL *candidate in candidates) {
+    NSURL *bundlePath = [candidate URLByAppendingPathComponent:[bundleName stringByAppendingString:@".bundle"]];
+    NSBundle *bundle = [NSBundle bundleWithURL:bundlePath];
+    if (bundle) {
+      return bundle;
+    }
+  }
+  [NSException raise:NSInternalInconsistencyException format:@"Unable to find bundle named %@", bundleName];
+  return nil;
+}

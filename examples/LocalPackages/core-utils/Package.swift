@@ -8,12 +8,18 @@ let package = Package(
   products: [
     .library(name: "Swizzler", targets: ["Swizzler"]),
     .library(name: "ResourceKit", targets: ["ResourceKit"]),
+    .library(name: "DebugKit", targets: ["DebugKit"]),
   ],
   targets: [
     .target(name: "Swizzler"),
     .target(
       name: "ResourceKit",
       resources: [.copy("greetings.txt")]
+    ),
+    .target(
+      name: "DebugKit",
+      path: "Sources/DebugKitObjc",
+      resources: [.copy("token.txt")]
     ),
   ]
 )
