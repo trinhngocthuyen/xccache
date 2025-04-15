@@ -18,6 +18,9 @@ cache.viz:
 build:
 	cicd ios build
 
+test:
+	cicd ios test
+
 check:
 	rm -rf xccache/packages/umbrella/.build xccache/cachemap.json
 	make cache.build build

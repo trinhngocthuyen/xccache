@@ -1,12 +1,13 @@
 import SwiftUI
+import ResourceKit
 
 struct ContentView: View {
   var body: some View {
     VStack {
-      Image(systemName: "globe")
-        .imageScale(.large)
-        .foregroundStyle(.tint)
-      Text("Hello, world!")
+      Spacer()
+      Text(ResourceKit.greetings() ?? "N/A").font(.title)
+      Spacer()
+      Text("ResourceKit.bundle = \(ResourceKit.bundle.bundlePath)").font(.footnote)
     }
     .padding()
   }

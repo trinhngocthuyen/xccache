@@ -38,10 +38,12 @@
       "EX": [
         "SwiftyBeaver/SwiftyBeaver",
         "Moya/Moya",
+        "core-utils/ResourceKit",
         "core-utils/Swizzler",
         "ios-maps-sdk/GoogleMaps",
         "SDWebImage/SDWebImage"
-      ]
+      ],
+      "EXTests": []
     }
   }
 }

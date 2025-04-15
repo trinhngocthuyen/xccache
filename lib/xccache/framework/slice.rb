@@ -31,11 +31,41 @@ module XCCache
         end
       end
 
+      private
+
+      def override_resource_bundle_accessor
+        # By default, Swift generates resource_bundle_accessor.swift for targets having resources
+        # (Check .build/<Target>.build/DerivedSources/resource_bundle_accessor.swift)
+        # This enables accessing the resource bundle via `Bundle.module`.
+        # However, `Bundle.module` expects the resource bundle to be under the app bundle,
+        # which is not the case for binary targets. Instead the bundle is under `Frameworks/<Target>.framework`
+        # WORKAROUND:
+        # - Overriding resource_bundle_accessor.swift to add `Frameworks/<Target>.framework` to the search list
+        # - Compiling this file into an `.o` file before using `libtool` to create the framework binary
+        UI.message("Override resource_bundle_accessor")
+        source_path = tmpdir / "resource_bundle_accessor.swift"
+        Template.new("bundle.module.swift").render(
+          { :pkg => pkg_target.pkg_name, :target => name },
+          save_to: source_path
+        )
+
+        cmd = ["xcrun", "swiftc"]
+        cmd << "-emit-library" << "-emit-object"
+        cmd << "-module-name" << name
+        cmd << "-target" << sdk.triple
+        cmd << "-sdk" << sdk.sdk_path
+        cmd << "-o" << (products_dir / "#{name}.build/resource_bundle_accessor.o").to_s
+        cmd << source_path
+        Sh.run(cmd)
+      end
+
       def create_framework
+        override_resource_bundle_accessor if resource_bundle_product_path.exist?
         create_info_plist
         create_framework_binary
         create_headers
         create_modules
+        copy_resource_bundles if resource_bundle_product_path.exist?
       end
 
       def create_framework_binary
@@ -75,8 +105,6 @@ module XCCache
         )
       end
 
-      private
-
       def copy_headers
         UI.message("Copying headers")
         framework_headers_path = path / "Headers"
@@ -99,6 +127,11 @@ module XCCache
         end
       end
 
+      def copy_resource_bundles
+        UI.message("Copy resource bundle to framework: #{resource_bundle_product_path.basename}")
+        resource_bundle_product_path.copy(to_dir: path)
+      end
+
       def products_dir
         @products_dir ||= pkg_dir / ".build" / sdk.triple / config
       end
@@ -116,6 +149,10 @@ module XCCache
 
       def pkg_target
         @pkg_target ||= pkg_desc.get_target(name)
+      end
+
+      def resource_bundle_product_path
+        @resource_bundle_product_path ||= products_dir / pkg_target.bundle_name
       end
     end
   end

@@ -11,9 +11,21 @@
 		F577C6A92D96A3BD00C83C96 /* config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F577C6A82D96A3BD00C83C96 /* config.xcconfig */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		F5AF0FA02DAE09EF00AB812D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F577C6272D96971200C83C96 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F577C62E2D96971200C83C96;
+			remoteInfo = EX;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		F577C62F2D96971200C83C96 /* EX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F577C6A82D96A3BD00C83C96 /* config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = config.xcconfig; sourceTree = "<group>"; };
+		F5AF0F9C2DAE09EF00AB812D /* EXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5AF0FA52DAE0A7300AB812D /* EX.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EX.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -31,6 +43,13 @@
 			path = .xcconfigs;
 			sourceTree = "<group>";
 		};
+		F5AF0F9D2DAE09EF00AB812D /* EXTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			path = EXTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,15 +61,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F5AF0F992DAE09EF00AB812D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		F577C6262D96971200C83C96 = {
 			isa = PBXGroup;
 			children = (
+				F5AF0FA52DAE0A7300AB812D /* EX.xctestplan */,
 				F577C6A82D96A3BD00C83C96 /* config.xcconfig */,
 				F577C70A2D96CD1C00C83C96 /* .xcconfigs */,
 				F577C6312D96971200C83C96 /* EX */,
+				F5AF0F9D2DAE09EF00AB812D /* EXTests */,
 				F577C73D2D99B03000C83C96 /* Frameworks */,
 				F577C6302D96971200C83C96 /* Products */,
 			);
@@ -60,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				F577C62F2D96971200C83C96 /* EX.app */,
+				F5AF0F9C2DAE09EF00AB812D /* EXTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -97,6 +126,30 @@
 			productReference = F577C62F2D96971200C83C96 /* EX.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F5AF0F9B2DAE09EF00AB812D /* EXTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5AF0FA42DAE09EF00AB812D /* Build configuration list for PBXNativeTarget "EXTests" */;
+			buildPhases = (
+				F5AF0F982DAE09EF00AB812D /* Sources */,
+				F5AF0F992DAE09EF00AB812D /* Frameworks */,
+				F5AF0F9A2DAE09EF00AB812D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F5AF0FA12DAE09EF00AB812D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				F5AF0F9D2DAE09EF00AB812D /* EXTests */,
+			);
+			name = EXTests;
+			packageProductDependencies = (
+				4ED0A0AC1D877357F53D194E /* EXTests.xccache */,
+			);
+			productName = EXTests;
+			productReference = F5AF0F9C2DAE09EF00AB812D /* EXTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -109,6 +162,10 @@
 				TargetAttributes = {
 					F577C62E2D96971200C83C96 = {
 						CreatedOnToolsVersion = 16.2;
+					};
+					F5AF0F9B2DAE09EF00AB812D = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = F577C62E2D96971200C83C96;
 					};
 				};
 			};
@@ -135,6 +192,7 @@
 			projectRoot = "";
 			targets = (
 				F577C62E2D96971200C83C96 /* EX */,
+				F5AF0F9B2DAE09EF00AB812D /* EXTests */,
 			);
 		};
 /* End PBXProject section */
@@ -148,6 +206,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F5AF0F9A2DAE09EF00AB812D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -158,7 +223,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F5AF0F982DAE09EF00AB812D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F5AF0FA12DAE09EF00AB812D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F577C62E2D96971200C83C96 /* EX */;
+			targetProxy = F5AF0FA02DAE09EF00AB812D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		F577C63B2D96971300C83C96 /* Debug */ = {
@@ -338,6 +418,40 @@
 			};
 			name = Release;
 		};
+		F5AF0FA22DAE09EF00AB812D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thuyen.EXTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EX.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EX";
+			};
+			name = Debug;
+		};
+		F5AF0FA32DAE09EF00AB812D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thuyen.EXTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EX.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EX";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -355,6 +469,15 @@
 			buildConfigurations = (
 				F577C63E2D96971300C83C96 /* Debug */,
 				F577C63F2D96971300C83C96 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5AF0FA42DAE09EF00AB812D /* Build configuration list for PBXNativeTarget "EXTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5AF0FA22DAE09EF00AB812D /* Debug */,
+				F5AF0FA32DAE09EF00AB812D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -408,6 +531,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4ED0A0AC1D877357F53D194E /* EXTests.xccache */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */;
+			productName = EXTests.xccache;
+		};
 		72815BF879FB306E2CE3E550 /* EX.xccache */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */;
