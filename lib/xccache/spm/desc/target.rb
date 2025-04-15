@@ -8,6 +8,10 @@ module XCCache
           @type ||= raw["type"].to_sym
         end
 
+        def bundle_name
+          "#{pkg_name}_#{name}.bundle"
+        end
+
         def sources_path
           @sources_path ||= begin
             path = raw["path"] || "Sources/#{name}"

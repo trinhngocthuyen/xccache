@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "DA9D28D2-8487-4286-9EC0-082D1A2FA0C3",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:EX.xcodeproj",
+      "identifier" : "F577C62E2D96971200C83C96",
+      "name" : "EX"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:EX.xcodeproj",
+        "identifier" : "F5AF0F9B2DAE09EF00AB812D",
+        "name" : "EXTests"
+      }
+    }
+  ],
+  "version" : 1
+}
