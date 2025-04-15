@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F50E8E3C2DA668CA00D96A31 /* EX.xccache in Frameworks */ = {isa = PBXBuildFile; productRef = 72815BF879FB306E2CE3E550 /* EX.xccache */; };
 		F577C6A92D96A3BD00C83C96 /* config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F577C6A82D96A3BD00C83C96 /* config.xcconfig */; };
+		F5AF10312DAE15A400AB812D /* EXTests.xccache in Frameworks */ = {isa = PBXBuildFile; productRef = 4ED0A0AC1D877357F53D194E /* EXTests.xccache */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5AF10312DAE15A400AB812D /* EXTests.xccache in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

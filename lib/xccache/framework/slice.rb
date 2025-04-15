@@ -43,19 +43,28 @@ module XCCache
         # - Overriding resource_bundle_accessor.swift to add `Frameworks/<Target>.framework` to the search list
         # - Compiling this file into an `.o` file before using `libtool` to create the framework binary
         UI.message("Override resource_bundle_accessor")
-        source_path = tmpdir / "resource_bundle_accessor.swift"
-        Template.new("bundle.module.swift").render(
+        template_name = use_clang? ? "resource_bundle_accessor.m" : "resource_bundle_accessor.swift"
+        source_path = tmpdir / File.basename(template_name)
+        obj_path = products_dir / "#{name}.build" / "#{source_path.basename}.o"
+        Template.new(template_name).render(
           { :pkg => pkg_target.pkg_name, :target => name },
           save_to: source_path
         )
 
-        cmd = ["xcrun", "swiftc"]
-        cmd << "-emit-library" << "-emit-object"
-        cmd << "-module-name" << name
-        cmd << "-target" << sdk.triple
-        cmd << "-sdk" << sdk.sdk_path
-        cmd << "-o" << (products_dir / "#{name}.build/resource_bundle_accessor.o").to_s
-        cmd << source_path
+        if use_clang?
+          cmd = ["xcrun", "clang"]
+          cmd << "-x" << "objective-c"
+          cmd << "-target" << sdk.triple << "-isysroot" << sdk.sdk_path
+          cmd << "-o" << obj_path.to_s
+          cmd << "-c" << source_path
+        else
+          cmd = ["xcrun", "swiftc"]
+          cmd << "-emit-library" << "-emit-object"
+          cmd << "-module-name" << name
+          cmd << "-target" << sdk.triple << "-sdk" << sdk.sdk_path
+          cmd << "-o" << obj_path.to_s
+          cmd << source_path
+        end
         Sh.run(cmd)
       end
 

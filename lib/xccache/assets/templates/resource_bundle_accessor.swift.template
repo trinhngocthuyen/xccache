@@ -19,6 +19,6 @@ extension Bundle {
         return bundle
       }
     }
-    fatalError("unable to find bundle named <%= pkg %>_<%= target %>")
+    fatalError("unable to find bundle named \(bundleName)")
   }()
 }
