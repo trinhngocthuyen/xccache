@@ -4,42 +4,76 @@ module XCCache
   module Cache
     class Cachemap < JSONRepresentable
       def deps_data
-        raw["_deps_"]
+        raw["deps"] ||= {}
       end
 
       def cache_data
-        raw.reject { |k, _| k == "_deps_" }
+        raw["cache"] ||= { "hit" => [], "missed" => {} }
       end
 
-      def sync!(lockfile, projects, depmap)
-        # FIXME: Handle upstream/downstream cache invalidation
-        raw["_deps_"] = depmap
-        projects.each do |project|
-          target_deps = lockfile[project.display_name]["dependencies"].to_h do |target_name, products|
-            deps = products.flat_map { |p| depmap[p] || [p] }.map { |d| hit?(d) ? "#{d}.binary" : d }.uniq
-            [target_name, deps]
-          end
-          raw[project.display_name] = target_deps
+      def targets_data
+        raw["targets"] ||= {}
+      end
+
+      def sync!(lockfile, _projects, depmap)
+        # Hit/missed targets
+        hit, missed =
+          lockfile
+          .product_dependencies
+          .flat_map { |p| depmap[p] || [p] }.uniq
+          .partition { |d| binary_path(d).exist? && !Config.instance.ignore?(d) }
+
+        # binding.pry
+
+        hit_products, missed_products = [], {}
+        lockfile.product_dependencies.each do |product|
+          deps = depmap[product] || [product]
+          missing = deps.difference(hit)
+          hit_products << product if missing.empty?
+          missed_products[product] = "missed targets: #{missing.join(', ')}" unless missing.empty?
+        end
+
+        lockfile.product_dependencies_by_targets.each do |target_name, products|
+          targets_data["#{target_name}.xccache"] = products.flat_map do |product|
+            next product unless hit_products.include?(product)
+            depmap[product].map { |x| "#{x}.binary" }
+          end.uniq
+        end
+
+        raw["deps"] = depmap
+        raw["cache"] = {
+          "hit" => hit,
+          "missed" => missed,
+          "hit_products" => hit_products,
+          "missed_products" => missed_products,
+        }
+        unless missed_products.empty?
+          UI.message("Cache missed (products):\n#{JSON.pretty_generate(missed_products).yellow.dark}")
         end
         save
       end
 
       def hit?(name)
-        binary_path(name).exist?
+        cache_data["hit"].include?(name) && !Config.instance.ignore?(name)
       end
 
       def miss?(name)
         !hit?(name)
       end
 
-      def missed
-        all_items = cache_data.values.flat_map { |h| h.values.flatten }
-        all_items.select { |x| miss?(x) }.map { |x| x.split("/")[-1] }
+      def missed_targets
+        cache_data
+          .fetch("missed_products", {}).keys
+          .flat_map { |p| deps_data[p] }.uniq
+          .reject { |x| hit?(x) }
+          .map { |x| x.split("/").last }
       end
+
+      private
 
       def binary_path(name)
         basename = File.basename(name, ".binary")
-        XCCache::Config.instance.spm_binaries_frameworks_dir / "#{basename}.xcframework"
+        Config.instance.spm_binaries_frameworks_dir / "#{basename}.xcframework"
       end
     end
   end

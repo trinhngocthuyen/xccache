@@ -45,7 +45,10 @@ module XCCache
         end
 
         def resolve_recursive_dependencies(platform: nil)
-          products.to_h { |p| [p, p.recursive_targets(platform: platform)] }
+          @recursive_dependencies ||= {}
+          @recursive_dependencies[platform] = products.to_h do |p|
+            [p, p.recursive_targets(platform: platform)]
+          end
         end
       end
     end
