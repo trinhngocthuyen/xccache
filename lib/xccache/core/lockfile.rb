@@ -3,19 +3,23 @@ require "xccache/core/syntax/json"
 module XCCache
   class Lockfile < JSONRepresentable
     def hash_for_project(project)
-      raw[project.display_name] || {}
+      raw[project.display_name] ||= {}
+    end
+
+    def product_dependencies_by_targets
+      @product_dependencies_by_targets ||= raw.values.map { |h| h["dependencies"] }.reduce { |acc, h| acc.merge(h) }
     end
 
     def deep_merge!(hash)
       raw.deep_merge!(hash)
     end
 
-    def all_explicit_dependencies
-      raw.values.flat_map { |h| h["dependencies"].values.flatten }
+    def product_dependencies
+      @product_dependencies ||= product_dependencies_by_targets.values.flatten.uniq
     end
 
-    def implicit_dependency?(name)
-      !all_explicit_dependencies.include?(name)
+    def targets_data
+      @targets_data ||= product_dependencies_by_targets.transform_keys { |k| "#{k}.xccache" }
     end
   end
 end

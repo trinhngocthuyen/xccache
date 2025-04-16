@@ -21,9 +21,8 @@ module XCCache
         end
 
         def recursive_targets(platform: nil)
-          children = targets.flat_map { |t| t.recursive_targets(platform: platform) }
-          # TODO: Check platform for targets
-          targets + children
+          @recursive_targets ||= {}
+          @recursive_targets[platform] = targets + targets.flat_map { |t| t.recursive_targets(platform: platform) }
         end
       end
     end

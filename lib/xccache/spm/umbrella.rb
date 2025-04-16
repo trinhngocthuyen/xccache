@@ -51,17 +51,17 @@ module XCCache
 
     def targets_to_build(options)
       items = options[:targets]
-      items = cachemap.missed if items.nil? || items.empty?
+      items = cachemap.missed_targets if items.nil? || items.empty?
       items = items.split(",") if items.is_a?(String)
+      items = items.map do |name|
+        @pkg_descs.flat_map(&:targets).find { |p| p.name == name }.full_name
+      end
       to_discard = items.select { |x| config.ignore?(x) }
       unless to_discard.empty?
         UI.message("Don't build #{to_discard.to_s.dark} (reason: ignored in the config)")
         items = items.difference(to_discard)
       end
-
-      items.map do |name|
-        @pkg_descs.flat_map(&:targets).find { |p| p.name == name }.full_name
-      end
+      items
     end
 
     def gen_metadata
@@ -133,12 +133,8 @@ module XCCache
     end
 
     def manifest_targets_json
-      data = cachemap.cache_data.values.flat_map do |hash|
-        hash.map do |target_name, deps|
-          deps = deps.reject { |d| cachemap.miss?(d) && lockfile.implicit_dependency?(d) }
-          ["#{target_name}.xccache", deps]
-        end
-      end.to_h
+      # Initially, write json with the original data in lockfile (without cache)
+      data = @did_write_manifest ? cachemap.targets_data : lockfile.targets_data
       JSON.pretty_generate("targets" => data)
     end
 
