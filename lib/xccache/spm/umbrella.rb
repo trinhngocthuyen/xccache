@@ -134,6 +134,11 @@ module XCCache
     end
 
     def create_symlinks_to_artifacts
+      # Clean up broken symlinks
+      config.spm_binaries_frameworks_dir.glob("*.xcframework").each do |p|
+        p.rmtree if p.symlink? && !p.readlink.exist?
+      end
+
       binary_targets = @dependencies.values.flatten.uniq.select(&:binary?)
       UI.message("Creating symlinks to binary artifacts of targets: #{binary_targets.map(&:full_name).to_s.dark}")
       binary_targets.each do |target|
