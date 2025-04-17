@@ -7,6 +7,7 @@ module XCCache
     Dir["#{__dir__}/#{File.basename(__FILE__, '.rb')}/*.rb"].sort.each { |f| require f }
 
     self.abstract_command = true
+    self.default_subcommand = "use"
     self.summary = "xccache - a build caching tool"
 
     def initialize(argv)
