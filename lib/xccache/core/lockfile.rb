@@ -14,6 +14,18 @@ module XCCache
       raw.deep_merge!(hash)
     end
 
+    def pkgs
+      @pkgs ||= raw.values.flat_map { |h| h["packages"] || [] }
+    end
+
+    def local_pkgs
+      @local_pkgs ||= pkgs.select { |h| h.key?("relative_path") || h.key?("path") }
+    end
+
+    def local_pkg_slugs
+      @local_pkg_slugs ||= local_pkgs.map { |h| File.basename(h["relative_path"] || h["path"]) }.uniq
+    end
+
     def product_dependencies
       @product_dependencies ||= product_dependencies_by_targets.values.flatten.uniq
     end

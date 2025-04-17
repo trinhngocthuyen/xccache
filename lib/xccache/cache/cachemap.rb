@@ -17,18 +17,22 @@ module XCCache
 
       def sync!(lockfile, depmap)
         # Hit/missed targets
-        hit, missed =
-          lockfile
+        hit, missed = [], {}
+        lockfile
           .product_dependencies
           .flat_map { |p| depmap[p] || [p] }.uniq
-          .partition { |d| binary_path(d).exist? && !Config.instance.ignore?(d) }
+          .each do |d|
+            hit << d if !ignore?(d) && binary_exist?(d)
+            missed[d] = "no binary" unless binary_exist?(d)
+            missed[d] = "ignored" if ignore?(d)
+          end
 
         hit_products, missed_products = [], {}
         lockfile.product_dependencies.each do |product|
           deps = depmap[product] || [product]
-          missing = deps.difference(hit)
+          missing = deps.intersection(missed.keys)
           hit_products << product if missing.empty?
-          missed_products[product] = "missed targets: #{missing.join(', ')}" unless missing.empty?
+          missed_products[product] = missing.map { |d| "#{d} (#{missed[d]})" }.join(", ") unless missing.empty?
         end
 
         lockfile.product_dependencies_by_targets.each do |target_name, products|
@@ -52,26 +56,26 @@ module XCCache
       end
 
       def hit?(name)
-        cache_data["hit"].include?(name) && !Config.instance.ignore?(name)
-      end
-
-      def miss?(name)
-        !hit?(name)
+        cache_data["hit"].include?(name) && !ignore?(name)
       end
 
       def missed_targets
         cache_data
           .fetch("missed_products", {}).keys
           .flat_map { |p| deps_data[p] }.uniq
-          .reject { |x| hit?(x) }
+          .reject { |x| hit?(x) || ignore?(x) }
           .map { |x| x.split("/").last }
       end
 
       private
 
-      def binary_path(name)
+      def binary_exist?(name)
         basename = File.basename(name, ".binary")
-        Config.instance.spm_binaries_frameworks_dir / "#{basename}.xcframework"
+        (Config.instance.spm_binaries_frameworks_dir / "#{basename}.xcframework").exist?
+      end
+
+      def ignore?(name)
+        Config.instance.ignore?(name)
       end
     end
   end

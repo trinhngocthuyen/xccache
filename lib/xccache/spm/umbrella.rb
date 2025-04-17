@@ -37,7 +37,7 @@ module XCCache
 
     def build(options = {})
       to_build = targets_to_build(options)
-      return UI.warn("No targets to build. Possibly because cache was all hit") if to_build.empty?
+      return UI.warn("No targets to build, possibly due to all-hit for non-ignored targets/products") if to_build.empty?
 
       UI.info("-> Targets to build: #{to_build.to_s.bold}")
       pkg.build(options.merge(:targets => to_build))
@@ -53,15 +53,9 @@ module XCCache
       items = options[:targets]
       items = cachemap.missed_targets if items.nil? || items.empty?
       items = items.split(",") if items.is_a?(String)
-      items = items.map do |name|
+      items.map do |name|
         @pkg_descs.flat_map(&:targets).find { |p| p.name == name }.full_name
       end
-      to_discard = items.select { |x| config.ignore?(x) }
-      unless to_discard.empty?
-        UI.message("Don't build #{to_discard.to_s.dark} (reason: ignored in the config)")
-        items = items.difference(to_discard)
-      end
-      items
     end
 
     def gen_metadata

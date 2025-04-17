@@ -63,7 +63,12 @@ module XCCache
     end
 
     def ignore?(item)
+      return true if ignore_local? && lockfile.local_pkg_slugs.include?(item.split("/").first)
       ignore_list.any? { |p| File.fnmatch(p, item) }
+    end
+
+    def ignore_local?
+      raw["ignore_local"]
     end
   end
 end
