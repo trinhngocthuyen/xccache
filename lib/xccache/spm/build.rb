@@ -29,6 +29,10 @@ module XCCache
 
       def build_target(target: nil, sdk: nil, config: nil, out_dir: nil, **options)
         target_pkg_desc = pkg_desc_of_target(target)
+        if target_pkg_desc.binary_targets.any? { |t| t.name == target }
+          return UI.warn("Target #{target} is a binary target -> no need to build")
+        end
+
         sdks = (sdk || "iphonesimulator").split(",")
 
         out_dir = Pathname(out_dir || ".")
