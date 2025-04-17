@@ -86,15 +86,17 @@ enum XCCache {
   @MainActor
   class Dependency {
     let name: String
+    private let bareName: String
     private let binaryName: String
 
     init(_ name: String) {
       self.name = name
-      self.binaryName = name.basename.withoutExtenstion + ".xcframework"
+      self.bareName = name.basename.withoutExtenstion
+      self.binaryName = bareName + ".xcframework"
     }
 
     private var isBinary: Bool { name.hasSuffix(".binary") }
-    private var binaryExist: Bool { Config.binariesDir.appending(path: binaryName).exist }
+    private var binaryExist: Bool { Config.binariesDir.appending(path: "\(bareName)/\(binaryName)").exist }
     private var isKnownSlug: Bool { Config.knownSlugs.contains(name.slug) }
 
     func toSPM() -> PackageDescription.Target.Dependency? {
@@ -103,7 +105,7 @@ enum XCCache {
       return nil
     }
     func toSPMBinaryTarget() -> PackageDescription.Target? {
-      isBinary && binaryExist ? .binaryTarget(name: name, path: "binaries/\(binaryName)") : nil
+      isBinary && binaryExist ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(binaryName)") : nil
     }
   }
 }

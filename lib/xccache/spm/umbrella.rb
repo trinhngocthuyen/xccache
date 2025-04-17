@@ -46,7 +46,7 @@ module XCCache
 
     def sync_cachemap
       UI.section("Syncing cachemap")
-      cachemap.sync!(lockfile, @raw_dependencies)
+      cachemap.sync!(lockfile, @raw_dependencies, @pkg_descs_by_name)
     end
 
     def targets_to_build(options)
@@ -129,14 +129,14 @@ module XCCache
 
     def create_symlinks_to_artifacts
       # Clean up broken symlinks
-      config.spm_binaries_frameworks_dir.glob("*.xcframework").each do |p|
+      config.spm_binaries_frameworks_dir.glob("*/*.xcframework").each do |p|
         p.rmtree if p.symlink? && !p.readlink.exist?
       end
 
       binary_targets = @dependencies.values.flatten.uniq.select(&:binary?)
       UI.message("Creating symlinks to binary artifacts of targets: #{binary_targets.map(&:full_name).to_s.dark}")
       binary_targets.each do |target|
-        dst_path = config.spm_binaries_frameworks_dir / "#{target.name}.xcframework"
+        dst_path = config.spm_binaries_frameworks_dir / target.name / "#{target.name}.xcframework"
         # For local xcframework, just symlink to the path
         # Zip frameworks (either of local or remote pkgs) are unzipped in the build artifacts
         target.local_binary_path.symlink_to(dst_path) if target.local_binary_path&.extname == ".xcframework"
