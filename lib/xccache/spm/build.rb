@@ -13,6 +13,7 @@ module XCCache
       end
 
       def build(options = {})
+        validate!
         targets = options.delete(:targets) || []
         targets = targets.split(",") if targets.is_a?(String)
         raise GeneralError, "No targets were specified" if targets.empty?
@@ -47,6 +48,11 @@ module XCCache
       end
 
       private
+
+      def validate!
+        return unless root_dir.glob("Package*.swift").empty?
+        raise GeneralError, "No Package.swift in #{root_dir}. Are you sure you're running on a package dir?"
+      end
 
       def pkg_desc_of_target(name)
         # TODO: Refactor this resolution logic
