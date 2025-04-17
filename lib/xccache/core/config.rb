@@ -25,7 +25,15 @@ module XCCache
     end
 
     def spm_binaries_frameworks_dir
-      @spm_binaries_frameworks_dir ||= spm_umbrella_sandbox / "binaries"
+      @spm_binaries_frameworks_dir ||= Dir.prepare(spm_umbrella_sandbox / "binaries")
+    end
+
+    def spm_build_dir
+      @spm_build_dir ||= spm_umbrella_sandbox / ".build"
+    end
+
+    def spm_artifacts_dir
+      @spm_artifacts_dir ||= spm_build_dir / "artifacts"
     end
 
     def spm_umbrella_sandbox

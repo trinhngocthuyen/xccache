@@ -90,6 +90,18 @@ module XCCache
         def match_platform?(_condition, _platform)
           true # FIXME: Handle this
         end
+
+        def binary?
+          type == :binary
+        end
+
+        def binary_path
+          sources_path if binary?
+        end
+
+        def local_binary_path
+          binary_path if binary? && root.local?
+        end
       end
     end
   end
