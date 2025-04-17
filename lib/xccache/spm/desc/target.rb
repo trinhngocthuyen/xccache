@@ -4,6 +4,9 @@ module XCCache
   module SPM
     class Package
       class Target < BaseObject
+        include Cacheable
+        cacheable :recursive_targets
+
         def type
           @type ||= raw["type"].to_sym
         end
@@ -64,8 +67,7 @@ module XCCache
         end
 
         def recursive_targets(platform: nil)
-          @recursive_targets ||= {}
-          @recursive_targets[platform] = raw["dependencies"].flat_map do |hash|
+          raw["dependencies"].flat_map do |hash|
             dep_type = ["byName", "target", "product"].find { |k| hash.key?(k) }
             if dep_type.nil?
               raise GeneralError, "Unexpected dependency type. Must be either `byName`, `target`, or `product`."

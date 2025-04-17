@@ -4,6 +4,9 @@ module XCCache
   module SPM
     class Package
       class Description < BaseObject
+        include Cacheable
+        cacheable :resolve_recursive_dependencies
+
         def self.in_dir(dir, save_to_dir: nil)
           path = save_to_dir / "#{dir.basename}.json" unless save_to_dir.nil?
           begin
@@ -45,10 +48,7 @@ module XCCache
         end
 
         def resolve_recursive_dependencies(platform: nil)
-          @recursive_dependencies ||= {}
-          @recursive_dependencies[platform] = products.to_h do |p|
-            [p, p.recursive_targets(platform: platform)]
-          end
+          products.to_h { |p| [p, p.recursive_targets(platform: platform)] }
         end
       end
     end

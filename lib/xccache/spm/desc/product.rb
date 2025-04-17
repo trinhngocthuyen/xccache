@@ -4,6 +4,9 @@ module XCCache
   module SPM
     class Package
       class Product < BaseObject
+        include Cacheable
+        cacheable :recursive_targets
+
         def target_names
           raw["targets"]
         end
@@ -21,8 +24,7 @@ module XCCache
         end
 
         def recursive_targets(platform: nil)
-          @recursive_targets ||= {}
-          @recursive_targets[platform] = targets + targets.flat_map { |t| t.recursive_targets(platform: platform) }
+          targets + targets.flat_map { |t| t.recursive_targets(platform: platform) }
         end
       end
     end
