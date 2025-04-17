@@ -21,20 +21,27 @@ module XCCache
         targets.map { |t| t.split("/")[-1] }.each do |t|
           UI.section("\n▶ Building target: #{t}".bold.magenta) do
             build_target(**options, target: t)
+          rescue StandardError => e
+            UI.error("Failed to build target: #{t}. Error: #{e}")
           end
         end
       end
 
-      def build_target(target: nil, sdk: nil, config: nil, out_dir: nil)
-        out_dir = Pathname(out_dir || ".")
+      def build_target(target: nil, sdk: nil, config: nil, out_dir: nil, **options)
+        target_pkg_desc = pkg_desc_of_target(target)
         sdks = (sdk || "iphonesimulator").split(",")
+
+        out_dir = Pathname(out_dir || ".")
+        out_dir /= target if options[:checksum]
+        basename = options[:checksum] ? "#{target}-#{target_pkg_desc.checksum}.xcframework" : "#{target}.xcframework"
+
         Framework::XCFramework.new(
           name: target,
           pkg_dir: root_dir,
           config: config,
           sdks: sdks,
-          path: out_dir / "#{target}.xcframework",
-          pkg_desc: pkg_desc_of_target(target),
+          path: out_dir / basename,
+          pkg_desc: target_pkg_desc,
         ).create
       end
 

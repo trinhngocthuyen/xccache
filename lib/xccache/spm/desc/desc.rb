@@ -7,11 +7,13 @@ module XCCache
         include Cacheable
         cacheable :resolve_recursive_dependencies
 
-        def self.in_dir(dir, save_to_dir: nil)
+        def self.in_dir(dir, save_to_dir: nil, checksum: true)
           path = save_to_dir / "#{dir.basename}.json" unless save_to_dir.nil?
           begin
             raw = JSON.parse(Sh.capture_output("swift package dump-package --package-path #{dir}"))
-            Description.new(path, raw: raw)
+            this = Description.new(path, raw: raw)
+            this.calc_checksum if checksum
+            this
           rescue StandardError => e
             UI.error("Failed to dump package in #{dir}. Error: #{e}")
           end
@@ -19,6 +21,14 @@ module XCCache
 
         def root
           self
+        end
+
+        def metadata
+          raw["_metadata"] ||= {}
+        end
+
+        def checksum
+          metadata["checksum"]
         end
 
         def dependencies
@@ -31,6 +41,10 @@ module XCCache
 
         def targets
           @targets ||= fetch("targets", Target)
+        end
+
+        def binary_targets
+          @binary_targets ||= targets.select(&:binary?)
         end
 
         def has_target?(name)
@@ -54,6 +68,16 @@ module XCCache
         def local?
           # Workaround: If the pkg dir is under the build checkouts dir -> remote
           !src_dir.to_s.start_with?((config.spm_build_dir / "checkouts").to_s)
+        end
+
+        def calc_checksum
+          metadata["checksum"] = git.nil? ? src_dir.checksum : git.sha
+        end
+
+        private
+
+        def git
+          @git ||= Git.new(src_dir) if Dir.git?(src_dir)
         end
       end
     end

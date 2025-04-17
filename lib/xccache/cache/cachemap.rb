@@ -15,17 +15,32 @@ module XCCache
         raw["targets"] ||= {}
       end
 
-      def sync!(lockfile, depmap)
+      def sync!(lockfile, depmap, pkg_descs_by_name)
+        targets = lockfile.product_dependencies.flat_map { |p| depmap[p] || [p] }.uniq
+        pkg_descs = pkg_descs_by_name.values.flatten.uniq
+        binary_target_names = pkg_descs.flat_map(&:binary_targets).map(&:full_name)
+
+        targets.difference(binary_target_names).each do |d|
+          slug, name = d.split("/")
+          pkg_desc = pkg_descs_by_name[slug]
+          bpath = binary_path(name)
+          bpath_with_checksum = binary_path(name, checksum: pkg_desc.checksum)
+          # If checksum matches, create symlink from `A-abc123.xcframework` -> `A.framework`
+          # Otherwise, remove symlink `A.xcframework`
+          if bpath_with_checksum.exist?
+            bpath_with_checksum.symlink_to(bpath)
+          elsif bpath.symlink?
+            bpath.rmtree
+          end
+        end
+
         # Hit/missed targets
         hit, missed = [], {}
-        lockfile
-          .product_dependencies
-          .flat_map { |p| depmap[p] || [p] }.uniq
-          .each do |d|
-            hit << d if !ignore?(d) && binary_exist?(d)
-            missed[d] = "no binary" unless binary_exist?(d)
-            missed[d] = "ignored" if ignore?(d)
-          end
+        targets.each do |d|
+          hit << d if !ignore?(d) && binary_exist?(d)
+          missed[d] = "no binary" unless binary_exist?(d)
+          missed[d] = "ignored" if ignore?(d)
+        end
 
         hit_products, missed_products = [], {}
         lockfile.product_dependencies.each do |product|
@@ -49,9 +64,7 @@ module XCCache
           "hit_products" => hit_products,
           "missed_products" => missed_products,
         }
-        unless missed_products.empty?
-          UI.message("Cache missed (products):\n#{JSON.pretty_generate(missed_products).yellow.dark}")
-        end
+        print_stats
         save
       end
 
@@ -69,13 +82,29 @@ module XCCache
 
       private
 
+      def binary_path(name, checksum: nil)
+        suffix = checksum.nil? ? "" : "-#{checksum}"
+        p = Config.instance.spm_binaries_frameworks_dir / File.basename(name, ".binary")
+        p / "#{p.basename}#{suffix}.xcframework"
+      end
+
       def binary_exist?(name)
-        basename = File.basename(name, ".binary")
-        (Config.instance.spm_binaries_frameworks_dir / "#{basename}.xcframework").exist?
+        binary_path(name).exist?
       end
 
       def ignore?(name)
         Config.instance.ignore?(name)
+      end
+
+      def print_stats
+        hit_products, missed_products = cache_data["hit_products"], cache_data["missed_products"]
+        UI.message <<~DESC
+          -------------------------------------------------------------------
+          Cache stats
+            • Hit (#{hit_products.count}): #{hit_products.to_s.green.dark}
+            • Missed (#{missed_products.count}):\n#{JSON.pretty_generate(missed_products).yellow.dark}
+          -------------------------------------------------------------------
+        DESC
       end
     end
   end
