@@ -15,15 +15,13 @@ module XCCache
         raw["targets"] ||= {}
       end
 
-      def sync!(lockfile, _projects, depmap)
+      def sync!(lockfile, depmap)
         # Hit/missed targets
         hit, missed =
           lockfile
           .product_dependencies
           .flat_map { |p| depmap[p] || [p] }.uniq
           .partition { |d| binary_path(d).exist? && !Config.instance.ignore?(d) }
-
-        # binding.pry
 
         hit_products, missed_products = [], {}
         lockfile.product_dependencies.each do |product|

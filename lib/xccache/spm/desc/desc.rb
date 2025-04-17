@@ -50,6 +50,11 @@ module XCCache
         def resolve_recursive_dependencies(platform: nil)
           products.to_h { |p| [p, p.recursive_targets(platform: platform)] }
         end
+
+        def local?
+          # Workaround: If the pkg dir is under the build checkouts dir -> remote
+          !src_dir.to_s.start_with?((config.spm_build_dir / "checkouts").to_s)
+        end
       end
     end
   end

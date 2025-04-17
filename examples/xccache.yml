@@ -1,2 +1,2 @@
 ignore:
-  - ios-maps-sdk/GoogleMaps*
+  # - ios-maps-sdk/GoogleMaps*

@@ -46,7 +46,7 @@ module XCCache
 
     def sync_cachemap
       UI.section("Syncing cachemap")
-      cachemap.sync!(lockfile, projects, @raw_dependencies)
+      cachemap.sync!(lockfile, @raw_dependencies)
     end
 
     def targets_to_build(options)
@@ -88,6 +88,7 @@ module XCCache
         end
       end
       @raw_dependencies = @dependencies.to_h { |k, v| [k.full_name, v.map(&:full_name)] }
+      create_symlinks_to_artifacts
     end
 
     def write_manifest(force: false)
@@ -130,6 +131,20 @@ module XCCache
       (path / "binaries").symlink_to(path.parent / "binaries")
       (path / ".build").symlink_to(path.parent / ".build")
       (path / ".build/checkouts").symlink_to(path.parent / "checkouts")
+    end
+
+    def create_symlinks_to_artifacts
+      binary_targets = @dependencies.values.flatten.uniq.select(&:binary?)
+      UI.message("Creating symlinks to binary artifacts of targets: #{binary_targets.map(&:full_name).to_s.dark}")
+      binary_targets.each do |target|
+        dst_path = config.spm_binaries_frameworks_dir / "#{target.name}.xcframework"
+        # For local xcframework, just symlink to the path
+        # Zip frameworks (either of local or remote pkgs) are unzipped in the build artifacts
+        target.local_binary_path.symlink_to(dst_path) if target.local_binary_path&.extname == ".xcframework"
+        config.spm_artifacts_dir.glob("#{target.full_name}/*.xcframework").each do |p|
+          p.symlink_to(dst_path)
+        end
+      end
     end
 
     def manifest_targets_json
