@@ -11,7 +11,7 @@ module XCCache
     end
 
     def deep_merge!(hash)
-      keys = ["repositoryURL", "relative_path"]
+      keys = ["repositoryURL", "path_from_root", "relative_path"]
       raw.deep_merge!(hash, uniq_block: proc do |h|
         h.is_a?(Hash) && (k = keys.find { |k| h.key?(k) }) ? h[k] : h
       end)

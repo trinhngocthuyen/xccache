@@ -48,7 +48,7 @@ module Xcodeproj
           {
             "relative_path" => relative_path,
             "path" => path,
-            "path_from_root" => absolute_path.relative_path_from(Pathname(".").expand_path),
+            "path_from_root" => absolute_path.relative_path_from(Pathname(".").expand_path).to_s,
           }
         end
 
