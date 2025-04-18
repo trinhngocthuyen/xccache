@@ -1,1 +1,1 @@
-#include ".xcconfigs/prebuilt.xcconfig"
+#include? ".xcconfigs/hook.xcconfig"
