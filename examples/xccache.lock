@@ -17,7 +17,8 @@
       },
       {
         "relative_path": "LocalPackages/core-utils",
-        "path": null
+        "path": null,
+        "path_from_root": "LocalPackages/core-utils"
       },
       {
         "repositoryURL": "https://github.com/googlemaps/ios-maps-sdk.git",

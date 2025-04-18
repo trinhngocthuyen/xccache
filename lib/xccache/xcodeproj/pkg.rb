@@ -45,7 +45,11 @@ module Xcodeproj
         end
 
         def to_h
-          { "relative_path" => relative_path, "path" => path }
+          {
+            "relative_path" => relative_path,
+            "path" => path,
+            "path_from_root" => absolute_path.relative_path_from(Pathname(".").expand_path),
+          }
         end
 
         def absolute_path
