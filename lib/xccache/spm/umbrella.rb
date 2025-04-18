@@ -153,10 +153,13 @@ module XCCache
     end
 
     def manifest_pkg_dependencies
-      decl = proc do |pkg|
-        next ".package(path: \"#{pkg.absolute_path}\")" if pkg.local?
+      decl = proc do |hash|
+        if (path_from_root = hash["path_from_root"])
+          absolute_path = (Pathname(".") / path_from_root).expand_path
+          next ".package(path: \"#{absolute_path}\")"
+        end
 
-        requirement = pkg.requirement
+        requirement = hash["requirement"]
         case requirement["kind"]
         when "upToNextMajorVersion"
           opt = ".upToNextMajor(from: \"#{requirement['minimumVersion']}\")"
@@ -171,10 +174,10 @@ module XCCache
         when "versionRange"
           opt = "\"#{requirement['minimumVersion']}\"..<\"#{requirement['maximumVersion']}\""
         end
-        ".package(url: \"#{pkg.repositoryURL}\", #{opt})"
+        ".package(url: \"#{hash['repositoryURL']}\", #{opt})"
       end
 
-      projects.flat_map(&:non_xccache_pkgs).map { |x| "  #{decl.call(x)}," }.join("\n")
+      lockfile.pkgs.map { |h| "  #{decl.call(h)}," }.join("\n")
     end
 
     def manifest_platforms
