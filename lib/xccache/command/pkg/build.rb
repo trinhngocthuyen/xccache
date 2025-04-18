@@ -11,6 +11,7 @@ module XCCache
             ["--sdk=foo,bar", "Sdk (iphonesimulator, iphoneos, etc.)"],
             ["--config=foo", "Configuration (debug, release)"],
             ["--out=foo", "Output directory for the xcframework"],
+            ["--checksum/no-checksum", "Whether to include checksum to the binary name"],
           ].concat(super)
         end
 
@@ -20,6 +21,7 @@ module XCCache
           @sdk = argv.option("sdk")
           @config = argv.option("config")
           @out_dir = argv.option("out")
+          @include_checksum = argv.flag?("checksum")
         end
 
         def run
@@ -29,6 +31,7 @@ module XCCache
             sdk: @sdk,
             config: @config,
             out_dir: @out_dir,
+            checksum: @include_checksum,
           )
         end
       end
