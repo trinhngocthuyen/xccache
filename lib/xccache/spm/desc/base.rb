@@ -16,6 +16,10 @@ module XCCache
           is_a?(Description) ? name : "#{pkg_slug}/#{name}"
         end
 
+        def inspect
+          to_s
+        end
+
         def to_s
           "<#{self.class} name=#{name}>"
         end
