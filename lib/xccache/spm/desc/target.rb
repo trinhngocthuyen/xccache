@@ -5,7 +5,7 @@ module XCCache
     class Package
       class Target < BaseObject
         include Cacheable
-        cacheable :recursive_targets
+        cacheable :recursive_targets, :dependency_targets
 
         def type
           @type ||= raw["type"].to_sym
@@ -67,6 +67,11 @@ module XCCache
         end
 
         def recursive_targets(platform: nil)
+          children = dependency_targets(platform: platform)
+          children + children.flat_map { |t| t.recursive_targets(platform: platform) }
+        end
+
+        def dependency_targets(platform: nil)
           raw["dependencies"].flat_map do |hash|
             dep_type = ["byName", "target", "product"].find { |k| hash.key?(k) }
             if dep_type.nil?
