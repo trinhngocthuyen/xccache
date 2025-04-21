@@ -10,7 +10,7 @@ module XCCache
       @path = Gem.find_files("xccache/assets/templates/#{name}.template").first
     end
 
-    def render(hash, save_to: nil)
+    def render(hash = {}, save_to: nil)
       raise GeneralError, "Template not found: #{name}" if path.nil?
 
       rendered = ERB.new(File.read(@path)).result_with_hash(hash)

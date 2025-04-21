@@ -12,12 +12,14 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", .upToNextMajor(from: "2.1.1")),
+    .package(url: "https://github.com/Moya/Moya", .upToNextMajor(from: "15.0.3")),
   ],
   targets: [
     .target(
       name: "Swizzler",
       dependencies: [
         .product(name: "SwiftyBeaver", package: "SwiftyBeaver"),
+        .product(name: "Moya", package: "Moya"),
       ]
     ),
     .target(
