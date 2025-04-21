@@ -1,0 +1,58 @@
+graph = JSON.parse(`
+<%= json %>
+`);
+
+// ------------------------------------------------
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: ([...graph.nodes, ...graph.edges]).map(x => ({data: x})),
+  style: [
+    {
+      selector: 'node',
+      style: {
+        'label': 'data(label)',
+        'color': '#fff',
+        'text-valign': 'center',
+        'text-halign': 'center',
+        'font-size': '14px',
+        'width': '100px',
+        'shape': 'roundrectangle',
+      }
+    },
+    {
+      selector: 'edge',
+      style: {
+        'width': 1,
+        'line-color': '#ccc',
+        'target-arrow-color': '#ccc',
+        'target-arrow-shape': 'triangle',
+        'curve-style': 'bezier',
+      }
+    },
+    {
+      selector: 'node[cache="hit"]',
+      style: {'background-color': 'green'}
+    },
+    {
+      selector: 'node[cache="missed"]',
+      style: {'background-color': 'orange'}
+    },
+    {
+      selector: 'node[agg]',
+      style: {
+        'font-weight': 'bold',
+        'background-color': '#333',
+      }
+    },
+    {
+      selector: 'node[cache="ignore"]',
+      style: {
+        'background-color': 'grey',
+      }
+    },
+  ],
+  layout: {
+    name: 'breadthfirst',
+    directed: true,
+  }
+});

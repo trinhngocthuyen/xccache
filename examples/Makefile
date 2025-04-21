@@ -13,7 +13,7 @@ cache.rollback:
 	bundle exec xccache rollback $(XCCACHE_ARGS)
 
 cache.viz:
-	bundle exec xccache viz $(XCCACHE_ARGS)
+	bundle exec xccache viz --out=xccache $(XCCACHE_ARGS)
 
 build:
 	cicd ios build
