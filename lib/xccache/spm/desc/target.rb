@@ -83,7 +83,7 @@ module XCCache
             pkg_name = hash.key?("product") ? hash["product"][1] : self.pkg_name
             pkg_desc = pkg_desc_of(pkg_name)
             find_by_target = -> { pkg_desc.targets.select { |t| t.name == name } }
-            find_by_product = -> { pkg_desc.targets_of_product(name) }
+            find_by_product = -> { pkg_desc.targets_of_products(name) }
             next find_by_target.call if hash.key?("target")
             next find_by_product.call if hash.key?("product")
 

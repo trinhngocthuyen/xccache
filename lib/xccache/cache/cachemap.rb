@@ -19,8 +19,8 @@ module XCCache
         raw["targets"] ||= {}
       end
 
-      def sync!(lockfile, depmap, pkg_descs_by_name)
-        @lockfile, @depmap, @pkg_descs_by_name = lockfile, depmap, pkg_descs_by_name
+      def sync!(lockfile, pkg_group)
+        @lockfile, @pkg_group = lockfile, pkg_group
         gen_cache_data
         gen_depgraph_data
         print_stats
@@ -42,21 +42,21 @@ module XCCache
       end
 
       def missed_targets
-        cache_data
-          .fetch("missed_products", {}).keys
-          .flat_map { |p| deps_data[p] }.uniq
-          .reject { |x| hit?(x) || ignore?(x) }
-          .map { |x| x.split("/").last }
+        missed_products = cache_data.fetch("missed_products", {}).keys
+        @pkg_group
+          .dependency_targets_of_products(missed_products)
+          .reject { |x| hit?(x.full_name) || ignore?(x.full_name) }
+          .map(&:name)
       end
 
       private
 
       def gen_cache_data
-        binary_target_names = @pkg_descs_by_name.values.flatten.uniq.flat_map(&:binary_targets).map(&:full_name)
-        targets = @lockfile.product_dependencies.flat_map { |p| @depmap[p] || [p] }.uniq
+        binary_target_names = @pkg_group.binary_targets.map(&:full_name)
+        targets = @pkg_group.dependency_targets_of_products(@lockfile.product_dependencies).map(&:full_name)
         targets.difference(binary_target_names).each do |d|
           bpath = binary_path(File.basename(d))
-          bpath_with_checksum = binary_path(File.basename(d), checksum: pkg_desc_of(d).checksum)
+          bpath_with_checksum = binary_path(File.basename(d), checksum: @pkg_group.desc_of(d).checksum)
           # If checksum matches, create symlink from `A-abc123.xcframework` -> `A.framework`
           # Otherwise, remove symlink `A.xcframework`
           if bpath_with_checksum.exist?
@@ -76,8 +76,7 @@ module XCCache
 
         hit_products, missed_products = [], {}
         @lockfile.product_dependencies.each do |product|
-          deps = @depmap[product] || [product]
-          missing = deps.intersection(missed.keys)
+          missing = @pkg_group.dependency_targets_of_products(product).map(&:full_name).intersection(missed.keys)
           hit_products << product if missing.empty?
           missed_products[product] = missing.map { |d| "#{d} (#{missed[d]})" }.join(", ") unless missing.empty?
         end
@@ -85,11 +84,10 @@ module XCCache
         @lockfile.product_dependencies_by_targets.each do |target_name, products|
           targets_data["#{target_name}.xccache"] = products.flat_map do |product|
             next product unless hit_products.include?(product)
-            @depmap[product].map { |x| "#{x}.binary" }
+            @pkg_group.dependency_targets_of_products(product).map { |x| "#{x.full_name}.binary" }
           end.uniq
         end
 
-        raw["deps"] = @depmap
         raw["cache"] = {
           "hit" => hit,
           "missed" => missed,
@@ -102,7 +100,7 @@ module XCCache
         nodes, edges, parents = [], [], {}
         to_visit = @lockfile.product_dependencies_by_targets.flat_map do |target_name, deps|
           nodes << { :id => target_name, :label => target_name, :agg => true }
-          targets = deps.flat_map { |d| pkg_desc_of(d).targets_of_product(File.basename(d)) }
+          targets = @pkg_group.targets_of_products(deps)
           targets.each { |t| edges << { :source => target_name, :target => t.full_name } }
           targets
         end.uniq
@@ -153,10 +151,6 @@ module XCCache
             • Missed (#{missed_products.count}):\n#{JSON.pretty_generate(missed_products).yellow.dark}
           -------------------------------------------------------------------
         DESC
-      end
-
-      def pkg_desc_of(d)
-        @pkg_descs_by_name[d.split("/")[0]] unless @pkg_descs_by_name.nil?
       end
     end
   end

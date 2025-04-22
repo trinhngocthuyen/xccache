@@ -15,10 +15,7 @@ module XCCache
       @cachemap = config.cachemap
       @pkg = SPM::Package.new(root_dir: @path)
       @metadata_dir = config.spm_metadata_dir
-      @pkg_descs = []
-      @pkg_descs_by_name = {}
-      @dependencies ||= {}
-      @raw_dependencies ||= {}
+      @pkg_group = nil
     end
 
     def prepare
@@ -46,7 +43,7 @@ module XCCache
 
     def sync_cachemap
       UI.section("Syncing cachemap")
-      cachemap.sync!(lockfile, @raw_dependencies, @pkg_descs_by_name)
+      cachemap.sync!(lockfile, @pkg_group)
     end
 
     def targets_to_build(options)
@@ -54,34 +51,24 @@ module XCCache
       items = cachemap.missed_targets if items.nil? || items.empty?
       items = items.split(",") if items.is_a?(String)
       items.map do |name|
-        @pkg_descs.flat_map(&:targets).find { |p| p.name == name }.full_name
+        @pkg_group.descs.flat_map(&:targets).find { |p| p.name == name }.full_name
       end
     end
 
     def gen_metadata
       UI.section("Generating metadata of packages") do
-        checkouts_dirs.each do |dir|
-          pkg_desc = SPM::Package::Description.in_dir(dir, save_to_dir: config.spm_metadata_dir)
-          next if pkg_desc.nil?
-
-          pkg_desc.retrieve_pkg_desc = proc { |name| @pkg_descs_by_name[name] }
-          pkg_desc.save
-          pkg_desc.save(to: pkg_desc.path.parent / "#{pkg_desc.name}.json") if pkg_desc.name != dir.basename.to_s
-          @pkg_descs << pkg_desc
-          @pkg_descs_by_name[pkg_desc.name] = pkg_desc
-          @pkg_descs_by_name[dir.basename.to_s] = pkg_desc
-        end
+        @pkg_group = SPM::Package::Group.in_checkouts_dir(
+          config.spm_build_dir / "checkouts",
+          save_to_dir: config.spm_metadata_dir,
+        )
       end
     end
 
     def resolve_recursive_dependencies
       gen_metadata
       UI.section("Resolving recursive dependencies") do
-        @pkg_descs.each do |pkg_desc|
-          @dependencies.merge!(pkg_desc.resolve_recursive_dependencies)
-        end
+        @pkg_group.resolve_recursive_dependencies
       end
-      @raw_dependencies = @dependencies.to_h { |k, v| [k.full_name, v.map(&:full_name)] }
       create_symlinks_to_artifacts
     end
 
@@ -133,7 +120,7 @@ module XCCache
         p.rmtree if p.symlink? && !p.readlink.exist?
       end
 
-      binary_targets = @dependencies.values.flatten.uniq.select(&:binary?)
+      binary_targets = @pkg_group.binary_targets
       UI.message("Creating symlinks to binary artifacts of targets: #{binary_targets.map(&:full_name).to_s.dark}")
       binary_targets.each do |target|
         dst_path = config.spm_binaries_frameworks_dir / target.name / "#{target.name}.xcframework"
