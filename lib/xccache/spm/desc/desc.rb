@@ -55,7 +55,7 @@ module XCCache
           targets.find { |t| t.name == name }
         end
 
-        def targets_of_product(name)
+        def targets_of_products(name)
           matched_products = products.select { |p| p.name == name }
           matched_products
             .flat_map { |p| targets.select { |t| p.target_names.include?(t.name) } }
