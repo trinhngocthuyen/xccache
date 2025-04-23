@@ -11,6 +11,10 @@ module XCCache
           raw["targets"]
         end
 
+        def flatten_as_targets
+          targets
+        end
+
         def targets
           @targets ||= root.targets.select { |t| target_names.include?(t.name) }
         end

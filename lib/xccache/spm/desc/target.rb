@@ -5,7 +5,7 @@ module XCCache
     class Package
       class Target < BaseObject
         include Cacheable
-        cacheable :recursive_targets, :direct_dependency_targets
+        cacheable :recursive_targets, :direct_dependency_targets, :direct_dependencies
 
         def xccache?
           name.end_with?(".xccache")
@@ -17,6 +17,10 @@ module XCCache
 
         def bundle_name
           "#{pkg_name}_#{name}.bundle"
+        end
+
+        def flatten_as_targets
+          [self]
         end
 
         def sources_path
@@ -76,7 +80,7 @@ module XCCache
           children.uniq
         end
 
-        def direct_dependency_targets(platform: nil)
+        def direct_dependencies(platform: nil)
           raw["dependencies"].flat_map do |hash|
             dep_type = ["byName", "target", "product"].find { |k| hash.key?(k) }
             if dep_type.nil?
@@ -88,13 +92,17 @@ module XCCache
             pkg_name = hash.key?("product") ? hash["product"][1] : self.pkg_name
             pkg_desc = pkg_desc_of(pkg_name)
             find_by_target = -> { pkg_desc.targets.select { |t| t.name == name } }
-            find_by_product = -> { pkg_desc.targets_of_products(name) }
+            find_by_product = -> { pkg_desc.products.select { |t| t.name == name } }
             next find_by_target.call if hash.key?("target")
             next find_by_product.call if hash.key?("product")
 
             # byName, could be either a target or a product
             next find_by_target.call || find_by_product.call
           end
+        end
+
+        def direct_dependency_targets(platform: nil)
+          direct_dependencies(platform: platform).flat_map(&:flatten_as_targets).uniq
         end
 
         def match_platform?(_condition, _platform)
