@@ -7,8 +7,14 @@ module XCCache
           nodes, edges, parents = xccache_desc.traverse
           cache_data = gen_cache_data(nodes, parents)
           targets_data = xccache_desc.targets.to_h do |agg_target|
-            deps = agg_target.recursive_targets.map do |t|
-              cache_data[t] == :hit ? "#{t.full_name}.binary" : t.full_name
+            deps = agg_target.direct_dependencies.flat_map do |d|
+              # If any associated targets is missed -> use original product form
+              # Otherwise, replace with recursive targets' binaries
+              if d.flatten_as_targets.all? { |t| cache_data[t] == :hit }
+                d.recursive_targets.map { |t| "#{t.full_name}.binary" }
+              else
+                d.full_name
+              end
             end
             [agg_target.name, deps]
           end
