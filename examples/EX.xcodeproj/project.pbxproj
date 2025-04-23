@@ -22,6 +22,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		F599EAE92DB8A8A3000E926B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		F577C62F2D96971200C83C96 /* EX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F577C6A82D96A3BD00C83C96 /* config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = config.xcconfig; sourceTree = "<group>"; };
@@ -112,6 +125,7 @@
 				F577C62B2D96971200C83C96 /* Sources */,
 				F577C62C2D96971200C83C96 /* Frameworks */,
 				F577C62D2D96971200C83C96 /* Resources */,
+				F599EAE92DB8A8A3000E926B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -187,6 +201,7 @@
 				B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */,
 				F5339D5C2DA7D32200F7312D /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
 				F533A0C82DA8CB1500F7312D /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				F599EAE62DB8A89A000E926B /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F577C6302D96971200C83C96 /* Products */;
@@ -526,6 +541,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.21.0;
+			};
+		};
+		F599EAE62DB8A89A000E926B /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -33,6 +33,13 @@
           "kind": "upToNextMajorVersion",
           "minimumVersion": "5.21.0"
         }
+      },
+      {
+        "repositoryURL": "https://github.com/SnapKit/SnapKit",
+        "requirement": {
+          "kind": "upToNextMajorVersion",
+          "minimumVersion": "5.7.1"
+        }
       }
     ],
     "dependencies": {
@@ -43,7 +50,8 @@
         "core-utils/ResourceKit",
         "core-utils/Swizzler",
         "ios-maps-sdk/GoogleMaps",
-        "SDWebImage/SDWebImage"
+        "SDWebImage/SDWebImage",
+        "SnapKit/SnapKit-Dynamic"
       ],
       "EXTests": []
     }

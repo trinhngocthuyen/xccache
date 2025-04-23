@@ -34,12 +34,13 @@ module Xcodeproj
         end
 
         def remove_pkg_product_dependencies(&block)
-          phase = frameworks_build_phase
           package_product_dependencies.select(&block).each do |d|
             XCCache::UI.message(
               "(-) Remove #{d.product_name.red} from product dependencies of target #{display_name.bold}"
             )
-            phase.files.select { |f| f.remove_from_project if f.product_ref == d }
+            build_phases.each do |phase|
+              phase.files.select { |f| f.remove_from_project if f.product_ref == d }
+            end
             d.remove_from_project
           end
         end
