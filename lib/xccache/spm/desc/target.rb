@@ -7,6 +7,10 @@ module XCCache
         include Cacheable
         cacheable :recursive_targets, :direct_dependency_targets
 
+        def xccache?
+          name.end_with?(".xccache")
+        end
+
         def type
           @type ||= raw["type"].to_sym
         end
@@ -68,7 +72,8 @@ module XCCache
 
         def recursive_targets(platform: nil)
           children = direct_dependency_targets(platform: platform)
-          children + children.flat_map { |t| t.recursive_targets(platform: platform) }
+          children += children.flat_map { |t| t.recursive_targets(platform: platform) }
+          children.uniq
         end
 
         def direct_dependency_targets(platform: nil)

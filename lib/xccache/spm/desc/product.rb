@@ -24,7 +24,7 @@ module XCCache
         end
 
         def recursive_targets(platform: nil)
-          targets + targets.flat_map { |t| t.recursive_targets(platform: platform) }
+          targets + targets.flat_map { |t| t.recursive_targets(platform: platform) }.uniq
         end
       end
     end

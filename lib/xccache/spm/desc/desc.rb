@@ -74,6 +74,27 @@ module XCCache
           metadata["checksum"] = git.nil? ? src_dir.checksum : git.sha
         end
 
+        def traverse
+          nodes, edges, parents = [], [], {}
+          to_visit = targets.map { |x| [nil, x] }
+          visited = Set.new
+          until to_visit.empty?
+            prev, cur = to_visit.pop
+            next if visited.include?(cur)
+
+            visited << cur
+            nodes << cur
+            unless prev.nil?
+              edges << [prev, cur]
+              parents[cur] ||= []
+              parents[cur] << prev
+            end
+            yield prev, cur if block_given?
+            to_visit += cur.direct_dependency_targets.map { |t| [cur, t] }
+          end
+          [nodes, edges, parents]
+        end
+
         private
 
         def git
