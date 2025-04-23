@@ -14,6 +14,7 @@ module XCCache
         include UmbrellaDescsMixin
         include UmbrellaBuilldMixin
         include UmbrellaManifestMixin
+        include UmbrellaVizMixin
 
         def initialize(options = {})
           super
@@ -26,6 +27,7 @@ module XCCache
           create
           resolve
           sync_cachemap
+          gen_cachemap_viz
         end
 
         def resolve
