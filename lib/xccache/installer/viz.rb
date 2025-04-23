@@ -23,7 +23,7 @@ module XCCache
       private
 
       def create_html
-        viz_json = JSON.pretty_generate(cachemap.depgraph_data)
+        viz_json = JSON.pretty_generate(config.cachemap.depgraph_data)
         Template.new("cachemap.html").render(save_to: @html_path)
         Template.new("cachemap.js").render({ :json => viz_json }, save_to: @js_path)
       end
