@@ -72,7 +72,6 @@ module XCCache
         def target_to_cytoscape_node(x, cache_result)
           {
             :id => x.full_name,
-            :label => x.name,
             :cache => cache_result,
             :type => x.name.end_with?(".xccache") ? "agg" : "regular",
           }

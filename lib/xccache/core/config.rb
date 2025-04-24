@@ -45,7 +45,7 @@ module XCCache
     end
 
     def lockfile
-      @lockfile ||= Lockfile.new(Pathname("xccache.lock"))
+      @lockfile ||= Lockfile.new(Pathname("xccache.lock").expand_path)
     end
 
     def cachemap

@@ -1,21 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cachemap Visualization</title>
+  <link rel="stylesheet" href="assets/style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.31.2/cytoscape.min.js"></script>
-  <style>
-    #cy {
-      width: 100%;
-      height: 100vh;
-      display: block;
-    }
-  </style>
 </head>
 <body>
-  <div id="cy"></div>
-  <script src="<%= js_path %>"></script>
+  <div class="container">
+    <aside id="sidebar">
+      <div class="toggle-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M512 256A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM271 135c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-87 87 87 87c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L167 273c-9.4-9.4-9.4-24.6 0-33.9L271 135z"/></svg></div>
+      <div class="sidebar-content">
+        <h3 class="title">Cachemap Visualization</h3>
+        <section class="legend">
+          <div class="section-header">Cache result</div>
+          <div>
+            <div class="hit"><span class="node">A</span> hit <span class="desc"><%= desc_hit %></span></div>
+            <div class="missed"><span class="node">B</span> missed <span class="desc"><%= desc_missed %></span></div>
+            <div class="ignored"><span class="node">C</span> ignored <span class="desc"><%= desc_ignored %></span></div>
+          </div>
+        </section>
+        <section class="metadata">
+          <div class="section-header">Metadata</div>
+          <div>
+            <div class="info">Workspace: <a href="<%= root_dir %>"><%= root_dir_short %></a></div>
+            <div class="info">Lockfile: <a href="<%= lockfile_path %>"><%= lockfile_path_short %></a></div>
+            <div class="info">Binaries: <a href="<%= binaries_dir %>"><%= binaries_dir_short %></a></div>
+          </div>
+        </section>
+      </div>
+    </aside>
+    <div id="cy"></div>
+    <div class="footnote">Powered by <a href="https://github.com/trinhngocthuyen/xccache">xccache</a></div>
+  </div>
+  <script src="assets/cachemap.js"></script>
+  <script>
+    document.querySelector('.toggle-btn').addEventListener('click', () => {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('collapsed');
+    });
+  </script>
 </body>
 </html>

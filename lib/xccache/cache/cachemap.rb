@@ -19,6 +19,20 @@ module XCCache
         get_cache_data(:missed)
       end
 
+      def stats
+        describe = proc do |type|
+          count = get_cache_data(type).count
+          total_count = [cache_data.count, 1].max
+          percent = (count * 100 / total_count).to_i
+          "#{percent}% (#{count}/#{total_count})"
+        end
+        {
+          :hit => describe.call(:hit),
+          :missed => describe.call(:missed),
+          :ignored => describe.call(:ignored),
+        }
+      end
+
       def print_stats
         hit = get_cache_data(:hit)
         missed = get_cache_data(:missed)
