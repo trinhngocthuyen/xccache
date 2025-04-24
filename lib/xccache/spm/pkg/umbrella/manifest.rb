@@ -38,11 +38,11 @@ module XCCache
             when "upToNextMinorVersion"
               opt = ".upToNextMinor(from: \"#{requirement['minimumVersion']}\")"
             when "exactVersion"
-              opt = "exact: #{requirement['version']}"
+              opt = "exact: \"#{requirement['version']}\""
             when "branch"
               opt = "branch: \"#{requirement['branch']}\""
             when "revision"
-              opt = "revision: #{requirement['revision']}"
+              opt = "revision: \"#{requirement['revision']}\""
             when "versionRange"
               opt = "\"#{requirement['minimumVersion']}\"..<\"#{requirement['maximumVersion']}\""
             end
