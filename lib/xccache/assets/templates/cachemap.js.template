@@ -10,13 +10,13 @@ const cy = cytoscape({
     {
       selector: 'node',
       style: {
-        'label': 'data(label)',
+        'label': (e) => e.id().split("/")[1],
         'color': '#fff',
         'text-valign': 'center',
         'text-halign': 'center',
         'font-size': '14px',
-        'width': '100px',
         'shape': 'roundrectangle',
+        'width': (e) => Math.max(50, e.id().split("/")[1].length * 10),
       }
     },
     {
@@ -35,7 +35,7 @@ const cy = cytoscape({
     },
     {
       selector: 'node[cache="missed"]',
-      style: {'background-color': 'orange'}
+      style: {'background-color': '#ff6f00'}
     },
     {
       selector: 'node[type="agg"]',
@@ -45,9 +45,9 @@ const cy = cytoscape({
       }
     },
     {
-      selector: 'node[cache="ignore"]',
+      selector: 'node[cache="ignored"]',
       style: {
-        'background-color': 'grey',
+        'background-color': '#888',
       }
     },
   ],
