@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cachemap Visualization</title>
   <link rel="stylesheet" href="assets/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.31.2/cytoscape.min.js"></script>
 </head>
 <body>
@@ -29,6 +30,14 @@
             <div class="info">Binaries: <a href="<%= binaries_dir %>"><%= binaries_dir_short %></a></div>
           </div>
         </section>
+        <section class="node-info">
+          <div class="section-header">Cache info</div>
+          <div>
+            <div class="info">Target: <span class="value target">TBU</span></div>
+            <div class="info">Checksum: <span class="value checksum">TBU</span></div>
+            <div class="info">Binary: <a class="value binary" href="">TBU</a></div>
+          </div>
+        </section>
       </div>
     </aside>
     <div id="cy"></div>
@@ -36,10 +45,7 @@
   </div>
   <script src="assets/cachemap.js"></script>
   <script>
-    document.querySelector('.toggle-btn').addEventListener('click', () => {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('collapsed');
-    });
+    $('.toggle-btn').on('click', () => $('#sidebar').toggleClass('collapsed'));
   </script>
 </body>
 </html>

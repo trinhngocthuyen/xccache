@@ -23,7 +23,7 @@ module XCCache
             "targets" => targets_data,
             "cache" => cache_data.transform_keys(&:full_name),
             "depgraph" => {
-              "nodes" => nodes.map { |x| target_to_cytoscape_node(x, cache_data[x]) },
+              "nodes" => nodes.map { |x| target_to_cytoscape_node(x, cache_data) },
               "edges" => edges.map { |x, y| { :source => x.full_name, :target => y.full_name } },
             },
           }
@@ -69,12 +69,12 @@ module XCCache
           p / "#{p.basename}#{suffix}.xcframework"
         end
 
-        def target_to_cytoscape_node(x, cache_result)
-          {
-            :id => x.full_name,
-            :cache => cache_result,
-            :type => x.name.end_with?(".xccache") ? "agg" : "regular",
-          }
+        def target_to_cytoscape_node(x, cache_data)
+          h = { :id => x.full_name, :cache => cache_data[x] }
+          h[:type] = "agg" if x.name.end_with?(".xccache")
+          h[:checksum] = x.root.checksum
+          h[:binary] = binary_path(x.name) if cache_data[x] == :hit
+          h
         end
       end
     end

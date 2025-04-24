@@ -64,12 +64,18 @@ a:hover { color: #339966; }
   font-weight: bold;
   margin-block-end: 4px;
 }
-.metadata .info {
-  color: #999;
+.node-info {
+  display: none;
+}
+.info {
+  color: #888;
   font-size: 10px;
 }
+.info .value {
+  color: #666;
+}
 .footnote {
-  color: #999;
+  color: #888;
   position: absolute;
   left: 16px;
   bottom: 8px;

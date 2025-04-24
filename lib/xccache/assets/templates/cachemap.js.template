@@ -1,10 +1,12 @@
+// MARK: GENERATED
+// ------------------------------------------------
 graph = JSON.parse(`
 <%= json %>
 `);
-
 // ------------------------------------------------
+
 const cy = cytoscape({
-  container: document.getElementById('cy'),
+  container: $('#cy'),
   elements: ([...graph.nodes, ...graph.edges]).map(x => ({data: x})),
   style: [
     {
@@ -55,4 +57,18 @@ const cy = cytoscape({
     name: 'breadthfirst',
     directed: true,
   }
+});
+cy.on('click', 'node', function(event) {
+  // Make node focused
+  const node = event.target;
+  cy.nodes().style({'border-width': 0, 'font-weight': 'normal'});
+  node.style({'border-color': '#333', 'border-width': 3, 'font-weight': 'bold'});
+  // Display node info on the sidebar
+  $('.node-info').css('display', 'block');
+  const info = $('.node-info .info');
+  info.find('.target').html(node.id());
+  info.find('.checksum').html(node.data('checksum') || 'NA');
+  info.find('.binary')
+    .html((node.data('binary') || 'NA').split('/').slice(-1))
+    .attr({'href': node.data('binary') || ''});
 });
