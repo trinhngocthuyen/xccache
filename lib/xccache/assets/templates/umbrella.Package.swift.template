@@ -20,7 +20,7 @@ let PLATFORMS: [SupportedPlatform] = [
 if let data = JSON.data(using: .utf8),
    let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
    let dict = dict["targets"] as? [String: [String]] {
-  _ = XCCache.Package(dict).toSPM()
+  _ = XCCache.Package(dict).spm
 } else {
   _ = Package(name: "xccache")
 }
@@ -46,13 +46,13 @@ enum XCCache {
       targets = dict.map { XCCache.Target($0, $1) }
     }
 
-    func toSPM() -> PackageDescription.Package {
-      let regularTargets = targets.map { $0.toSPM() }
-      let binaryTargets = targets.flatMap { x in x.deps.compactMap { $0.toSPMBinaryTarget() }}
+    var spm: PackageDescription.Package {
+      let regularTargets = targets.map(\.spm)
+      let binaryTargets = targets.flatMap(\.deps).compactMap(\.spmBinaryTarget).unique(by: \.name)
       return .init(
         name: "xccache",
         platforms: PLATFORMS,
-        products: targets.map { $0.toSPMProduct() },
+        products: targets.map(\.spmProduct),
         dependencies: DEPENDENCIES,
         targets: regularTargets + binaryTargets
       )
@@ -69,16 +69,18 @@ enum XCCache {
       self.deps = deps.map { XCCache.Dependency($0) }
     }
 
-    func toSPMProduct() -> PackageDescription.Product {
+    var spmProduct: PackageDescription.Product {
       .library(name: name, targets: [name])
     }
-
-    func toSPM() -> PackageDescription.Target {
+    var spm: PackageDescription.Target {
       .target(
         name: name,
-        dependencies: deps.compactMap { $0.toSPM() },
+        dependencies: deps.compactMap(\.spm),
         path: ".Sources/\(name)"
       )
+    }
+    var spmBinaryTargets: [PackageDescription.Target] {
+      deps.compactMap(\.spmBinaryTarget).unique(by: \.name)
     }
   }
 
@@ -99,12 +101,12 @@ enum XCCache {
     private var binaryExist: Bool { Config.binariesDir.appending(path: "\(bareName)/\(binaryName)").exist }
     private var isKnownSlug: Bool { Config.knownSlugs.contains(name.slug) }
 
-    func toSPM() -> PackageDescription.Target.Dependency? {
+    var spm: PackageDescription.Target.Dependency? {
       if isBinary && binaryExist { return .byName(name: name) }
       if isKnownSlug { return .product(name: name.basename.withoutBinary, package: name.slug) }
       return nil
     }
-    func toSPMBinaryTarget() -> PackageDescription.Target? {
+    var spmBinaryTarget: PackageDescription.Target? {
       isBinary && binaryExist ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(binaryName)") : nil
     }
   }
@@ -131,4 +133,11 @@ extension String {
   var basename: String { (self as NSString).lastPathComponent }
   var withoutExtenstion: String { (self as NSString).deletingPathExtension }
   var withoutBinary: String { replacing(#/\.binary$/#, with: "") }
+}
+
+extension Sequence {
+  func unique<T: Hashable>(by: (Element) -> T) -> [Element] {
+    var seen: Set<T> = []
+    return filter { seen.insert(by($0)).inserted }
+  }
 }
