@@ -35,7 +35,7 @@ module Xcodeproj
 
         def remove_pkg_product_dependencies(&block)
           package_product_dependencies.select(&block).each do |d|
-            XCCache::UI.message(
+            XCCache::UI.info(
               "(-) Remove #{d.product_name.red} from product dependencies of target #{display_name.bold}"
             )
             build_phases.each do |phase|

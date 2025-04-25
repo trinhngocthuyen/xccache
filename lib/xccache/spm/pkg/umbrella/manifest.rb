@@ -5,7 +5,7 @@ module XCCache
         def write_manifest(force: false)
           return if @did_write_manifest && !force
 
-          UI.message("Writing Package.swift (package: #{root_dir.basename.to_s.dark})")
+          UI.info("Writing Package.swift (package: #{root_dir.basename.to_s.dark})")
           Template.new("umbrella.Package.swift").render(
             {
               :json => manifest_targets_json,

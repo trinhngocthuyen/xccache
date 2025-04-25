@@ -17,7 +17,7 @@ module XCCache
     end
 
     def sync_lockfile
-      UI.message("Syncing lockfile")
+      UI.info("Syncing lockfile")
       update_projects do |project|
         lockfile.deep_merge!(project.display_name => lockfile_hash_for_project(project))
       end
