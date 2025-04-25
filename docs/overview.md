@@ -8,7 +8,7 @@ The `xccache` CLI provides some functionalities to build a Swift package target 
 
 The tool manages a special *umbrella package* (at: xccache/packages/umbrella) to manipulate cache dependencies in the project. In case of cache hit, it replaces the original dependency (with source code) with the corresponding prebuilt dependency.
 
-## Cache Fallback
+### Cache Fallback
 In case of cache miss, it automatically uses the original dependency.
 
 ### Cache Validation Model
