@@ -46,11 +46,11 @@ module XCCache
         end
 
         def create
-          UI.message("Creating umbrella package")
+          UI.info("Creating umbrella package")
           write_manifest
           # Create dummy sources dirs prefixed with `.` so that they do not show up in Xcode
           config.projects.flat_map(&:targets).each do |target|
-            dir = Dir.prepare(root_dir / ".Sources" / "#{target.product_name}.xccache")
+            dir = Dir.prepare(root_dir / ".Sources" / "#{target.name}.xccache")
             (dir / "dummy.swift").write("")
           end
         end

@@ -15,7 +15,7 @@ module Xcodeproj
         end
 
         def has_pkg_product_dependency?(name)
-          pkg_product_dependencies.any? { |d| "#{d.pkg.slug}/#{d.product_name}" == name }
+          pkg_product_dependencies.any? { |d| "#{d.pkg.slug}/#{d.name}" == name }
         end
 
         def add_pkg_product_dependency(name)
@@ -26,7 +26,7 @@ module Xcodeproj
         end
 
         def add_xccache_product_dependency
-          add_pkg_product_dependency("umbrella/#{product_name}.xccache")
+          add_pkg_product_dependency("umbrella/#{name}.xccache")
         end
 
         def remove_xccache_product_dependencies
