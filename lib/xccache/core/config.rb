@@ -58,6 +58,10 @@ module XCCache
       end
     end
 
+    def project_targets
+      projects.flat_map(&:targets)
+    end
+
     def ignore_list
       raw["ignore"] || []
     end

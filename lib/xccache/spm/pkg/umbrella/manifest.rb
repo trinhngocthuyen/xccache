@@ -54,20 +54,24 @@ module XCCache
 
         def manifest_platforms
           @manifest_platforms ||= begin
-            hash = config.projects.flat_map(&:targets).to_h { |t| [t.platform_name, t.deployment_target] }
-            items = hash.map do |name, version|
-              major_version = version.split(".")[0]
-              platform = {
-                :ios => "iOS",
-                :macos => "macOS",
-                :osx => "macOS",
-                :tvos => "tvOS",
-                :watchos => "watchOS",
-                :visionos => "visionOS",
-              }[name]
-              ".#{platform}(.v#{major_version})"
+            to_spm_platform = {
+              :ios => "iOS",
+              :macos => "macOS",
+              :osx => "macOS",
+              :tvos => "tvOS",
+              :watchos => "watchOS",
+              :visionos => "visionOS",
+            }
+            hash = {}
+            config.project_targets.each do |t|
+              platform = to_spm_platform[t.platform_name]
+              hash[platform] ||= []
+              hash[platform] << t.deployment_target.split(".")[0]
             end
-            items.map { |x| "  #{x}," }.join("\n")
+            hash
+              .transform_values(&:min)
+              .map { |platform, version| "  .#{platform}(.v#{version})," }
+              .join("\n")
           end
         end
       end
