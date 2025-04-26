@@ -82,22 +82,13 @@ module XCCache
 
         def direct_dependencies(platform: nil)
           raw["dependencies"].flat_map do |hash|
-            dep_type = ["byName", "target", "product"].find { |k| hash.key?(k) }
-            if dep_type.nil?
-              raise GeneralError, "Unexpected dependency type. Must be either `byName`, `target`, or `product`."
+            dep_types = ["byName", "target", "product"]
+            if (dep_type = dep_types.intersection(hash.keys).first).nil?
+              raise GeneralError, "Unexpected dependency type. Must be one of #{dep_types}. Hash: #{hash}"
             end
             next [] unless match_platform?(hash[dep_type][-1], platform)
-
-            name = hash[dep_type][0]
-            pkg_name = hash.key?("product") ? hash["product"][1] : self.pkg_name
-            pkg_desc = pkg_desc_of(pkg_name)
-            find_by_target = -> { pkg_desc.targets.select { |t| t.name == name } }
-            find_by_product = -> { pkg_desc.products.select { |t| t.name == name } }
-            next find_by_target.call if hash.key?("target")
-            next find_by_product.call if hash.key?("product")
-
-            # byName, could be either a target or a product
-            next find_by_target.call || find_by_product.call
+            pkg_name = hash[dep_type][1] if dep_type == "product"
+            find_deps(hash[dep_type][0], pkg_name, dep_type)
           end
         end
 
@@ -119,6 +110,25 @@ module XCCache
 
         def local_binary_path
           binary_path if binary? && root.local?
+        end
+
+        private
+
+        def find_deps(name, pkg_name, dep_type)
+          # If `dep_type` is `target` -> constrained within current pkg only
+          # If `dep_type` is `product` -> `pkg_name` must be present
+          # If `dep_type` is `byName` -> it's either from this pkg, or its children/dependencies
+          res = []
+          descs = pkg_name.nil? ? [root] + root.uniform_dependencies : [pkg_desc_of(pkg_name)]
+          descs.each do |desc|
+            by_target = -> { desc.targets.select { |t| t.name == name } }
+            by_product = -> { desc.products.select { |t| t.name == name } }
+            return by_target.call if dep_type == "target"
+            return by_product.call if dep_type == "product"
+            return res unless (res = by_target.call).empty?
+            return res unless (res = by_product.call).empty?
+          end
+          []
         end
       end
     end

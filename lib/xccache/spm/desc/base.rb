@@ -20,8 +20,12 @@ module XCCache
           to_s
         end
 
+        def display_name
+          name
+        end
+
         def to_s
-          "<#{self.class} name=#{name}>"
+          "<#{self.class} name=#{display_name}>"
         end
 
         def pkg_name
