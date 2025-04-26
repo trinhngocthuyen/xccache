@@ -35,6 +35,10 @@ module XCCache
           @dependencies ||= fetch("dependencies", Dependency)
         end
 
+        def uniform_dependencies
+          dependencies.filter_map(&:pkg_desc)
+        end
+
         def products
           @products ||= fetch("products", Product)
         end
