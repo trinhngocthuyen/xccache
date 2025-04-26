@@ -18,7 +18,7 @@ const cy = cytoscape({
         'text-halign': 'center',
         'font-size': '14px',
         'shape': 'roundrectangle',
-        'width': (e) => Math.max(50, e.id().split("/")[1].length * 10),
+        'width': (e) => Math.max(50, e.id().split("/")[1].length * 8),
       }
     },
     {
@@ -42,7 +42,6 @@ const cy = cytoscape({
     {
       selector: 'node[type="agg"]',
       style: {
-        'font-weight': 'bold',
         'background-color': '#333',
       }
     },
@@ -54,7 +53,7 @@ const cy = cytoscape({
     },
   ],
   layout: {
-    name: 'breadthfirst',
+    name: 'fcose',
     directed: true,
   }
 });
