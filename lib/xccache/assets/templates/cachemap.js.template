@@ -22,18 +22,16 @@ const cy = cytoscape({
       }
     },
     {
-      selector: 'edge',
+      selector: 'node:selected',
       style: {
-        'width': 1,
-        'line-color': '#ccc',
-        'target-arrow-color': '#ccc',
-        'target-arrow-shape': 'triangle',
-        'curve-style': 'bezier',
+        'font-weight': 'bold',
+        'border-width': 3,
+        'border-color': '#333',
       }
     },
     {
       selector: 'node[cache="hit"]',
-      style: {'background-color': 'green'}
+      style: {'background-color': '#339966'}
     },
     {
       selector: 'node[cache="missed"]',
@@ -51,23 +49,46 @@ const cy = cytoscape({
         'background-color': '#888',
       }
     },
+    {
+      selector: 'edge',
+      style: {
+        'width': 1,
+        'target-arrow-shape': 'triangle',
+        'curve-style': 'bezier',
+        'line-color': '#ccc',
+        // 'line-color': e => e.target().style('background-color') || '#999',
+        'target-arrow-color': e => e.style('line-color'),
+      }
+    },
   ],
   layout: {
     name: 'fcose',
-    directed: true,
+    animationDuration: 300,
+    nodeRepulsion: 10000,
+    idealEdgeLength: 120,
+    gravity: 0.25,
   }
 });
-cy.on('click', 'node', function(event) {
-  // Make node focused
-  const node = event.target;
-  cy.nodes().style({'border-width': 0, 'font-weight': 'normal'});
-  node.style({'border-color': '#333', 'border-width': 3, 'font-weight': 'bold'});
-  // Display node info on the sidebar
+
+cy.on('select', 'node', function(event) {
   $('.node-info').css('display', 'block');
+  const node = event.target;
   const info = $('.node-info .info');
   info.find('.target').html(node.id());
   info.find('.checksum').html(node.data('checksum') || 'NA');
   info.find('.binary')
     .html((node.data('binary') || 'NA').split('/').slice(-1))
     .attr({'href': node.data('binary') || ''});
+
+  // Mark neighbor as focused, dim others
+  const focused = node.neighborhood().add(node);
+  focused.animate({style: {'opacity': 1}, duration: 200});
+  cy.elements().not(focused).animate({style: {'opacity': 0.15}, duration: 200});
+});
+
+cy.on('tap', function(event) {
+  if (event.target == cy) {
+    $('.node-info').css('display', 'none');
+    cy.elements().animate({style: {'opacity': 1}});
+  }
 });

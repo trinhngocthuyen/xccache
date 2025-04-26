@@ -87,6 +87,6 @@ a:hover { color: #339966; }
   background-color: var(--color)
 }
 .desc { color: var(--color) }
-.hit { --color: green }
+.hit { --color: #339966 }
 .missed { --color: #ff6f00 }
 .ignored { --color: #888 }
