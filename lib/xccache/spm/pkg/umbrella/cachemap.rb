@@ -15,7 +15,7 @@ module XCCache
               else
                 d.full_name
               end
-            end
+            end.uniq.sort
             [agg_target.name, deps]
           end
 
