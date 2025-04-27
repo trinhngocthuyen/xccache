@@ -3,10 +3,11 @@ require "xccache/utils/template"
 module XCCache
   class Framework
     class Slice
-      attr_reader :name, :pkg_dir, :pkg_desc, :sdk, :config, :path, :tmpdir
+      attr_reader :name, :module_name, :pkg_dir, :pkg_desc, :sdk, :config, :path, :tmpdir
 
       def initialize(options = {})
         @name = options[:name]
+        @module_name = @name.c99extidentifier
         @pkg_dir = Pathname(options[:pkg_dir] || ".").expand_path
         @pkg_desc = options[:pkg_desc]
         @sdk = options[:sdk]
@@ -26,6 +27,7 @@ module XCCache
           cmd << "-Xswiftc" << "-enable-library-evolution"
           cmd << "-Xswiftc" << "-alias-module-names-in-module-interface"
           cmd << "-Xswiftc" << "-emit-module-interface"
+          cmd << "-Xswiftc" << "-no-verify-emitted-module-interface"
           Sh.run(cmd, suppress_err: /(dependency '.*' is not used by any target|unable to create symbolic link)/)
           create_framework
         end
@@ -60,7 +62,7 @@ module XCCache
         else
           cmd = ["xcrun", "swiftc"]
           cmd << "-emit-library" << "-emit-object"
-          cmd << "-module-name" << name
+          cmd << "-module-name" << module_name
           cmd << "-target" << sdk.triple << "-sdk" << sdk.sdk_path
           cmd << "-o" << obj_path.to_s
           cmd << source_path
@@ -79,8 +81,11 @@ module XCCache
 
       def create_framework_binary
         # Write .o file list into a file
+        obj_paths = products_dir.glob("#{module_name}.build/**/*.o")
+        raise GeneralError, "Detected no object files for #{name}" if obj_paths.empty?
+
         objlist_path = tmpdir / "objects.txt"
-        objlist_path.write(products_dir.glob("#{name}.build/**/*.o").map(&:to_s).join("\n"))
+        objlist_path.write(obj_paths.map(&:to_s).join("\n"))
 
         cmd = ["libtool", "-static"]
         cmd << "-o" << "#{path}/#{name}"
@@ -129,7 +134,7 @@ module XCCache
       def copy_swiftmodules
         UI.message("Copying swiftmodules")
         swiftmodule_dir = Dir.prepare("#{path}/Modules/#{name}.swiftmodule")
-        swiftinterfaces = products_dir.glob("#{name}.build/#{name}.swiftinterface")
+        swiftinterfaces = products_dir.glob("#{module_name}.build/#{name}.swiftinterface")
         to_copy = products_dir.glob("Modules/#{name}.*") + swiftinterfaces
         to_copy.each do |p|
           p.copy(to: swiftmodule_dir / p.basename.sub(name, sdk.triple))

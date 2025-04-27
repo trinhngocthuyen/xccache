@@ -1,5 +1,11 @@
 require "digest"
 
+class String
+  def c99extidentifier
+    sub(/[^a-zA-Z0-9.]/, "_")
+  end
+end
+
 class Dir
   def self.prepare(dir)
     dir = Pathname(dir)
