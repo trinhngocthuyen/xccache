@@ -2,6 +2,13 @@
   "EX.xcodeproj": {
     "packages": [
       {
+        "repositoryURL": "https://github.com/yeatse/KingfisherWebP.git",
+        "requirement": {
+          "kind": "upToNextMajorVersion",
+          "minimumVersion": "1.6.0"
+        }
+      },
+      {
         "repositoryURL": "https://github.com/SwiftyBeaver/SwiftyBeaver",
         "requirement": {
           "kind": "upToNextMajorVersion",
@@ -51,7 +58,8 @@
         "core-utils/Swizzler",
         "ios-maps-sdk/GoogleMaps",
         "SDWebImage/SDWebImage",
-        "SnapKit/SnapKit-Dynamic"
+        "SnapKit/SnapKit-Dynamic",
+        "KingfisherWebP/KingfisherWebP"
       ],
       "EXTests": []
     }

@@ -22,10 +22,7 @@ module XCCache
           cmd << "--package-path" << pkg_dir
           cmd << "--target" << name
           cmd << "--sdk" << sdk.sdk_path
-          # Workaround for swiftinterface emission
-          # https://github.com/swiftlang/swift/issues/64669#issuecomment-1535335601
           cmd << "-Xswiftc" << "-enable-library-evolution"
-          cmd << "-Xswiftc" << "-alias-module-names-in-module-interface"
           cmd << "-Xswiftc" << "-emit-module-interface"
           cmd << "-Xswiftc" << "-no-verify-emitted-module-interface"
           Sh.run(cmd, suppress_err: /(dependency '.*' is not used by any target|unable to create symbolic link)/)
@@ -88,17 +85,15 @@ module XCCache
         objlist_path.write(obj_paths.map(&:to_s).join("\n"))
 
         cmd = ["libtool", "-static"]
-        cmd << "-o" << "#{path}/#{name}"
+        cmd << "-o" << "#{path}/#{module_name}"
         cmd << "-filelist" << objlist_path.to_s
         Sh.run(cmd)
-        FileUtils.chmod("+x", path / name)
+        FileUtils.chmod("+x", path / module_name)
       end
 
       def create_info_plist
         Template.new("framework.info.plist").render(
-          {
-            :name => name,
-          },
+          { :module_name => module_name },
           save_to: path / "Info.plist",
         )
       end
@@ -114,7 +109,7 @@ module XCCache
 
         UI.message("Creating framework modulemap")
         Template.new("framework.modulemap").render(
-          { :name => name },
+          { :module_name => module_name },
           save_to: path / "Modules" / "module.modulemap"
         )
       end
@@ -128,14 +123,14 @@ module XCCache
           .map { |p| p.copy(to_dir: framework_headers_path) }
           .map { |p| "#include \"#{p.basename}\"" }
           .join("\n")
-        (framework_headers_path / "#{name}-umbrella.h").write(umbrella_header_content)
+        (framework_headers_path / "#{module_name}-umbrella.h").write(umbrella_header_content)
       end
 
       def copy_swiftmodules
         UI.message("Copying swiftmodules")
-        swiftmodule_dir = Dir.prepare("#{path}/Modules/#{name}.swiftmodule")
-        swiftinterfaces = products_dir.glob("#{module_name}.build/#{name}.swiftinterface")
-        to_copy = products_dir.glob("Modules/#{name}.*") + swiftinterfaces
+        swiftmodule_dir = Dir.prepare("#{path}/Modules/#{module_name}.swiftmodule")
+        swiftinterfaces = products_dir.glob("#{module_name}.build/#{module_name}.swiftinterface")
+        to_copy = products_dir.glob("Modules/#{module_name}.*") + swiftinterfaces
         to_copy.each do |p|
           p.copy(to: swiftmodule_dir / p.basename.sub(name, sdk.triple))
         end

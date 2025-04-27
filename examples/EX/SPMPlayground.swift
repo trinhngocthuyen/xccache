@@ -6,6 +6,7 @@ import ResourceKit
 import Swizzler
 import GoogleMaps
 import SDWebImage
+import KingfisherWebP
 
 struct Playground {
   init() {
@@ -16,6 +17,7 @@ struct Playground {
     print(Swizzler.self)            // core-utils
     print(ResourceKit.self)         // core-utils
     print(GMSAddress.self)          // GoogleMaps
-    print(SDImageCacheOptions.self) // SDWebImage
+    print(SDImageCacheOptions.self) // SDWebImage)
+    print(WebPProcessor.self)       // KingfisherWebP
   }
 }
