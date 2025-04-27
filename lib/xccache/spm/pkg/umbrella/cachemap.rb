@@ -34,16 +34,23 @@ module XCCache
         private
 
         def gen_cache_data(nodes, parents)
-          result = {}
-          nodes.reject(&:xccache?).each do |node|
-            next if result.key?(node)
-            result[node] = :missed
-            result[node] = :hit if verify_binary?(node)
-            result[node] = :ignored if config.ignore?(node.full_name)
-            # Mark dependants as missed
-            if %i[missed ignored].include?(result[node]) && parents.key?(node)
-              parents[node].reject(&:xccache?).each { |p| result[p] = :missed if result[p] != :ignored }
-            end
+          result = nodes.to_h do |node|
+            res = if config.ignore?(node.full_name) then :ignored
+                  else
+                    verify_binary?(node) ? :hit : :missed
+                  end
+            [node, res]
+          end
+
+          # Propagate cache miss
+          to_visit = result.select { |_, v| %i[missed ignore].include?(v) }.keys
+          visited = Set.new
+          until to_visit.empty?
+            node = to_visit.pop
+            next if visited.include?(node)
+            visited << node
+            result[node] = :missed if result[node] == :hit
+            to_visit += parents[node] if parents.key?(node)
           end
           result
         end
