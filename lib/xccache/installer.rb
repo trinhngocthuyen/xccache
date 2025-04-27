@@ -10,6 +10,7 @@ module XCCache
     end
 
     def perform_install
+      verify_projects!
       sync_lockfile if @umbrella_pkg.nil?
       umbrella_pkg.prepare if @umbrella_pkg.nil?
       yield
@@ -56,6 +57,10 @@ module XCCache
         "packages" => project.non_xccache_pkgs.map(&:to_h),
         "dependencies" => deps_by_targets,
       }
+    end
+
+    def verify_projects!
+      raise "No projects detected. Are you running on the correct project directory?" if projects.empty?
     end
   end
 end
