@@ -1,10 +1,11 @@
 module XCCache
   class Framework
     class XCFramework
-      attr_reader :name, :pkg_dir, :pkg_desc, :config, :sdks, :path
+      attr_reader :name, :module_name, :pkg_dir, :pkg_desc, :config, :sdks, :path
 
       def initialize(options = {})
         @name = options[:name]
+        @module_name = @name.c99extidentifier
         @pkg_dir = options[:pkg_dir]
         @pkg_desc = options[:pkg_desc]
         @config = options[:config]
@@ -40,7 +41,7 @@ module XCCache
             pkg_desc: pkg_desc,
             sdk: sdk,
             config: config,
-            path: Dir.prepare(tmpdir / sdk.triple / "#{name}.framework"),
+            path: Dir.prepare(tmpdir / sdk.triple / "#{module_name}.framework"),
             tmpdir: tmpdir,
           )
         end

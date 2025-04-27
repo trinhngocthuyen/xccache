@@ -6,11 +6,11 @@
 	<array>
 		<dict>
 			<key>BinaryPath</key>
-			<string><%= name %>.framework/<%= name %></string>
+			<string><%= module_name %>.framework/<%= module_name %></string>
 			<key>LibraryIdentifier</key>
 			<string>ios-arm64-simulator</string>
 			<key>LibraryPath</key>
-			<string><%= name %>.framework</string>
+			<string><%= module_name %>.framework</string>
       <key>SupportedArchitectures</key>
 			<array>
 				<string>arm64</string>
@@ -22,11 +22,11 @@
 		</dict>
 	</array>
   <key>CFBundleExecutable</key>
-	<string><%= name %></string>
+	<string><%= module_name %></string>
   <key>CFBundleName</key>
-  <string><%= name %></string>
+  <string><%= module_name %></string>
   <key>CFBundleIdentifier</key>
-  <string>com.xccache.<%= name %></string>
+  <string>com.xccache.<%= module_name %></string>
 	<key>CFBundlePackageType</key>
 	<string>XFWK</string>
 	<key>XCFrameworkFormatVersion</key>

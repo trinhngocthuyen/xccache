@@ -1,5 +1,5 @@
-framework module <%= name %> {
-  umbrella header "<%= name %>-umbrella.h"
+framework module <%= module_name %> {
+  umbrella header "<%= module_name %>-umbrella.h"
 
   export *
   module * { export * }

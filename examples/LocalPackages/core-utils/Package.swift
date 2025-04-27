@@ -18,7 +18,7 @@ let package = Package(
     .target(
       name: "Swizzler",
       dependencies: [
-        "CoreUtilsWrapper",
+        "CoreUtils-Wrapper",
         .product(name: "SwiftyBeaver", package: "SwiftyBeaver"),
         .product(name: "Moya", package: "Moya"),
       ]
@@ -33,7 +33,7 @@ let package = Package(
       resources: [.copy("token.txt")]
     ),
     .target(
-      name: "CoreUtilsWrapper",
+      name: "CoreUtils-Wrapper",
       path: "Sources/Core"
     )
   ]
