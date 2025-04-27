@@ -17,8 +17,6 @@ module XCCache
             out_dir: config.spm_binaries_frameworks_dir,
             checksum: true,
           )
-          # After building targets, update manifest to use binaries
-          umbrella_pkg.write_manifest(force: true)
         end
       end
     end

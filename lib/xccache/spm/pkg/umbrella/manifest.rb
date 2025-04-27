@@ -2,25 +2,21 @@ module XCCache
   module SPM
     class Package
       module UmbrellaManifestMixin
-        def write_manifest(force: false)
-          return if @did_write_manifest && !force
-
+        def write_manifest(no_cache: false)
           UI.info("Writing Package.swift (package: #{root_dir.basename.to_s.dark})")
           Template.new("umbrella.Package.swift").render(
             {
-              :json => manifest_targets_json,
+              :json => manifest_targets_json(no_cache: no_cache),
               :platforms => manifest_platforms,
               :dependencies => manifest_pkg_dependencies,
               :swift_version => Swift::Swiftc.version_without_patch,
             },
             save_to: root_dir / "Package.swift",
           )
-          @did_write_manifest = true
         end
 
-        def manifest_targets_json
-          # Initially, write json with the original data in lockfile (without cache)
-          data = @did_write_manifest ? config.cachemap.targets_data : config.lockfile.targets_data
+        def manifest_targets_json(no_cache: false)
+          data = no_cache ? config.lockfile.targets_data : config.cachemap.targets_data
           JSON.pretty_generate("targets" => data)
         end
 

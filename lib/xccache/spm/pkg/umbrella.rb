@@ -47,7 +47,8 @@ module XCCache
 
         def create
           UI.info("Creating umbrella package")
-          write_manifest
+          # Initially, write json with the original data in lockfile (without cache)
+          write_manifest(no_cache: true)
           # Create dummy sources dirs prefixed with `.` so that they do not show up in Xcode
           config.project_targets.each do |target|
             dir = Dir.prepare(root_dir / ".Sources" / "#{target.name}.xccache")
