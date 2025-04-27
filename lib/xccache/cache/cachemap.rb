@@ -11,8 +11,8 @@ module XCCache
         raw["cache"] ||= {}
       end
 
-      def targets_data
-        raw["targets"] ||= {}
+      def manifest_data
+        raw["manifest"] ||= { "targets" => {}, "deps" => {} }
       end
 
       def missed

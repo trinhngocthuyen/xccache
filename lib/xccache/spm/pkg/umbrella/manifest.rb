@@ -7,6 +7,7 @@ module XCCache
           Template.new("umbrella.Package.swift").render(
             {
               :json => manifest_targets_json(no_cache: no_cache),
+              :products_to_targets => manifest_products_to_targets_json(no_cache: no_cache),
               :platforms => manifest_platforms,
               :dependencies => manifest_pkg_dependencies,
               :swift_version => Swift::Swiftc.version_without_patch,
@@ -16,8 +17,13 @@ module XCCache
         end
 
         def manifest_targets_json(no_cache: false)
-          data = no_cache ? config.lockfile.targets_data : config.cachemap.targets_data
-          JSON.pretty_generate("targets" => data)
+          data = no_cache ? config.lockfile.targets_data : config.cachemap.manifest_data["targets"]
+          JSON.pretty_generate(data)
+        end
+
+        def manifest_products_to_targets_json(no_cache: false)
+          data = no_cache ? {} : config.cachemap.manifest_data["deps"]
+          JSON.pretty_generate(data)
         end
 
         def manifest_pkg_dependencies

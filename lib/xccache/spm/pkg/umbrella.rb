@@ -27,7 +27,6 @@ module XCCache
           create
           resolve
           sync_cachemap
-          gen_cachemap_viz
         end
 
         def resolve

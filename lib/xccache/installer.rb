@@ -14,6 +14,7 @@ module XCCache
       umbrella_pkg.prepare if @umbrella_pkg.nil?
       yield
       umbrella_pkg.write_manifest
+      umbrella_pkg.gen_cachemap_viz
     end
 
     def sync_lockfile

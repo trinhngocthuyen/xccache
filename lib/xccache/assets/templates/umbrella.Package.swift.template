@@ -14,25 +14,20 @@ let DEPENDENCIES: [Package.Dependency] = [
 let PLATFORMS: [SupportedPlatform] = [
 <%= platforms %>
 ]
+let PRODUCTS_TO_TARGETS: [String: [String]] = try parseJSON("""
+<%= products_to_targets %>
+""")
 // ------------------------------------------------------------------------------------
 
 // MARK: Main
-if let data = JSON.data(using: .utf8),
-   let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-   let dict = dict["targets"] as? [String: [String]] {
-  _ = XCCache.Package(dict).spm
-} else {
-  _ = Package(name: "xccache")
-}
+_ = try XCCache.Package(parseJSON(JSON)).spm
 
 // MARK: XCCache
 enum XCCache {
   // MARK: Config
   @MainActor
   struct Config {
-    static let knownSlugs: [String] = DEPENDENCIES.map(\.slug)
     static let pkgDir = URL(filePath: #filePath).deletingLastPathComponent()
-
     // NOTE: Do NOT change `binariesDir` to `static let`
     // Somehow, incremental resolution doesnt work causing the `binaryExist` wrongly cached
     static var binariesDir: URL { pkgDir.appending(path: "binaries") }
@@ -48,7 +43,7 @@ enum XCCache {
 
     var spm: PackageDescription.Package {
       let regularTargets = targets.map(\.spm)
-      let binaryTargets = targets.flatMap(\.deps).compactMap(\.spmBinaryTarget).unique(by: \.name)
+      let binaryTargets = targets.flatMap(\.flattenDeps).compactMap(\.spmBinaryTarget)
       return .init(
         name: "xccache",
         platforms: PLATFORMS,
@@ -63,65 +58,62 @@ enum XCCache {
   @MainActor
   final class Target {
     let name: String
-    let deps: [XCCache.Dependency]
+    let deps: [UmbrellaDependency]
     init(_ name: String, _ deps: [String]) {
       self.name = name
-      self.deps = deps.map { XCCache.Dependency($0) }
+      self.deps = deps.map { UmbrellaDependency($0) }
     }
 
     var spmProduct: PackageDescription.Product {
       .library(name: name, targets: [name])
     }
     var spm: PackageDescription.Target {
-      .target(
-        name: name,
-        dependencies: deps.compactMap(\.spm),
-        path: ".Sources/\(name)"
-      )
+      .target(name: name, dependencies: flattenDeps.map(\.spm), path: ".Sources/\(name)")
     }
-    var spmBinaryTargets: [PackageDescription.Target] {
-      deps.compactMap(\.spmBinaryTarget).unique(by: \.name)
-    }
+    var flattenDeps: [Dependency] { deps.flatMap(\.toBinariesIfOk).unique(by: \.name) }
   }
 
   // MARK: Dependency
   @MainActor
   class Dependency {
     let name: String
+    let binary: Bool
     private let bareName: String
-    private let binaryName: String
 
     init(_ name: String) {
       self.name = name
       self.bareName = name.basename.withoutExtenstion
-      self.binaryName = bareName + ".xcframework"
+      self.binary = name.hasSuffix(".binary") && Config.binariesDir.appending(path: "\(bareName)/\(bareName).xcframework").exist
     }
-
-    private var isBinary: Bool { name.hasSuffix(".binary") }
-    private var binaryExist: Bool { Config.binariesDir.appending(path: "\(bareName)/\(binaryName)").exist }
-    private var isKnownSlug: Bool { Config.knownSlugs.contains(name.slug) }
-
-    var spm: PackageDescription.Target.Dependency? {
-      if isBinary && binaryExist { return .byName(name: name) }
-      if isKnownSlug { return .product(name: name.basename.withoutBinary, package: name.slug) }
-      return nil
+    var spm: PackageDescription.Target.Dependency {
+      if binary { return .byName(name: name) }
+      return .product(name: bareName, package: name.slug)
     }
     var spmBinaryTarget: PackageDescription.Target? {
-      isBinary && binaryExist ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(binaryName)") : nil
+      binary ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(bareName).xcframework") : nil
+    }
+  }
+
+  @MainActor
+  class UmbrellaDependency: Dependency {
+    let binaries: [Dependency]
+    override init(_ name: String) {
+      binaries = (PRODUCTS_TO_TARGETS[name.withoutBinary] ?? []).map { Dependency("\($0).binary") }
+      super.init(name)
+    }
+    var toBinariesIfOk: [Dependency] {
+      if !binaries.isEmpty && binaries.allSatisfy(\.binary) { return binaries }
+      return [Dependency(name.withoutBinary)]
     }
   }
 }
 
 // MARK: Helpers
-extension Package.Dependency {
-  var slug: String {
-    switch kind {
-    case let .registry(id: id, _): id
-    case let .sourceControl(_, location: location, _): location.basename.withoutExtenstion
-    case let .fileSystem(_, path: path): path.basename
-    @unknown default: ""
-    }
+func parseJSON<T>(_ content: String) throws -> T {
+  if let data = content.data(using: .utf8), let result = try JSONSerialization.jsonObject(with: data) as? T {
+    return result
   }
+  throw NSError(domain: "Invalid JSON:\n\(content)", code: 111)
 }
 
 extension URL {

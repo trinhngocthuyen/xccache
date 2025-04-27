@@ -6,21 +6,25 @@ module XCCache
           UI.section("Syncing cachemap")
           nodes, edges, parents = xccache_desc.traverse
           cache_data = gen_cache_data(nodes, parents)
-          targets_data = xccache_desc.targets.to_h do |agg_target|
-            deps = agg_target.direct_dependencies.flat_map do |d|
+          targets_data, deps_data = {}, {}
+          xccache_desc.targets.each do |agg_target|
+            targets_data[agg_target.name] = agg_target.direct_dependencies.flat_map do |d|
               # If any associated targets is missed -> use original product form
               # Otherwise, replace with recursive targets' binaries
-              if d.flatten_as_targets.all? { |t| cache_data[t] == :hit }
-                d.recursive_targets.map { |t| "#{t.full_name}.binary" }
+              deps_data[d.full_name] = d.recursive_targets.map(&:full_name)
+              if d.recursive_targets.all? { |t| cache_data[t] == :hit }
+                "#{d.full_name}.binary"
               else
                 d.full_name
               end
-            end.uniq.sort
-            [agg_target.name, deps]
+            end.uniq
           end
 
           config.cachemap.raw = {
-            "targets" => targets_data,
+            "manifest" => {
+              "targets" => targets_data,
+              "deps" => deps_data,
+            },
             "cache" => cache_data.transform_keys(&:full_name),
             "depgraph" => {
               "nodes" => nodes.map { |x| target_to_cytoscape_node(x, cache_data) },

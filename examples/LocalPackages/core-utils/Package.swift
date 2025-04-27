@@ -18,6 +18,7 @@ let package = Package(
     .target(
       name: "Swizzler",
       dependencies: [
+        "CoreUtilsWrapper",
         .product(name: "SwiftyBeaver", package: "SwiftyBeaver"),
         .product(name: "Moya", package: "Moya"),
       ]
@@ -31,5 +32,9 @@ let package = Package(
       path: "Sources/DebugKitObjc",
       resources: [.copy("token.txt")]
     ),
+    .target(
+      name: "CoreUtilsWrapper",
+      path: "Sources/Core"
+    )
   ]
 )
