@@ -102,7 +102,7 @@ enum XCCache {
       super.init(name)
     }
     var toBinariesIfOk: [Dependency] {
-      if !binaries.isEmpty && binaries.allSatisfy(\.binary) { return binaries }
+      if name.hasSuffix(".binary"), !binaries.isEmpty && binaries.allSatisfy(\.binary) { return binaries }
       return [Dependency(name.withoutBinary)]
     }
   }
