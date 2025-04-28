@@ -43,7 +43,7 @@ enum XCCache {
 
     var spm: PackageDescription.Package {
       let regularTargets = targets.map(\.spm)
-      let binaryTargets = targets.flatMap(\.flattenDeps).compactMap(\.spmBinaryTarget)
+      let binaryTargets = targets.flatMap(\.flattenDeps).unique(by: \.name).compactMap(\.spmBinaryTarget)
       return .init(
         name: "xccache",
         platforms: PLATFORMS,
