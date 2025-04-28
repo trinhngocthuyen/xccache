@@ -12,11 +12,12 @@ module XCCache
         end
 
         def targets_to_build(options)
-          items = options[:targets]
-          items = config.cachemap.missed.map { |x| File.basename(x) } if items.nil? || items.empty?
-          items = items.split(",") if items.is_a?(String)
+          items = options[:targets] || []
+          items = config.cachemap.missed.map { |x| File.basename(x) } if items.empty?
           items.map do |name|
-            @descs.flat_map(&:targets).find { |p| p.name == name }.full_name
+            target = @descs.flat_map(&:targets).find { |p| p.name == name }
+            raise GeneralError, "Found no target: #{name}" if target.nil?
+            target.full_name
           end
         end
       end

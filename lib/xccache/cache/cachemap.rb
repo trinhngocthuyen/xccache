@@ -49,7 +49,7 @@ module XCCache
       end
 
       def get_cache_data(type)
-        cache_data.select { |_, v| v == type }.keys
+        cache_data.select { |k, v| !k.end_with?(".xccache") && v == type }.keys
       end
     end
   end

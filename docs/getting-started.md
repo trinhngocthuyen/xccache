@@ -41,9 +41,9 @@ Refer to this doc: [Overview](overview.md)
 
 To build cache of Swift packages, run `xccache build`.
 
-By default, the tool only builds cache-missed targets. Use the `--target` option to specify the targets to build (comma separated).
+By default, the tool only builds cache-missed targets. To build specify targets, specify them in the arguments, for example:
 ```sh
-xccache build --target=SwiftyBeaver,SDWebImage
+xccache build SwiftyBeaver SDWebImage
 ```
 The prebuilt xcframeworks are available under `xccache/binaries`, following the structure as below:
 ```
@@ -112,5 +112,5 @@ Run `xccache rollback`. This returns the project to the original state where pro
 
 Packaging a Swift package target as binary is not as easy as it seems, which involves several steps. This tool offers a convenient way to build such a target into an xcframework with just only one step. Check out build options (ex. configuration, sdk, etc.) with `--help`.
 ```sh
-xccache pkg build --target=<Target>
+xccache pkg build <Target>
 ```

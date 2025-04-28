@@ -7,17 +7,19 @@ module XCCache
         self.summary = "Build a Swift package into an xcframework"
         def self.options
           [
-            ["--target=foo", "Target to build"],
             ["--sdk=foo,bar", "Sdk (iphonesimulator, iphoneos, etc.)"],
             ["--config=foo", "Configuration (debug, release)"],
             ["--out=foo", "Output directory for the xcframework"],
             ["--checksum/no-checksum", "Whether to include checksum to the binary name"],
           ].concat(super)
         end
+        self.arguments = [
+          CLAide::Argument.new("TARGET", false, true),
+        ]
 
         def initialize(argv)
           super
-          @target = argv.option("target")
+          @targets = argv.arguments!
           @sdk = argv.option("sdk")
           @config = argv.option("config")
           @out_dir = argv.option("out")
@@ -27,7 +29,7 @@ module XCCache
         def run
           pkg = SPM::Package.new
           pkg.build(
-            targets: @target,
+            targets: @targets,
             sdk: @sdk,
             config: @config,
             out_dir: @out_dir,

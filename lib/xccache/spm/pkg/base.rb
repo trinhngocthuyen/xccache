@@ -15,7 +15,6 @@ module XCCache
       def build(options = {})
         validate!
         targets = options.delete(:targets) || []
-        targets = targets.split(",") if targets.is_a?(String)
         raise GeneralError, "No targets were specified" if targets.empty?
 
         targets.map { |t| t.split("/")[-1] }.each do |t|

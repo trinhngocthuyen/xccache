@@ -5,14 +5,14 @@ module XCCache
     class Build < Installer
       def initialize(options = {})
         super
-        @target = options[:target]
+        @targets = options[:targets]
         @sdk = options[:sdk]
       end
 
       def install!
         perform_install do
           umbrella_pkg.build(
-            targets: @target,
+            targets: @targets,
             sdk: @sdk,
             out_dir: config.spm_binaries_frameworks_dir,
             checksum: true,
