@@ -2,7 +2,7 @@ require "digest"
 
 class String
   def c99extidentifier
-    sub(/[^a-zA-Z0-9.]/, "_")
+    gsub(/[^a-zA-Z0-9.]/, "_")
   end
 end
 

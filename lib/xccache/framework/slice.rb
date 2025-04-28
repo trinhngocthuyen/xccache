@@ -44,9 +44,9 @@ module XCCache
         UI.message("Override resource_bundle_accessor")
         template_name = use_clang? ? "resource_bundle_accessor.m" : "resource_bundle_accessor.swift"
         source_path = tmpdir / File.basename(template_name)
-        obj_path = products_dir / "#{name}.build" / "#{source_path.basename}.o"
+        obj_path = products_dir / "#{module_name}.build" / "#{source_path.basename}.o"
         Template.new(template_name).render(
-          { :pkg => pkg_target.pkg_name, :target => name },
+          { :pkg => pkg_target.pkg_name, :target => name, :module_name => module_name },
           save_to: source_path
         )
 

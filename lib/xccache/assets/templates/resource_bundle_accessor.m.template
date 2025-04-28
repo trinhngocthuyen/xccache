@@ -6,7 +6,7 @@
 @implementation BundleFinder
 @end
 
-NSBundle* <%= target %>_SWIFTPM_MODULE_BUNDLE() {
+NSBundle* <%= module_name %>_SWIFTPM_MODULE_BUNDLE() {
   NSString *bundleName = @"<%= pkg %>_<%= target %>";
   NSArray<NSURL *> *candidates = @[
     NSBundle.mainBundle.resourceURL,
