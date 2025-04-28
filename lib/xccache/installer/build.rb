@@ -7,6 +7,7 @@ module XCCache
         super
         @targets = options[:targets]
         @sdk = options[:sdk]
+        @recursive = options[:recursive]
       end
 
       def install!
@@ -16,6 +17,7 @@ module XCCache
             sdk: @sdk,
             out_dir: config.spm_binaries_frameworks_dir,
             checksum: true,
+            recursive: @recursive,
           )
         end
       end

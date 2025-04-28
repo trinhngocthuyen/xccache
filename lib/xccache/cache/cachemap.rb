@@ -15,6 +15,10 @@ module XCCache
         raw["manifest"] ||= { "targets" => {}, "deps" => {} }
       end
 
+      def missed?(name)
+        missed.include?(name)
+      end
+
       def missed
         get_cache_data(:missed)
       end

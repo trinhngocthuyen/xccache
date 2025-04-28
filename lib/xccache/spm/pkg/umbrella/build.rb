@@ -14,11 +14,15 @@ module XCCache
         def targets_to_build(options)
           items = options[:targets] || []
           items = config.cachemap.missed.map { |x| File.basename(x) } if items.empty?
-          items.map do |name|
-            target = @descs.flat_map(&:targets).find { |p| p.name == name }
-            raise GeneralError, "Found no target: #{name}" if target.nil?
-            target.full_name
+          targets = @descs.flat_map(&:targets).select { |t| items.include?(t.name) }
+          if options[:recursive]
+            UI.message("Will include cache-missed recursive targets")
+            targets += targets.flat_map do |t|
+              t.recursive_targets.select { |x| config.cachemap.missed?(x.full_name) }
+            end
           end
+          # TODO: Sort by number of dependents
+          targets.map(&:full_name).uniq
         end
       end
     end
