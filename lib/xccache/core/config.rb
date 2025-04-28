@@ -74,5 +74,9 @@ module XCCache
     def ignore_local?
       raw["ignore_local"]
     end
+
+    def ignore_build_errors?
+      raw["ignore_build_errors"]
+    end
   end
 end

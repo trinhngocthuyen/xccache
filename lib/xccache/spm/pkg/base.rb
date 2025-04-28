@@ -22,6 +22,7 @@ module XCCache
             build_target(**options, target: t)
           rescue StandardError => e
             UI.error("Failed to build target: #{t}. Error: #{e}")
+            raise e unless config.ignore_build_errors?
           end
         end
       end
