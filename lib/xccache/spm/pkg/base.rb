@@ -28,7 +28,7 @@ module XCCache
       end
 
       def build_target(target: nil, sdk: nil, config: nil, out_dir: nil, **options)
-        target_pkg_desc = pkg_desc_of_target(target)
+        target_pkg_desc = pkg_desc_of_target(target, skip_resolve: options[:skip_resolve])
         if target_pkg_desc.binary_targets.any? { |t| t.name == target }
           return UI.warn("Target #{target} is a binary target -> no need to build")
         end
@@ -65,7 +65,7 @@ module XCCache
         raise GeneralError, "No Package.swift in #{root_dir}. Are you sure you're running on a package dir?"
       end
 
-      def pkg_desc_of_target(name)
+      def pkg_desc_of_target(name, skip_resolve: false)
         # TODO: Refactor this resolution logic
         find_pkg_desc = proc do
           # The current package contains the given target
@@ -76,7 +76,7 @@ module XCCache
             "-> trigger from dependencies"
           )
           # Otherwise, it's inside one of the dependencies. Need to resolve then find it
-          resolve
+          resolve unless skip_resolve
           root_dir.glob(".build/checkouts/*").each do |dir|
             desc = Description.in_dir(dir)
             return desc if desc.has_target?(name)

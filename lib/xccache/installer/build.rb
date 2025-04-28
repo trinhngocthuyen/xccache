@@ -18,6 +18,7 @@ module XCCache
             out_dir: config.spm_binaries_frameworks_dir,
             checksum: true,
             recursive: @recursive,
+            skip_resolve: @skip_resolving_dependencies,
           )
         end
       end

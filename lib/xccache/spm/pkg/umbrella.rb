@@ -23,18 +23,14 @@ module XCCache
           @dependency_targets_by_products = {}
         end
 
-        def prepare
+        def prepare(options = {})
           create
-          resolve
-          sync_cachemap
-        end
-
-        def resolve
-          super
+          resolve unless options[:skip_resolve]
           create_symlinks
           gen_metadata
           resolve_recursive_dependencies
           create_symlinks_to_artifacts
+          sync_cachemap
         end
 
         def resolve_recursive_dependencies

@@ -34,6 +34,7 @@ module XCCache
             config: @config,
             out_dir: @out_dir,
             checksum: @include_checksum,
+            skip_resolve: @skip_resolving_dependencies,
           )
         end
       end

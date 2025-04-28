@@ -13,6 +13,8 @@ module XCCache
     def initialize(argv)
       super
       config.verbose = verbose unless verbose.nil?
+      @skip_resolving_dependencies = argv.flag?("skip-resolving-dependencies")
+      @install_options = { :skip_resolving_dependencies => @skip_resolving_dependencies }
     end
   end
 end

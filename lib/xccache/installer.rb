@@ -7,12 +7,13 @@ module XCCache
 
     def initialize(options = {})
       @umbrella_pkg = options[:umbrella_pkg]
+      @skip_resolving_dependencies = options[:skip_resolving_dependencies]
     end
 
     def perform_install
       verify_projects!
       sync_lockfile if @umbrella_pkg.nil?
-      umbrella_pkg.prepare if @umbrella_pkg.nil?
+      umbrella_pkg.prepare(skip_resolve: @skip_resolving_dependencies) if @umbrella_pkg.nil?
       yield
       umbrella_pkg.write_manifest
       umbrella_pkg.gen_cachemap_viz

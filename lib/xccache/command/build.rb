@@ -9,6 +9,7 @@ module XCCache
           ["--sdk=iphonesimulator", "SDKs to build (comma separated)"],
           ["--integrate/no-integrate", "Whether to integrate after building target (default: true)"],
           ["--recursive", "Whether to build their recursive targets if cache-missed (default: false)"],
+          ["--skip-resolving-dependencies", "Skip resolving package dependencies"],
         ].concat(super)
       end
       self.arguments = [
@@ -24,10 +25,10 @@ module XCCache
       end
 
       def run
-        installer = Installer::Build.new(targets: @targets, sdk: @sdk, recursive: @recursive)
+        installer = Installer::Build.new(targets: @targets, sdk: @sdk, recursive: @recursive, **@install_options)
         installer.install!
         # Reuse umbrella_pkg from previous installers
-        Installer::Use.new(umbrella_pkg: installer.umbrella_pkg).install! if @should_integrate
+        Installer::Use.new(umbrella_pkg: installer.umbrella_pkg, **@install_options).install! if @should_integrate
       end
     end
   end
