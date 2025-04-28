@@ -2,7 +2,14 @@
   "EX.xcodeproj": {
     "packages": [
       {
-        "repositoryURL": "https://github.com/yeatse/KingfisherWebP.git",
+        "repositoryURL": "https://github.com/firebase/firebase-ios-sdk",
+        "requirement": {
+          "kind": "upToNextMajorVersion",
+          "minimumVersion": "11.4.0"
+        }
+      },
+      {
+        "repositoryURL": "https://github.com/yeatse/KingfisherWebP",
         "requirement": {
           "kind": "upToNextMajorVersion",
           "minimumVersion": "1.6.0"
@@ -28,7 +35,7 @@
         "path_from_root": "LocalPackages/core-utils"
       },
       {
-        "repositoryURL": "https://github.com/googlemaps/ios-maps-sdk.git",
+        "repositoryURL": "https://github.com/googlemaps/ios-maps-sdk",
         "requirement": {
           "kind": "upToNextMajorVersion",
           "minimumVersion": "9.4.0"
@@ -57,6 +64,7 @@
         "core-utils/ResourceKit",
         "core-utils/Swizzler",
         "ios-maps-sdk/GoogleMaps",
+        "firebase-ios-sdk/FirebaseCrashlytics",
         "SDWebImage/SDWebImage",
         "SnapKit/SnapKit-Dynamic",
         "KingfisherWebP/KingfisherWebP"

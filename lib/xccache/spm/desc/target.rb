@@ -34,9 +34,11 @@ module XCCache
           !header_paths.empty?
         end
 
-        def header_paths
-          @header_paths ||=
-            (header_search_paths + public_header_paths)
+        def header_paths(options = {})
+          paths = []
+          paths += public_header_paths if options.fetch(:public, true)
+          paths += header_search_paths if options.fetch(:search, false)
+          paths
             .flat_map { |p| p.glob("**/*.h*") }
             .map(&:realpath)
             .uniq

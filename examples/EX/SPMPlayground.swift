@@ -7,6 +7,7 @@ import Swizzler
 import GoogleMaps
 import SDWebImage
 import KingfisherWebP
+import FirebaseCrashlytics
 
 struct Playground {
   init() {
@@ -19,5 +20,6 @@ struct Playground {
     print(GMSAddress.self)          // GoogleMaps
     print(SDImageCacheOptions.self) // SDWebImage)
     print(WebPProcessor.self)       // KingfisherWebP
+    print(CrashlyticsReport.self)   // FirebaseCrashlytics
   }
 }
