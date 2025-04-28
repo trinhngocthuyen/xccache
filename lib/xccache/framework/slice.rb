@@ -22,7 +22,10 @@ module XCCache
           cmd << "--package-path" << pkg_dir
           cmd << "--target" << name
           cmd << "--sdk" << sdk.sdk_path
+          # Workaround for swiftinterface emission
+          # https://github.com/swiftlang/swift/issues/64669#issuecomment-1535335601
           cmd << "-Xswiftc" << "-enable-library-evolution"
+          cmd << "-Xswiftc" << "-alias-module-names-in-module-interface"
           cmd << "-Xswiftc" << "-emit-module-interface"
           cmd << "-Xswiftc" << "-no-verify-emitted-module-interface"
           Sh.run(cmd, suppress_err: /(dependency '.*' is not used by any target|unable to create symbolic link)/)
