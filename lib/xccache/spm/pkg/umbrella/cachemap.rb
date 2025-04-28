@@ -17,7 +17,7 @@ module XCCache
               else
                 d.full_name
               end
-            end.uniq
+            end.uniq.sort_by(&:downcase)
           end
 
           config.cachemap.raw = {
