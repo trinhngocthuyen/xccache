@@ -8,6 +8,7 @@ import GoogleMaps
 import SDWebImage
 import KingfisherWebP
 import FirebaseCrashlytics
+import CoreUtils_Wrapper
 
 struct Playground {
   init() {
@@ -15,6 +16,7 @@ struct Playground {
     print(MoyaError.self)           // Moya
     print(AFError.self)             // Alamofire
     print(DebugKit.self)            // core-utils
+    print(CoreUtils_Wrapper.self)   // core-utils
     print(Swizzler.self)            // core-utils
     print(ResourceKit.self)         // core-utils
     print(GMSAddress.self)          // GoogleMaps

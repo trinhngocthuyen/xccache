@@ -135,7 +135,7 @@ module XCCache
         swiftinterfaces = products_dir.glob("#{module_name}.build/#{module_name}.swiftinterface")
         to_copy = products_dir.glob("Modules/#{module_name}.*") + swiftinterfaces
         to_copy.each do |p|
-          p.copy(to: swiftmodule_dir / p.basename.sub(name, sdk.triple))
+          p.copy(to: swiftmodule_dir / p.basename.sub(module_name, sdk.triple))
         end
       end
 
