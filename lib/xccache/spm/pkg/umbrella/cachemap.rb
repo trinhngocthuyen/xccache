@@ -56,7 +56,7 @@ module XCCache
             result[node] = :missed if result[node] == :hit
             to_visit += parents[node] if parents.key?(node)
           end
-          result
+          result.reject { |k, _| k.name.end_with?(".xccache") }
         end
 
         def verify_binary?(target)

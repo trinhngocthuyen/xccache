@@ -24,23 +24,15 @@ module XCCache
       end
 
       def stats
-        describe = proc do |type|
-          count = get_cache_data(type).count
-          total_count = [cache_data.count, 1].max
-          percent = (count * 100 / total_count).to_i
-          "#{percent}% (#{count}/#{total_count})"
+        %i[hit missed ignored].to_h do |type|
+          count, total_count = get_cache_data(type).count, cache_data.count
+          percent = total_count.positive? ? count * 100 / total_count : 0
+          [type, "#{percent}% (#{count}/#{total_count})"]
         end
-        {
-          :hit => describe.call(:hit),
-          :missed => describe.call(:missed),
-          :ignored => describe.call(:ignored),
-        }
       end
 
       def print_stats
-        hit = get_cache_data(:hit)
-        missed = get_cache_data(:missed)
-        ignored = get_cache_data(:ignored)
+        hit, missed, ignored = %i[hit missed ignore].map { |type| get_cache_data(type) }
         total_count = cache_data.count
         UI.message <<~DESC
           -------------------------------------------------------------------
@@ -53,7 +45,7 @@ module XCCache
       end
 
       def get_cache_data(type)
-        cache_data.select { |k, v| !k.end_with?(".xccache") && v == type }.keys
+        cache_data.select { |_, v| v == type }.keys
       end
     end
   end
