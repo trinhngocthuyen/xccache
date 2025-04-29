@@ -3,7 +3,7 @@ module XCCache
     class Package
       module UmbrellaDescsMixin
         def gen_metadata
-          UI.section("Generating metadata of packages") do
+          UI.section("Generating metadata of packages", timing: true) do
             dirs = [root_dir] + root_dir.glob(".build/checkouts/*").reject { |p| p.glob("Package*.swift").empty? }
             @descs = dirs.parallel_map do |dir|
               desc = Description.in_dir(dir, save_to_dir: config.spm_metadata_dir)

@@ -3,7 +3,7 @@ module XCCache
     class Package
       module UmbrellaManifestMixin
         def write_manifest(no_cache: false)
-          UI.info("Writing Package.swift (package: #{root_dir.basename.to_s.dark})")
+          UI.info("Writing Package.swift (package: #{root_dir.basename})")
           Template.new("umbrella.Package.swift").render(
             {
               :timestamp => Time.new.strftime("%F %T"),

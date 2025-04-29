@@ -9,11 +9,21 @@ module XCCache
       include Config::Mixin
       attr_accessor :indent
 
-      def section(title)
+      def section(title, timing: false)
+        start = Time.new if timing
         UI.puts(title)
         self.indent += 2
         res = yield if block_given?
         self.indent -= 2
+        if timing
+          duration = (Time.new - start).to_i
+          duration = if duration < 60 then "#{duration}s"
+                     elsif duration < 60 * 60 then "#{duration / 60}m"
+                     else
+                       "#{duration / 3600}h"
+                     end
+          UI.puts("-> Finished: #{title.dark} (#{duration})")
+        end
         res
       end
 

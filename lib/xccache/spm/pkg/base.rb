@@ -52,8 +52,9 @@ module XCCache
       def resolve(force: false)
         return if @resolved && !force
 
-        UI.info("Resolving package dependencies (package: #{root_dir.basename.to_s.dark})")
-        Sh.run("swift package resolve --package-path #{root_dir} 2>&1")
+        UI.section("Resolving package dependencies (package: #{root_dir.basename})", timing: true) do
+          Sh.run("swift package resolve --package-path #{root_dir} 2>&1")
+        end
         create_symlinks_to_local_pkgs
         @resolved = true
       end
