@@ -1,4 +1,4 @@
-[< Documentation](README.md)
+[< Knowledge Base](README.md)
 
 # Troubleshooting
 TBU

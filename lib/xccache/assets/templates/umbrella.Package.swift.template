@@ -1,10 +1,22 @@
 // swift-tools-version: 6.0
-
 import Foundation
 import PackageDescription
 
-// MARK: GENERATED
-// ------------------------------------------------------------------------------------
+/*
+ MARK: INSTRUCTIONS
+ ----------------------------------------------------------------------------------------------------------------------
+ This Package manifest is auto-generated from xccache.
+ ----------------------------------------------------------------------------------------------------------------------
+ During local development, you can switch between *BINARY mode* and *SOURCE mode* by adding or removing the `.binary`
+ suffix in the JSON below.
+ As a user, you just need to care about the JSON. The rest is just the tool's internal logic.
+
+ NOTE that a product (ex. `pkg/foo.binary`) can only be used as binary if:
+ - Binary exists for `pkg/foo` (in `xccache/packages/binaries/foo/foo.xcframework`)
+ - Binary exists for all of its dependencies
+ The tool auto-fallbacks to the *SOURCE mode* if the conditions are not met.
+ ----------------------------------------------------------------------------------------------------------------------
+*/
 let JSON = """
 <%= json %>
 """

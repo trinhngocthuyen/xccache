@@ -1,4 +1,4 @@
-[< Documentation](README.md)
+[< Knowledge Base](README.md)
 
 # Getting Started
 
@@ -6,7 +6,7 @@
 <summary>Table of Contents</summary>
 
 - [Quick Start](#quick-start)
-- [Overview](#overview)
+- [Understanding the Tool](#understanding-the-tool)
 - [Working With Cache](#working-with-cache)
   - [Building Cache](#building-cache)
   - [Using Cache](#using-cache)
@@ -29,8 +29,11 @@ Simply run `xccache` under the root directory of the project. Then, you should s
 
 <img src="res/umbrella_product_dependencies.png" width="580px">
 
-## Overview
-Refer to this doc: [Overview](overview.md)
+## Understanding the Tool
+Read the overview: [here](overview.md).
+
+Following are some docs about what happens under the hood:
+- [Packaging as an xcframework](under-the-hood/packaging-as-xcframework.md)
 
 ## Working With Cache
 
@@ -58,21 +61,19 @@ In the package manifest (Package.swift) of the umbrella package (named xccache),
 ```swift
 let JSON = """
 {
-  "targets": {
-    "EX.xccache": [
-      "SwiftyBeaver/SwiftyBeaver.binary", // <-- Using CACHE (xcframework)
-      "Moya/Moya.binary",
-      "Alamofire/Alamofire.binary",
-      "core-utils/DebugKit",              // <-- Using SOURCE CODE
-      "core-utils/ResourceKit",
-      "core-utils/Swizzler",
-      "ios-maps-sdk/GoogleMapsTarget.binary",
-      "ios-maps-sdk/GoogleMaps.binary",
-      "SDWebImage/SDWebImage.binary",
-      "SnapKit/SnapKit.binary"
-    ],
-    "EXTests.xccache": []
-  }
+  "EXTests.xccache": [],
+  "EX.xccache": [
+    "core-utils/DebugKit",           // <-- Using CACHE (xcframework)
+    "core-utils/ResourceKit",
+    "core-utils/Swizzler.binary",    // <-- Using SOURCE CODE
+    "firebase-ios-sdk/FirebaseCrashlytics.binary",
+    "ios-maps-sdk/GoogleMaps.binary",
+    "KingfisherWebP/KingfisherWebP.binary",
+    "Moya/Moya.binary",
+    "SDWebImage/SDWebImage.binary",
+    "SnapKit/SnapKit-Dynamic.binary",
+    "SwiftyBeaver/SwiftyBeaver.binary"
+  ]
 }
 """
 ```
@@ -87,7 +88,7 @@ In Xcode build log, you should see xcframeworks of the cache-hit targets being p
 
 Whenever cache is integrated into your project (via `xccache`, `xccache use`, or `xccache build`), the tool generates an html (at `xccache/cachemap.html`) that visualizes the cache dependencies. Open this html in your browser to better understand the depenencies in your project.
 
-<img src="res/cachemap.png" width="600px">
+<img src="res/cachemap.png" width="700px">
 
 ### Switching Between Binary and Source Code
 
