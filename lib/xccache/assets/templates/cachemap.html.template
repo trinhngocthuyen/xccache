@@ -39,6 +39,7 @@
             <div class="info">Target: <span class="value target">TBU</span></div>
             <div class="info">Checksum: <span class="value checksum">TBU</span></div>
             <div class="info">Binary: <a class="value binary" href="">TBU</a></div>
+            <div class="info"><p class="others">TBU</p></div>
           </div>
         </section>
       </div>

@@ -26,7 +26,7 @@ module XCCache
       def stats
         %i[hit missed ignored].to_h do |type|
           count, total_count = get_cache_data(type).count, cache_data.count
-          percent = total_count.positive? ? count * 100 / total_count : 0
+          percent = total_count.positive? ? (count.to_f * 100 / total_count).round : 0
           [type, "#{percent}% (#{count}/#{total_count})"]
         end
       end

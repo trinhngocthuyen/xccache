@@ -1,10 +1,15 @@
-// MARK: GENERATED
-// ------------------------------------------------
-graph = JSON.parse(`
+const graph = JSON.parse(`
 <%= json %>
 `);
+
 // ------------------------------------------------
 
+const COLORS = {
+  'hit': '#339966',
+  'missed': '#ff6f00',
+  'ignored': '#888',
+  'NA': '#888',
+}
 const cy = cytoscape({
   container: $('#cy'),
   elements: ([...graph.nodes, ...graph.edges]).map(x => ({data: x})),
@@ -18,7 +23,8 @@ const cy = cytoscape({
         'text-halign': 'center',
         'font-size': '14px',
         'shape': 'roundrectangle',
-        'width': (e) => Math.max(50, e.id().split("/")[1].length * 8),
+        'width': (e) => Math.max(50, e.id().split('/')[1].length * 8),
+        'background-color': (e) => COLORS[e.data('cache') || 'NA'],
       }
     },
     {
@@ -30,23 +36,9 @@ const cy = cytoscape({
       }
     },
     {
-      selector: 'node[cache="hit"]',
-      style: {'background-color': '#339966'}
-    },
-    {
-      selector: 'node[cache="missed"]',
-      style: {'background-color': '#ff6f00'}
-    },
-    {
       selector: 'node[type="agg"]',
       style: {
         'background-color': '#333',
-      }
-    },
-    {
-      selector: 'node[cache="ignored"]',
-      style: {
-        'background-color': '#888',
       }
     },
     {
@@ -56,14 +48,13 @@ const cy = cytoscape({
         'target-arrow-shape': 'triangle',
         'curve-style': 'bezier',
         'line-color': '#ccc',
-        // 'line-color': e => e.target().style('background-color') || '#999',
-        'target-arrow-color': e => e.style('line-color'),
+        'target-arrow-color': '#ccc',
       }
     },
   ],
   layout: {
     name: 'fcose',
-    animationDuration: 300,
+    animationDuration: 200,
     nodeRepulsion: 10000,
     idealEdgeLength: 120,
     gravity: 0.25,
@@ -71,24 +62,34 @@ const cy = cytoscape({
 });
 
 cy.on('select', 'node', function(event) {
-  $('.node-info').css('display', 'block');
   const node = event.target;
-  const info = $('.node-info .info');
-  info.find('.target').html(node.id());
-  info.find('.checksum').html(node.data('checksum') || 'NA');
-  info.find('.binary')
-    .html((node.data('binary') || 'NA').split('/').slice(-1))
-    .attr({'href': node.data('binary') || ''});
-
-  // Mark neighbor as focused, dim others
-  const focused = node.neighborhood().add(node);
-  focused.animate({style: {'opacity': 1}, duration: 200});
-  cy.elements().not(focused).animate({style: {'opacity': 0.15}, duration: 200});
+  node.displayDetails();
+  node.neighborhood().add(node).focus();
 });
 
 cy.on('tap', function(event) {
   if (event.target == cy) {
     $('.node-info').css('display', 'none');
-    cy.elements().animate({style: {'opacity': 1}});
+    cy.elements().animateStyle({'opacity': 1, 'line-color': '#ccc', 'target-arrow-color': '#ccc'});
   }
+});
+
+// -----------------------------------------------------------------
+
+cytoscape('collection', 'animateStyle', function(style) {
+  this.animate({style: style, duration: 200, easing: 'ease-out'})
+});
+cytoscape('collection', 'focus', function() {
+  this.animateStyle({'opacity': 1, 'line-color': '#666', 'target-arrow-color': '#666'});
+  cy.elements().not(this).animateStyle({'opacity': 0.15, 'line-color': '#ccc', 'target-arrow-color': '#ccc'});
+});
+cytoscape('collection', 'displayDetails', function() {
+  $('.node-info').css('display', 'block');
+  const info = $('.node-info .info');
+  info.find('.target').html(this.id());
+  info.find('.checksum').html(this.data('checksum') || 'NA');
+  info.find('.binary')
+    .html((this.data('binary') || 'NA').split('/').slice(-1))
+    .attr({'href': this.data('binary') || ''});
+  info.find('.others').html(`Node degree: ${this.degree()} (${this.indegree()} in, ${this.outdegree()} out)`);
 });
