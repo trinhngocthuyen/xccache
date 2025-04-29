@@ -3,6 +3,7 @@ PATH
   specs:
     xccache (0.0.1)
       claide
+      parallel
       xcodeproj
 
 GEM

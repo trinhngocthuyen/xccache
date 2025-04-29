@@ -5,17 +5,14 @@ module XCCache
         def gen_metadata
           UI.section("Generating metadata of packages") do
             dirs = [root_dir] + root_dir.glob(".build/checkouts/*").reject { |p| p.glob("Package*.swift").empty? }
-            dirs.each do |dir|
+            @descs = dirs.parallel_map do |dir|
               desc = Description.in_dir(dir, save_to_dir: config.spm_metadata_dir)
-              next if desc.nil?
-
               desc.retrieve_pkg_desc = proc { |name| @descs_by_name[name] }
               desc.save
               desc.save(to: desc.path.parent / "#{desc.name}.json") if desc.name != dir.basename.to_s
-              @descs << desc
-              @descs_by_name[desc.name] = desc
-              @descs_by_name[dir.basename.to_s] = desc
+              desc
             end
+            @descs_by_name = @descs.flat_map { |d| [[d.name, d], [d.pkg_slug, d]] }.to_h
           end
         end
 
