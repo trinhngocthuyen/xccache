@@ -5,7 +5,7 @@ import PackageDescription
 /*
  MARK: INSTRUCTIONS
  ----------------------------------------------------------------------------------------------------------------------
- This Package manifest is auto-generated from xccache.
+ This Package manifest is auto-generated from xccache (last updated: <%= timestamp %>).
  ----------------------------------------------------------------------------------------------------------------------
  During local development, you can switch between *BINARY mode* and *SOURCE mode* by adding or removing the `.binary`
  suffix in the JSON below.

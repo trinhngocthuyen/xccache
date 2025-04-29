@@ -6,6 +6,7 @@ module XCCache
           UI.info("Writing Package.swift (package: #{root_dir.basename.to_s.dark})")
           Template.new("umbrella.Package.swift").render(
             {
+              :timestamp => Time.new.strftime("%F %T"),
               :json => manifest_targets_json(no_cache: no_cache),
               :products_to_targets => manifest_products_to_targets_json(no_cache: no_cache),
               :platforms => manifest_platforms,
