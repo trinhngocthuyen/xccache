@@ -89,20 +89,34 @@ enum XCCache {
   @MainActor
   class Dependency {
     let name: String
+    let binaryURL: URL
     let binary: Bool
     private let bareName: String
 
     init(_ name: String) {
       self.name = name
       self.bareName = name.basename.withoutExtenstion
-      self.binary = name.hasSuffix(".binary") && Config.binariesDir.appending(path: "\(bareName)/\(bareName).xcframework").exist
+      self.binaryURL = Config.binariesDir.appending(path: "\(bareName)/\(bareName).xcframework").readlink()
+      self.binary = name.hasSuffix(".binary") && binaryURL.exist
     }
     var spm: PackageDescription.Target.Dependency {
       if binary { return .byName(name: name) }
       return .product(name: bareName, package: name.slug)
     }
     var spmBinaryTarget: PackageDescription.Target? {
-      binary ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(bareName).xcframework") : nil
+      // The real link may have different basename in case of remote binary targets
+      // For ex. `binaries/Foo/Foo.xcframework (symlink)` -> `.build/artifacts/foo/Bar.xcframework`
+      // In this case, we should use `Foo.xcframework` (of the symlink instead coz it matches the target name)
+      // Workaround: If readlink() is inside binaries dir -> use basename of the resolved link.
+      // Otherwise, it wasn't built by xccache -> just use basename of the symlink
+      //
+      // Why do we need to resolve symlinks? Well, Xcode caches and uses the wrongly resolved links :(
+      let basename = if binaryURL.path().contains(Config.binariesDir.path()) {
+        binaryURL.basename
+      } else {
+        "\(bareName).xcframework"
+      }
+      return binary ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(basename)") : nil
     }
   }
 
@@ -129,7 +143,9 @@ func parseJSON<T>(_ content: String) throws -> T {
 }
 
 extension URL {
-  var exist: Bool { FileManager.default.fileExists(atPath: path()) }
+  var basename: String { lastPathComponent }
+  var exist: Bool { FileManager.default.fileExists(atPath: readlink().path()) }
+  func readlink() -> URL { resolvingSymlinksInPath() }
 }
 
 extension String {
