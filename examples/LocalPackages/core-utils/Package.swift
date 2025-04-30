@@ -25,10 +25,12 @@ let package = Package(
     ),
     .target(
       name: "ResourceKit",
+      dependencies: ["CoreUtils-Wrapper"],
       resources: [.copy("greetings.txt")]
     ),
     .target(
       name: "DebugKit",
+      dependencies: ["CoreUtils-Wrapper"],
       path: "Sources/DebugKitObjc",
       resources: [.copy("token.txt")]
     ),

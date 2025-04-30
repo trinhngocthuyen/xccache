@@ -6,7 +6,7 @@ struct EXApp: App {
     WindowGroup {
       ContentView()
         .onAppear {
-          _ = Playground()
+          playground()
         }
     }
   }

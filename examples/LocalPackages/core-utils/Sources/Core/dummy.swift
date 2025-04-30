@@ -1,1 +1,3 @@
-public struct CoreUtils_Wrapper { }
+import Foundation
+
+@objc public class CoreUtils_Wrapper: NSObject { }
