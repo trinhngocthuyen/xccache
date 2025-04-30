@@ -13,7 +13,7 @@ module XCCache
             p.to_s.start_with?(root_dir.to_s) ? p.relative_path_from(root_dir).to_s : p.to_s
           end
 
-          UI.message("Cachemap visualization: #{html_path}")
+          UI.info("Cachemap visualization: #{html_path}")
           Template.new("cachemap.html").render(
             {
               :root_dir => root_dir.to_s,
