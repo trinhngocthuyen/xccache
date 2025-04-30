@@ -124,7 +124,7 @@ module XCCache
           pkg_target
           .header_paths
           .map { |p| p.copy(to_dir: framework_headers_path) }
-          .map { |p| "#include \"#{p.basename}\"" }
+          .map { |p| "#include <#{module_name}/#{p.basename}>" }
           .join("\n")
         (framework_headers_path / "#{module_name}-umbrella.h").write(umbrella_header_content)
       end

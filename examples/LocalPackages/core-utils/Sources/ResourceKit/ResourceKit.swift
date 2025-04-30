@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ResourceKit {
+@objc public class ResourceKit: NSObject {
   public static let bundle = Bundle.module
   public static func greetings() -> String? {
     guard let url = Bundle.module.url(forResource: "greetings", withExtension: "txt"),
