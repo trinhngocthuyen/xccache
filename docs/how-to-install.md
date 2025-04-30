@@ -1,6 +1,6 @@
 [< Knowledge Base](README.md)
 
-# How to Install
+# 🔧 How to Install
 
 Via [Bundler](https://bundler.io): Add the gem `xccache` to the Gemfile of your project.
 

@@ -1,6 +1,6 @@
 [< Knowledge Base](README.md)
 
-# Getting Started
+# 🚀 Getting Started
 
 <details>
 <summary>Table of Contents</summary>

@@ -1,4 +1,4 @@
 [< Knowledge Base](README.md)
 
-# Troubleshooting
+# 🩺 Troubleshooting
 TBU

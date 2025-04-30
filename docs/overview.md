@@ -1,6 +1,6 @@
 [< Knowledge Base](README.md)
 
-# Overview
+# 📝 Overview
 ## Cache as xcframeworks
 <!-- A typical way to use a product of a package (for ex. `pkg/A`) is to add it to the *Link Binary with Libraries* section, and let Xcode takes care of the rest. When compiling the project, such product dependencies are compiled alongside and then later be linked to the consumer's binary. -->
 

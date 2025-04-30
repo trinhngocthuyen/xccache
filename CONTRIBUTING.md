@@ -1,4 +1,4 @@
-# Contributing
+# 🤝 Contributing
 
 You are more than welcome to contribute to the project in various ways:
 - Implement features
