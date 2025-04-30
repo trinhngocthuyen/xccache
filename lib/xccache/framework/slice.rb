@@ -103,16 +103,16 @@ module XCCache
 
       def create_headers
         Dir.prepare(path / "Headers")
-        copy_headers if use_clang?
+        copy_headers
       end
 
       def create_modules
         Dir.prepare(path / "Modules")
-        return copy_swiftmodules unless use_clang?
+        copy_swiftmodules unless use_clang?
 
         UI.message("Creating framework modulemap")
         Template.new("framework.modulemap").render(
-          { :module_name => module_name },
+          { :module_name => module_name, :target => name },
           save_to: path / "Modules" / "module.modulemap"
         )
       end
@@ -120,13 +120,14 @@ module XCCache
       def copy_headers
         UI.message("Copying headers")
         framework_headers_path = path / "Headers"
+        swift_header_paths = products_dir.glob("#{module_name}.build/*-Swift.h")
+        header_paths = swift_header_paths + pkg_target.header_paths
         umbrella_header_content =
-          pkg_target
-          .header_paths
+          header_paths
           .map { |p| p.copy(to_dir: framework_headers_path) }
           .map { |p| "#include <#{module_name}/#{p.basename}>" }
           .join("\n")
-        (framework_headers_path / "#{module_name}-umbrella.h").write(umbrella_header_content)
+        (framework_headers_path / "#{name}-umbrella.h").write(umbrella_header_content)
       end
 
       def copy_swiftmodules
