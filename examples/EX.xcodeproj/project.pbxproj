@@ -36,6 +36,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1CBE8AAACA849C519746C865 /* xccache.yml */ = {isa = PBXFileReference; includeInIndex = 1; path = xccache.yml; sourceTree = "<group>"; };
+		3B5B411E32E4429CC9EDBC87 /* Package.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Package.swift; path = xccache/packages/umbrella/Package.swift; sourceTree = "<group>"; };
+		D1B6F890297CAD42EA43AFB3 /* xccache.lock */ = {isa = PBXFileReference; includeInIndex = 1; path = xccache.lock; sourceTree = "<group>"; };
 		F577C62F2D96971200C83C96 /* EX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F577C6A82D96A3BD00C83C96 /* config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = config.xcconfig; sourceTree = "<group>"; };
 		F5AF0F9C2DAE09EF00AB812D /* EXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,6 +89,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4EF401BCDE41633C982927C2 /* xccache.config */ = {
+			isa = PBXGroup;
+			children = (
+				3B5B411E32E4429CC9EDBC87 /* Package.swift */,
+				D1B6F890297CAD42EA43AFB3 /* xccache.lock */,
+				1CBE8AAACA849C519746C865 /* xccache.yml */,
+			);
+			name = xccache.config;
+			sourceTree = "<group>";
+		};
 		F577C6262D96971200C83C96 = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +109,7 @@
 				F5AF0F9D2DAE09EF00AB812D /* EXTests */,
 				F577C73D2D99B03000C83C96 /* Frameworks */,
 				F577C6302D96971200C83C96 /* Products */,
+				4EF401BCDE41633C982927C2 /* xccache.config */,
 			);
 			sourceTree = "<group>";
 		};
