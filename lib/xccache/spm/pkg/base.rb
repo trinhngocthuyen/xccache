@@ -33,14 +33,15 @@ module XCCache
           return UI.warn("Target #{target} is a binary target -> no need to build")
         end
 
+        target = target_pkg_desc.get_target(target)
         sdks = (sdk || "iphonesimulator").split(",")
 
         out_dir = Pathname(out_dir || ".")
-        out_dir /= target if options[:checksum]
-        basename = options[:checksum] ? "#{target}-#{target_pkg_desc.checksum}.xcframework" : "#{target}.xcframework"
+        out_dir /= target.name if options[:checksum]
+        basename = options[:checksum] ? "#{target.name}-#{target.checksum}.xcframework" : "#{target.name}.xcframework"
 
         Framework::XCFramework.new(
-          name: target,
+          name: target.name,
           pkg_dir: root_dir,
           config: config,
           sdks: sdks,
