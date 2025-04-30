@@ -7,13 +7,11 @@ module XCCache
         include Cacheable
         cacheable :resolve_recursive_dependencies
 
-        def self.in_dir(dir, save_to_dir: nil, checksum: true)
+        def self.in_dir(dir, save_to_dir: nil)
           path = save_to_dir / "#{dir.basename}.json" unless save_to_dir.nil?
           begin
             raw = JSON.parse(Sh.capture_output("swift package dump-package --package-path #{dir}"))
-            this = Description.new(path, raw: raw)
-            this.calc_checksum if checksum
-            this
+            Description.new(path, raw: raw)
           rescue StandardError => e
             UI.error("Failed to dump package in #{dir}. Error: #{e}")
           end
@@ -25,10 +23,6 @@ module XCCache
 
         def metadata
           raw["_metadata"] ||= {}
-        end
-
-        def checksum
-          metadata["checksum"]
         end
 
         def dependencies
@@ -74,10 +68,6 @@ module XCCache
           !src_dir.to_s.start_with?((config.spm_build_dir / "checkouts").to_s)
         end
 
-        def calc_checksum
-          metadata["checksum"] = git.nil? ? src_dir.checksum : git.sha
-        end
-
         def traverse
           nodes, edges, parents = [], [], {}
           to_visit = targets.dup
@@ -98,8 +88,6 @@ module XCCache
           end
           [nodes, edges, parents]
         end
-
-        private
 
         def git
           @git ||= Git.new(src_dir) if Dir.git?(src_dir)

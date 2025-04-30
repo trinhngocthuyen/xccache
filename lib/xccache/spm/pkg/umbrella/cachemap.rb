@@ -63,7 +63,7 @@ module XCCache
           return true if target.binary?
 
           bpath = binary_path(target.name)
-          bpath_with_checksum = binary_path(target.name, checksum: target.root.checksum)
+          bpath_with_checksum = binary_path(target.name, checksum: target.checksum)
           # If checksum matches, create symlink from `A-abc123.xcframework` -> `A.framework`
           # Otherwise, remove symlink `A.xcframework`
           if bpath_with_checksum.exist?
@@ -83,7 +83,7 @@ module XCCache
         def target_to_cytoscape_node(x, cache_data)
           h = { :id => x.full_name, :cache => cache_data[x] }
           h[:type] = "agg" if x.name.end_with?(".xccache")
-          h[:checksum] = x.root.checksum
+          h[:checksum] = x.checksum
           h[:binary] = binary_path(x.name) if cache_data[x] == :hit
           h
         end

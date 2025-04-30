@@ -114,6 +114,10 @@ module XCCache
           binary_path if binary? && root.local?
         end
 
+        def checksum
+          @checksum ||= root.git&.sha || sources_path.checksum
+        end
+
         private
 
         def find_deps(name, pkg_name, dep_type)
