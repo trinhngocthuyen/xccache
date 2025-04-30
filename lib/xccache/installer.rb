@@ -17,6 +17,7 @@ module XCCache
       yield
       umbrella_pkg.write_manifest
       umbrella_pkg.gen_cachemap_viz
+      add_xccache_refs_to_projects
     end
 
     def sync_lockfile
@@ -62,6 +63,16 @@ module XCCache
 
     def verify_projects!
       raise "No projects detected. Are you running on the correct project directory?" if projects.empty?
+    end
+
+    def add_xccache_refs_to_projects
+      projects.each do |project|
+        group = project["xccache.config"] || project.new_group("xccache.config")
+        add_file = proc { |p| group[p.basename.to_s] || group.new_file(p) }
+        add_file.call(config.spm_umbrella_sandbox / "Package.swift")
+        add_file.call(config.lockfile.path)
+        add_file.call(config.path) if config.path.exist?
+      end
     end
   end
 end

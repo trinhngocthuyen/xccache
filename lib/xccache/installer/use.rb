@@ -4,8 +4,8 @@ module XCCache
   class Installer
     class Use < Installer
       def install!
-        perform_install do
-          update_projects do |project|
+        update_projects do |project|
+          perform_install do
             UI.section("Using cache for project #{project.display_name}".bold.green) do
               replace_binaries_for_project(project)
             end
