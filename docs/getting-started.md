@@ -15,6 +15,7 @@
   - [Rolling Back Cache](#rolling-back-cache)
 - [Working With Swift Packages](#working-with-swift-packages)
   - [Building a Swift Package Target](#building-a-swift-package-target)
+- [Configuration](#configuration)
 </details>
 
 ## Quick Start
@@ -52,6 +53,10 @@ The prebuilt xcframeworks are available under `xccache/binaries`, following the 
 ```
 xccache /-- binaries /-- SwiftyBeaver /-- SwiftyBeaver-<checksum>.xcframework
                                       |-- SwiftyBeaver.xcframework
+```
+To build dependencies if cache-missed, use the `--recursive` option. For example, to build cache of `FirebaseCrashlytics` (including its dependencies):
+```sh
+xccache build FirebaseCrashlytics --recursive
 ```
 
 ### Using Cache
@@ -115,3 +120,5 @@ Packaging a Swift package target as binary is not as easy as it seems, which inv
 ```sh
 xccache pkg build <Target>
 ```
+## Configuration
+Check out this doc: [Configuration](configuration.md)
