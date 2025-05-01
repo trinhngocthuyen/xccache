@@ -17,8 +17,8 @@ module XCCache
         targets = options.delete(:targets) || []
         raise GeneralError, "No targets were specified" if targets.empty?
 
-        targets.map { |t| t.split("/")[-1] }.each do |t|
-          UI.section("\n▶ Building target: #{t}".bold.magenta) do
+        targets.map { |t| t.split("/")[-1] }.each_with_index do |t, i|
+          UI.section("\n▶ Building target: #{t} (#{i + 1}/#{targets.count})".bold.magenta) do
             build_target(**options, target: t)
           rescue StandardError => e
             UI.error("Failed to build target: #{t}. Error: #{e}")
