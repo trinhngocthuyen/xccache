@@ -15,7 +15,7 @@ module Xcodeproj
         end
 
         def has_pkg_product_dependency?(name)
-          pkg_product_dependencies.any? { |d| "#{d.pkg.slug}/#{d.name}" == name }
+          pkg_product_dependencies.any? { |d| d.full_name == name }
         end
 
         def add_pkg_product_dependency(name)
