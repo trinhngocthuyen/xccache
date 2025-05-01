@@ -23,3 +23,7 @@ ignore:
 ### `keep_pkgs_in_project`
 - Default: `false`
 - Whether to keep or remove packages from xcodeproj. By default, packages managed by xccache will be removed from xcodeproj in order to reduce time for package resolution in Xcode.
+
+### `ignore_build_errors`
+- Default: `false`
+- Whether to ignore build errors in `xccache build`. This option might be useful when building multiple targets and one of them fails, with this option as `true`, the tool still continues building other targets.
