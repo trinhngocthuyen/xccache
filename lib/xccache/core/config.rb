@@ -78,5 +78,9 @@ module XCCache
     def ignore_build_errors?
       raw["ignore_build_errors"]
     end
+
+    def keep_pkgs_in_project?
+      raw["keep_pkgs_in_project"]
+    end
   end
 end

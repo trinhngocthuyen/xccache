@@ -16,6 +16,10 @@ module Xcodeproj
       root_object.package_references
     end
 
+    def xccache_pkg
+      pkgs.find(&:xccache_pkg?)
+    end
+
     def non_xccache_pkgs
       pkgs.reject(&:xccache_pkg?)
     end
@@ -36,7 +40,8 @@ module Xcodeproj
       Log.message("Add package #{hash[key].bold} to project #{display_name.bold}")
       cls = is_local ? XCLocalSwiftPackageReference : XCRemoteSwiftPackageReference
       ref = new(cls)
-      hash.each { |k, v| ref.send("#{k}=", v) }
+      custom_keys = ["path_from_root"]
+      hash.each { |k, v| ref.send("#{k}=", v) unless custom_keys.include?(k) }
       root_object.package_references << ref
       ref
     end
@@ -44,6 +49,13 @@ module Xcodeproj
     def add_xccache_pkg
       sandbox_path = XCCache::Config.instance.spm_umbrella_sandbox
       add_pkg("relative_path" => sandbox_path.relative_path_from(path.parent).to_s)
+    end
+
+    def remove_pkgs(&block)
+      pkgs.select(&block).each do |pkg|
+        XCCache::UI.info("(-) Remove #{pkg.display_name.red} from package refs of project #{display_name.bold}")
+        pkg.remove_from_project
+      end
     end
 
     def get_target(name)

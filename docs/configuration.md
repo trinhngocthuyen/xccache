@@ -19,3 +19,7 @@ ignore:
 ```
 > [!NOTE]
 > These patterns apply to targets, not products.
+
+### `keep_pkgs_in_project`
+- Default: `false`
+- Whether to keep or remove packages from xcodeproj. By default, packages managed by xccache will be removed from xcodeproj in order to reduce time for package resolution in Xcode.

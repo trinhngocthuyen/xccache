@@ -30,6 +30,7 @@ module XCCache
 
         # Remove .binary product from the project
         project.targets.each(&:remove_xccache_product_dependencies)
+        project.xccache_pkg.remove_from_project
       end
     end
   end

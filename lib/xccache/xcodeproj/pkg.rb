@@ -20,6 +20,10 @@ module Xcodeproj
           local? && id == "xccache/packages/umbrella"
         end
 
+        def non_xccache_pkg?
+          !xccache_pkg?
+        end
+
         def create_pkg_product_dependency_ref(product)
           ref = project.new(XCSwiftPackageProductDependency)
           ref.package = self
