@@ -1,4 +1,6 @@
-# xccache (Yet another caching tool, but with SPM support)
+![xccache](docs/res/xccache.png)
+
+# Yet another caching tool for Xcode projects but with SPM support
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/trinhngocthuyen/xccache/blob/main/LICENSE.txt)
 [![Gem](https://img.shields.io/gem/v/xccache.svg)](https://rubygems.org/gems/xccache)
