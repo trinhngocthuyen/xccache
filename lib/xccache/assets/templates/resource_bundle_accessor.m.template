@@ -1,16 +1,16 @@
 #import <Foundation/Foundation.h>
 
-@interface BundleFinder : NSObject
+@interface BundleFinder_<%= module_name %> : NSObject
 @end
 
-@implementation BundleFinder
+@implementation BundleFinder_<%= module_name %>
 @end
 
 NSBundle* <%= module_name %>_SWIFTPM_MODULE_BUNDLE() {
   NSString *bundleName = @"<%= pkg %>_<%= target %>";
   NSArray<NSURL *> *candidates = @[
     NSBundle.mainBundle.resourceURL,
-    [NSBundle bundleForClass:[BundleFinder class]].resourceURL,
+    [NSBundle bundleForClass:[BundleFinder_<%= module_name %> class]].resourceURL,
     NSBundle.mainBundle.bundleURL,
     [NSBundle.mainBundle.bundleURL URLByAppendingPathComponent:@"Frameworks/<%= target %>.framework"]
   ];
