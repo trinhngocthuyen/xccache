@@ -18,3 +18,4 @@ In case of cache miss, it automatically uses the original dependency.
 
 ## Under the Hood
 - [Packaging as an xcframework](under-the-hood/packaging-as-xcframework.md)
+- [Ensuring `Bundle.module` When Accessing Resources](under-the-hood/ensuring-bundle-module.md)
