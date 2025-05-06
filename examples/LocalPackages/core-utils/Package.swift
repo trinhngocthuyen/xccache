@@ -18,9 +18,7 @@ let package = Package(
     .target(
       name: "Swizzler",
       dependencies: [
-        "CoreUtils-Wrapper",
-        .product(name: "SwiftyBeaver", package: "SwiftyBeaver"),
-        .product(name: "Moya", package: "Moya"),
+        "CoreUtils-Wrapper"
       ]
     ),
     .target(
@@ -30,13 +28,22 @@ let package = Package(
     ),
     .target(
       name: "DebugKit",
-      dependencies: ["CoreUtils-Wrapper"],
-      path: "Sources/DebugKitObjc",
-      resources: [.copy("token.txt")]
+      dependencies: [
+        "CoreUtils-Wrapper",
+        "Swizzler",
+        .product(name: "SwiftyBeaver", package: "SwiftyBeaver"),
+        .product(name: "Moya", package: "Moya"),
+      ],
+      path: "Sources/DebugKitObjC",
+      resources: [.copy("token.txt")],
+      publicHeadersPath: "Headers",
+      cSettings: [
+        .headerSearchPath("PrivateHeaders"),
+      ]
     ),
     .target(
       name: "CoreUtils-Wrapper",
       path: "Sources/Core"
-    )
+    ),
   ]
 )

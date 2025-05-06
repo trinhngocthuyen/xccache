@@ -102,37 +102,59 @@ module XCCache
       end
 
       def create_headers
-        Dir.prepare(path / "Headers")
         copy_headers
       end
 
       def create_modules
-        Dir.prepare(path / "Modules")
         copy_swiftmodules unless use_clang?
 
         UI.message("Creating framework modulemap")
         Template.new("framework.modulemap").render(
           { :module_name => module_name, :target => name },
-          save_to: path / "Modules" / "module.modulemap"
+          save_to: modules_dir / "module.modulemap"
         )
       end
 
       def copy_headers
         UI.message("Copying headers")
-        framework_headers_path = path / "Headers"
         swift_header_paths = products_dir.glob("#{module_name}.build/*-Swift.h")
-        header_paths = swift_header_paths + pkg_target.header_paths
-        umbrella_header_content =
-          header_paths
-          .map { |p| p.copy(to_dir: framework_headers_path) }
-          .map { |p| "#include <#{module_name}/#{p.basename}>" }
-          .join("\n")
-        (framework_headers_path / "#{name}-umbrella.h").write(umbrella_header_content)
+        paths = swift_header_paths + pkg_target.header_paths
+        paths.each { |p| process_header(p) }
+
+        umbrella_header_content = paths.map { |p| "#include <#{module_name}/#{p.basename}>" }.join("\n")
+        (headers_dir / "#{name}-umbrella.h").write(umbrella_header_content)
+      end
+
+      def process_header(path)
+        handle_angle_bracket_import = proc do |statement, header|
+          next statement if header.include?("/")
+
+          # NOTE: If importing a header with flat angle-bracket style (ex. `#import <foo.h>`)
+          # The header `foo.h` may belong to a dependency's headers.
+          # When packaging into xcframework, `#import <foo.h>` no longer works because `foo.h`
+          # coz it's not visible within the framework's headers
+          # -> We need to explicitly specify the module it belongs to, ex. `#import <foo/foo.h>`
+          targets = [pkg_target] + pkg_target.recursive_targets
+          target = targets.find { |t| t.header_paths.any? { |p| p.basename.to_s == header } }
+          next statement if target.nil?
+
+          corrected_statement = statement.sub("<#{header}>", "<#{target.module_name}/#{header}>")
+          <<~CONTENT
+            // -------------------------------------------------------------------------------------------------
+            // NOTE: This import was corrected by xccache, from flat angle-bracket to nested angle-bracket style
+            // Original: `#{statement}`
+            #{corrected_statement}
+            // -------------------------------------------------------------------------------------------------
+          CONTENT
+        end
+
+        content = path.read.gsub(/^ *#import <(.+)>/) { |m| handle_angle_bracket_import.call(m, $1) }
+        (headers_dir / path.basename).write(content)
       end
 
       def copy_swiftmodules
         UI.message("Copying swiftmodules")
-        swiftmodule_dir = Dir.prepare("#{path}/Modules/#{module_name}.swiftmodule")
+        swiftmodule_dir = Dir.prepare("#{modules_dir}/#{module_name}.swiftmodule")
         swiftinterfaces = products_dir.glob("#{module_name}.build/#{module_name}.swiftinterface")
         to_copy = products_dir.glob("Modules/#{module_name}.*") + swiftinterfaces
         to_copy.each do |p|
@@ -177,7 +199,15 @@ module XCCache
       end
 
       def resource_bundle_product_path
-        @resource_bundle_product_path ||= products_dir / pkg_target.bundle_name
+        @resource_bundle_product_path ||= products_dir / pkg_target.resource_bundle_name
+      end
+
+      def headers_dir
+        @headers_dir ||= Dir.prepare(path / "Headers")
+      end
+
+      def modules_dir
+        @modules_dir ||= Dir.prepare(path / "Modules")
       end
     end
   end

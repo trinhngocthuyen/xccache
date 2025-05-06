@@ -1,6 +1,7 @@
 import SwiftyBeaver
 import Moya
 import Alamofire
+import CoreUtils_Wrapper
 import DebugKit
 import ResourceKit
 import Swizzler
@@ -8,7 +9,7 @@ import GoogleMaps
 import SDWebImage
 import KingfisherWebP
 import FirebaseCrashlytics
-import CoreUtils_Wrapper
+import FacebookLogin
 
 func swift_playground() {
   print(SwiftyBeaver.self)        // SwiftyBeaver
@@ -22,6 +23,8 @@ func swift_playground() {
   print(SDImageCacheOptions.self) // SDWebImage)
   print(WebPProcessor.self)       // KingfisherWebP
   print(CrashlyticsReport.self)   // FirebaseCrashlytics
+  print(LoginResult.self)         // FacebookLogin
+  print(FBLoginButton.self)       // FBSDKLoginKit
 }
 
 func playground() {

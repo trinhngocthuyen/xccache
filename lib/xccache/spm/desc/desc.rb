@@ -7,6 +7,12 @@ module XCCache
         include Cacheable
         cacheable :resolve_recursive_dependencies
 
+        def self.descs_in_metadata_dir
+          descs = config.instance.spm_metadata_dir.glob("*.json").map { |p| Description.new(p) }
+          descs.each { |d| d.retrieve_pkg_desc = proc { |name| descs[name] } }
+          descs
+        end
+
         def self.in_dir(dir, save_to_dir: nil)
           path = save_to_dir / "#{dir.basename}.json" unless save_to_dir.nil?
           begin

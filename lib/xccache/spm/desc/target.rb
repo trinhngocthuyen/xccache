@@ -15,7 +15,11 @@ module XCCache
           @type ||= raw["type"].to_sym
         end
 
-        def bundle_name
+        def module_name
+          name.c99extidentifier
+        end
+
+        def resource_bundle_name
           "#{pkg_name}_#{name}.bundle"
         end
 

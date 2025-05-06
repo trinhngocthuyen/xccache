@@ -6,6 +6,9 @@ require "xccache/swift/sdk"
 module XCCache
   module SPM
     class Package
+      include Cacheable
+      cacheable :pkg_desc_of_target
+
       attr_reader :root_dir
 
       def initialize(options = {})
@@ -68,27 +71,20 @@ module XCCache
       end
 
       def pkg_desc_of_target(name, skip_resolve: false)
-        # TODO: Refactor this resolution logic
-        find_pkg_desc = proc do
-          # The current package contains the given target
-          return pkg_desc if pkg_desc.has_target?(name)
+        # The current package contains the given target
+        return pkg_desc if pkg_desc.has_target?(name)
 
-          UI.message(
-            "#{name.yellow.dark} is not a direct target of package #{root_dir.basename.to_s.dark} " \
-            "-> trigger from dependencies"
-          )
-          # Otherwise, it's inside one of the dependencies. Need to resolve then find it
-          resolve unless skip_resolve
-          root_dir.glob(".build/checkouts/*").each do |dir|
-            desc = Description.in_dir(dir)
-            return desc if desc.has_target?(name)
-          end
-          raise GeneralError, "Cannot find package with the given target #{name}"
-        end
+        UI.message(
+          "#{name.yellow.dark} is not a direct target of package #{root_dir.basename.to_s.dark} " \
+          "-> trigger from dependencies"
+        )
+        # Otherwise, it's inside one of the dependencies. Need to resolve then find it
+        resolve unless skip_resolve
 
-        @cache_pkg_desc_by_name ||= {}
-        @cache_pkg_desc_by_name[name] = find_pkg_desc.call unless @cache_pkg_desc_by_name.key?(name)
-        @cache_pkg_desc_by_name[name]
+        @descs ||= Description.descs_in_metadata_dir
+        desc = @descs.find { |d| d.has_target?(name) }
+        return desc unless desc.nil?
+        raise GeneralError, "Cannot find package with the given target #{name}"
       end
 
       def pkg_desc

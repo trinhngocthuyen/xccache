@@ -1,5 +1,8 @@
 XCCACHE_ARGS := --verbose
 
+format:
+	cd .. && make format
+
 cache.use:
 	bundle exec xccache use $(XCCACHE_ARGS)
 
