@@ -60,7 +60,7 @@ module XCCache
 
     def lockfile_hash_for_project(project)
       deps_by_targets = project.targets.to_h do |target|
-        deps = target.non_xccache_pkg_product_dependencies.map { |d| "#{d.pkg.slug}/#{d.product_name}" }
+        deps = target.non_xccache_pkg_product_dependencies.select(&:pkg).map { |d| "#{d.pkg.slug}/#{d.product_name}" }
         [target.name, deps]
       end
       {
