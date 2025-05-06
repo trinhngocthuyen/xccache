@@ -16,6 +16,10 @@ module XCCache
     attr_accessor :verbose
     alias verbose? verbose
 
+    # To distinguish if it's within an installation, or standalone like `xccache pkg build`
+    attr_accessor :in_installation
+    alias in_installation? in_installation
+
     def sandbox
       @sandbox = Dir.prepare("xccache").expand_path
     end
