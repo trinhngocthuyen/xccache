@@ -13,6 +13,7 @@ module XCCache
 
       def initialize(options = {})
         @root_dir = Pathname(options[:root_dir] || ".").expand_path
+        @warn_if_not_direct_target = options.fetch(:warn_if_not_direct_target, true)
       end
 
       def build(options = {})
@@ -25,7 +26,7 @@ module XCCache
             build_target(**options, target: t)
           rescue StandardError => e
             UI.error("Failed to build target: #{t}. Error: #{e}")
-            raise e unless config.ignore_build_errors?
+            raise e unless Config.instance.ignore_build_errors?
           end
         end
       end
@@ -74,14 +75,20 @@ module XCCache
         # The current package contains the given target
         return pkg_desc if pkg_desc.has_target?(name)
 
-        UI.message(
-          "#{name.yellow.dark} is not a direct target of package #{root_dir.basename.to_s.dark} " \
-          "-> trigger from dependencies"
-        )
+        if @warn_if_not_direct_target
+          UI.message(
+            "#{name.yellow.dark} is not a direct target of package #{root_dir.basename.to_s.dark} " \
+            "-> trigger from dependencies"
+          )
+        end
         # Otherwise, it's inside one of the dependencies. Need to resolve then find it
         resolve unless skip_resolve
 
-        @descs ||= Description.descs_in_metadata_dir
+        @descs ||= if Config.instance.in_installation?
+                   then Description.descs_in_metadata_dir[0]
+                   else
+                     Description.descs_in_dir(Pathname(".").expand_path)[0]
+                   end
         desc = @descs.find { |d| d.has_target?(name) }
         return desc unless desc.nil?
         raise GeneralError, "Cannot find package with the given target #{name}"

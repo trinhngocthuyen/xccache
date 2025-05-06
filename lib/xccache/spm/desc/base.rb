@@ -33,7 +33,7 @@ module XCCache
         end
 
         def pkg_slug
-          @pkg_slug ||= root.path.basename(".json").to_s
+          @pkg_slug ||= src_dir.basename.to_s
         end
 
         def fetch(key, dtype)
@@ -51,7 +51,7 @@ module XCCache
 
         def src_dir
           @src_dir ||= begin
-            path = raw.fetch("packageKind", {}).fetch("root", [])[0]
+            path = root.raw.fetch("packageKind", {}).fetch("root", [])[0]
             Pathname.new(path) unless path.nil?
           end
         end

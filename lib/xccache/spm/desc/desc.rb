@@ -8,9 +8,8 @@ module XCCache
         cacheable :resolve_recursive_dependencies
 
         def self.descs_in_metadata_dir
-          descs = config.instance.spm_metadata_dir.glob("*.json").map { |p| Description.new(p) }
-          descs.each { |d| d.retrieve_pkg_desc = proc { |name| descs[name] } }
-          descs
+          descs = Config.instance.spm_metadata_dir.glob("*.json").map { |p| Description.new(p) }
+          [descs, combine_descs(descs)]
         end
 
         def self.in_dir(dir, save_to_dir: nil)
@@ -21,6 +20,19 @@ module XCCache
           rescue StandardError => e
             UI.error("Failed to dump package in #{dir}. Error: #{e}")
           end
+        end
+
+        def self.descs_in_dir(root_dir, save_to_dir: nil)
+          dirs = [root_dir] + root_dir.glob(".build/checkouts/*").reject { |p| p.glob("Package*.swift").empty? }
+          descs = dirs.parallel_map do |dir|
+            desc = Description.in_dir(dir, save_to_dir: save_to_dir)
+            unless save_to_dir.nil?
+              desc.save
+              desc.save(to: desc.path.parent / "#{desc.name}.json") if desc.name != dir.basename.to_s
+            end
+            desc
+          end
+          [descs, combine_descs(descs)]
         end
 
         def root
@@ -97,6 +109,12 @@ module XCCache
 
         def git
           @git ||= Git.new(src_dir) if Dir.git?(src_dir)
+        end
+
+        def self.combine_descs(descs)
+          descs_by_name = descs.flat_map { |d| [[d.name, d], [d.pkg_slug, d]] }.to_h
+          descs.each { |d| d.retrieve_pkg_desc = proc { |name| descs_by_name[name] } }
+          descs_by_name
         end
       end
     end

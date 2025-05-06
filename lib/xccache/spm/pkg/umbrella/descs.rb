@@ -4,15 +4,7 @@ module XCCache
       module UmbrellaDescsMixin
         def gen_metadata
           UI.section("Generating metadata of packages", timing: true) do
-            dirs = [root_dir] + root_dir.glob(".build/checkouts/*").reject { |p| p.glob("Package*.swift").empty? }
-            @descs = dirs.parallel_map do |dir|
-              desc = Description.in_dir(dir, save_to_dir: config.spm_metadata_dir)
-              desc.retrieve_pkg_desc = proc { |name| @descs_by_name[name] }
-              desc.save
-              desc.save(to: desc.path.parent / "#{desc.name}.json") if desc.name != dir.basename.to_s
-              desc
-            end
-            @descs_by_name = @descs.flat_map { |d| [[d.name, d], [d.pkg_slug, d]] }.to_h
+            @descs, @descs_by_name = Description.descs_in_dir(root_dir, save_to_dir: config.spm_metadata_dir)
           end
         end
 

@@ -11,6 +11,7 @@ module XCCache
     end
 
     def perform_install
+      config.in_installation = true
       verify_projects!
       sync_lockfile if @umbrella_pkg.nil?
       umbrella_pkg.prepare(skip_resolve: @skip_resolving_dependencies) if @umbrella_pkg.nil?
