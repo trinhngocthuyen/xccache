@@ -6,7 +6,6 @@ module XCCache
       def initialize(options = {})
         super
         @targets = options[:targets]
-        @sdk = options[:sdk]
         @recursive = options[:recursive]
       end
 
@@ -14,7 +13,7 @@ module XCCache
         perform_install do
           umbrella_pkg.build(
             targets: @targets,
-            sdk: @sdk,
+            sdks: @sdks,
             out_dir: config.spm_binaries_frameworks_dir,
             checksum: true,
             recursive: @recursive,

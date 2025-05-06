@@ -11,6 +11,7 @@ module XCCache
         @config = options[:config]
         @sdks = options[:sdks]
         @path = options[:path]
+        raise GeneralError, "Missing sdks for xcframework: #{name}" if @sdks.empty?
       end
 
       def create
@@ -33,8 +34,7 @@ module XCCache
       end
 
       def slices
-        @slices ||= sdks.map do |s|
-          sdk = Swift::Sdk.new(s)
+        @slices ||= sdks.map do |sdk|
           Framework::Slice.new(
             name: name,
             pkg_dir: pkg_dir,

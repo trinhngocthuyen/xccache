@@ -1,3 +1,4 @@
+require_relative "base"
 require "xccache/command/pkg/build"
 
 module XCCache

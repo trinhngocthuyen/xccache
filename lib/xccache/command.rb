@@ -1,5 +1,6 @@
 require "claide"
 require "xccache/core/config"
+require "xccache/swift/sdk"
 
 module XCCache
   class Command < CLAide::Command
@@ -14,7 +15,15 @@ module XCCache
       super
       config.verbose = verbose unless verbose.nil?
       @skip_resolving_dependencies = argv.flag?("skip-resolving-dependencies")
-      @install_options = { :skip_resolving_dependencies => @skip_resolving_dependencies }
+      @sdks = str_to_sdks(argv.option("sdk"))
+      @install_options = {
+        :sdks => @sdks,
+        :skip_resolving_dependencies => @skip_resolving_dependencies,
+      }
+    end
+
+    def str_to_sdks(str)
+      (str || "iphonesimulator").split(",").map { |s| Swift::Sdk.new(s) }
     end
   end
 end
