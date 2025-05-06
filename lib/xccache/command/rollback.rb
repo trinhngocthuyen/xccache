@@ -1,4 +1,5 @@
 require "xccache/installer"
+require_relative "base"
 
 module XCCache
   class Command

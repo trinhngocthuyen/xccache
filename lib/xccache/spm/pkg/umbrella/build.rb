@@ -8,7 +8,7 @@ module XCCache
 
           UI.info("-> Targets to build: #{to_build.to_s.bold}")
           super(options.merge(:targets => to_build))
-          sync_cachemap
+          sync_cachemap(sdks: options[:sdks])
         end
 
         def targets_to_build(options)

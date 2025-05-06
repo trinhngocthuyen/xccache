@@ -7,7 +7,7 @@ module XCCache
         self.summary = "Build a Swift package into an xcframework"
         def self.options
           [
-            ["--sdk=foo,bar", "Sdk (iphonesimulator, iphoneos, etc.)"],
+            Options::SDK,
             ["--config=foo", "Configuration (debug, release)"],
             ["--out=foo", "Output directory for the xcframework"],
             ["--checksum/no-checksum", "Whether to include checksum to the binary name"],
@@ -20,7 +20,6 @@ module XCCache
         def initialize(argv)
           super
           @targets = argv.arguments!
-          @sdk = argv.option("sdk")
           @config = argv.option("config")
           @out_dir = argv.option("out")
           @include_checksum = argv.flag?("checksum")
@@ -30,7 +29,7 @@ module XCCache
           pkg = SPM::Package.new
           pkg.build(
             targets: @targets,
-            sdk: @sdk,
+            sdks: @sdks,
             config: @config,
             out_dir: @out_dir,
             checksum: @include_checksum,

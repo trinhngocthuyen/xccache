@@ -1,6 +1,7 @@
 require "json"
 require "xccache/framework/slice"
 require "xccache/framework/xcframework"
+require "xccache/framework/xcframework_metadata"
 require "xccache/swift/sdk"
 
 module XCCache
@@ -31,14 +32,13 @@ module XCCache
         end
       end
 
-      def build_target(target: nil, sdk: nil, config: nil, out_dir: nil, **options)
+      def build_target(target: nil, sdks: nil, config: nil, out_dir: nil, **options)
         target_pkg_desc = pkg_desc_of_target(target, skip_resolve: options[:skip_resolve])
         if target_pkg_desc.binary_targets.any? { |t| t.name == target }
           return UI.warn("Target #{target} is a binary target -> no need to build")
         end
 
         target = target_pkg_desc.get_target(target)
-        sdks = (sdk || "iphonesimulator").split(",")
 
         out_dir = Pathname(out_dir || ".")
         out_dir /= target.name if options[:checksum]

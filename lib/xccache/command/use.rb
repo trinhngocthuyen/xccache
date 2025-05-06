@@ -1,4 +1,5 @@
 require "xccache/installer"
+require_relative "base"
 
 module XCCache
   class Command
@@ -6,7 +7,7 @@ module XCCache
       self.summary = "Use prebuilt cache for packages"
       def self.options
         [
-          ["--skip-resolving-dependencies", "Skip resolving package dependencies"],
+          *Options.installer_options,
         ].concat(super)
       end
 

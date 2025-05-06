@@ -18,8 +18,10 @@ module XCCache
         name
       end
 
-      def triple
-        NAME_TO_TRIPLE[name.to_sym]
+      def triple(without_vendor: false)
+        res = NAME_TO_TRIPLE[name.to_sym]
+        res = res.sub("-apple", "") if without_vendor
+        res
       end
 
       def sdk_path

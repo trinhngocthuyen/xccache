@@ -30,7 +30,7 @@ module XCCache
           gen_metadata
           resolve_recursive_dependencies
           create_symlinks_to_artifacts
-          sync_cachemap
+          sync_cachemap(sdks: options[:sdks])
         end
 
         def resolve_recursive_dependencies
