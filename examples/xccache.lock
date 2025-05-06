@@ -54,6 +54,13 @@
           "kind": "upToNextMajorVersion",
           "minimumVersion": "5.7.1"
         }
+      },
+      {
+        "repositoryURL": "https://github.com/facebook/facebook-ios-sdk",
+        "requirement": {
+          "kind": "upToNextMajorVersion",
+          "minimumVersion": "9.0.0"
+        }
       }
     ],
     "dependencies": {
@@ -64,6 +71,7 @@
         "core-utils/ResourceKit",
         "core-utils/Swizzler",
         "ios-maps-sdk/GoogleMaps",
+        "facebook-ios-sdk/FacebookLogin",
         "firebase-ios-sdk/FirebaseCrashlytics",
         "SDWebImage/SDWebImage",
         "SnapKit/SnapKit-Dynamic",
