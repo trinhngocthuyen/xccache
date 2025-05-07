@@ -7,6 +7,7 @@ module XCCache
         super
         @targets = options[:targets]
         @recursive = options[:recursive]
+        @merge_slices = options[:merge_slices]
       end
 
       def install!
@@ -16,6 +17,7 @@ module XCCache
             sdks: @sdks,
             out_dir: config.spm_binaries_frameworks_dir,
             checksum: true,
+            merge_slices: @merge_slices,
             recursive: @recursive,
             skip_resolve: @skip_resolving_dependencies,
           )

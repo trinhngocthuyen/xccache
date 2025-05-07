@@ -8,9 +8,10 @@ module XCCache
         def self.options
           [
             Options::SDK,
-            ["--config=foo", "Configuration (debug, release)"],
+            Options::CONFIG,
             ["--out=foo", "Output directory for the xcframework"],
             ["--checksum/no-checksum", "Whether to include checksum to the binary name"],
+            Options::MERGE_SLICES,
           ].concat(super)
         end
         self.arguments = [
@@ -23,6 +24,7 @@ module XCCache
           @config = argv.option("config")
           @out_dir = argv.option("out")
           @include_checksum = argv.flag?("checksum")
+          @merge_slices = argv.flag?("merge-slices", true)
         end
 
         def run
@@ -33,6 +35,7 @@ module XCCache
             config: @config,
             out_dir: @out_dir,
             checksum: @include_checksum,
+            merge_slices: @merge_slices,
             skip_resolve: @skip_resolving_dependencies,
           )
         end

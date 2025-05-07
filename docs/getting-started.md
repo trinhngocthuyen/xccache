@@ -113,6 +113,19 @@ Run `xccache rollback`. This returns the project to the original state where pro
 > Well, you're advised not to use this action if not necessary.\
 > If you want to use source code entirely, consider *purging the cache* instead.
 
+### Multiplatform Cache
+
+An xcframework can include slices for multiple platforms. Use the `--sdk` option to specify the sdk (iphonesimulator, iphoneos, etc.) to use. If not specified, it uses the [`default_sdk`](configuration#default_sdk) configuration in the config if exist. Otherwise, it defaults to `iphonesimulator`.
+
+When building cache, the tool **merges existing slices with the newly created** to reduce unnecessary builds for multiplatform support. This behavior is controlled by the `--merge-slices` flag (default: `true`). To disable it, ie. replacing the existing xcframework if exists, specify `--no-merge-slices`.
+
+```sh
+xccache build SwiftyBeaver --sdk=iphonesimulator
+xccache build SwiftyBeaver --sdk=iphoneos # <-- here, xcframework contains both sdks: iphonesimulator and iphoneos
+
+xccache build SwiftyBeaver --sdk=macos --no-merge-slices # <-- here, xcframework contains only macos sdk
+```
+
 ## Working With Swift Packages
 ### Building a Swift Package Target
 
