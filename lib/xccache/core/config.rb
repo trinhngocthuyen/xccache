@@ -86,5 +86,9 @@ module XCCache
     def keep_pkgs_in_project?
       raw["keep_pkgs_in_project"]
     end
+
+    def default_sdk
+      raw["default_sdk"] || "iphonesimulator"
+    end
   end
 end

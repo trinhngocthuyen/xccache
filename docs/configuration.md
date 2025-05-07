@@ -27,3 +27,7 @@ ignore:
 ### `ignore_build_errors`
 - Default: `false`
 - Whether to ignore build errors in `xccache build`. This option might be useful when building multiple targets and one of them fails, with this option as `true`, the tool still continues building other targets.
+
+### `default_sdk`
+- Default: `iphonesimulator`
+- The default sdk to use. Valid values: `iphonesimulator`, `iphoneos`, `macos`, `appletvos`, `appletvsimulator`, `watchos`, `watchsimulator`, `xros`, `xrsimulator`.
