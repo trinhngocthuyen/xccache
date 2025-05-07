@@ -7,11 +7,11 @@ module Xcodeproj
         alias pkg_product_dependencies package_product_dependencies
 
         def non_xccache_pkg_product_dependencies
-          pkg_product_dependencies.reject { |d| d.pkg.xccache_pkg? }
+          pkg_product_dependencies.reject { |d| d.pkg&.xccache_pkg? }
         end
 
         def has_xccache_product_dependency?
-          pkg_product_dependencies.any? { |d| d.pkg.xccache_pkg? }
+          pkg_product_dependencies.any? { |d| d.pkg&.xccache_pkg? }
         end
 
         def has_pkg_product_dependency?(name)
