@@ -26,7 +26,8 @@ module XCCache
         def prepare(options = {})
           create
           resolve unless options[:skip_resolve]
-          create_symlinks
+          create_symlinks_for_convenience
+          create_symlinks_to_local_pkgs
           gen_metadata
           resolve_recursive_dependencies
           create_symlinks_to_artifacts
@@ -51,11 +52,20 @@ module XCCache
           end
         end
 
-        def create_symlinks
+        def create_symlinks_for_convenience
           # Symlinks for convenience
           (root_dir / "binaries").symlink_to(root_dir.parent / "binaries")
           (root_dir / ".build").symlink_to(root_dir.parent / ".build")
           (root_dir / ".build/checkouts").symlink_to(root_dir.parent / "checkouts")
+        end
+
+        def create_symlinks_to_local_pkgs
+          pkg_desc.dependencies.select(&:local?).each do |dep|
+            # For metadata generation
+            dep.path.symlink_to(root_dir / ".build/checkouts/#{dep.slug}")
+            # For convenience, synced group under `xccache.config` group in xcodeproj
+            dep.path.symlink_to(Config.instance.spm_local_pkgs_dir / dep.slug)
+          end
         end
 
         def create_symlinks_to_artifacts

@@ -75,11 +75,17 @@ module XCCache
 
     def add_xccache_refs_to_projects
       projects.each do |project|
-        group = project["xccache.config"] || project.new_group("xccache.config")
+        group = project.xccache_config_group
         add_file = proc { |p| group[p.basename.to_s] || group.new_file(p) }
         add_file.call(config.spm_umbrella_sandbox / "Package.swift")
         add_file.call(config.lockfile.path)
         add_file.call(config.path) if config.path.exist?
+        next if group.synced_groups.any? { |g| g.name == "local-packages" }
+
+        group.new_synced_group(
+          name: "local-packages",
+          path: config.spm_local_pkgs_dir.relative_path_from(project.path.parent),
+        )
       end
     end
   end
