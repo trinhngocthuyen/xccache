@@ -25,7 +25,23 @@ module XCCache
       end
 
       def sdk_path
+        # rubocop:disable Layout/LineLength
+        # /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk
+        # rubocop:enable Layout/LineLength
         @sdk_path ||= Pathname(Sh.capture_output("xcrun --sdk #{name} --show-sdk-path")).realpath
+      end
+
+      def sdk_platform_developer_path
+        @sdk_platform_developer_path ||= sdk_path.parent.parent # iPhoneSimulator.platform/Developer
+      end
+
+      def swiftc_args
+        developer_library_frameworks_path = sdk_platform_developer_path / "Library" / "Frameworks"
+        developer_usr_lib_path = sdk_platform_developer_path / "usr" / "lib"
+        [
+          "-F#{developer_library_frameworks_path}",
+          "-I#{developer_usr_lib_path}",
+        ]
       end
     end
   end

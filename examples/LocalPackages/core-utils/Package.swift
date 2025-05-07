@@ -9,6 +9,7 @@ let package = Package(
     .library(name: "Swizzler", targets: ["Swizzler"]),
     .library(name: "ResourceKit", targets: ["ResourceKit"]),
     .library(name: "DebugKit", targets: ["DebugKit"]),
+    .library(name: "TestKit", targets: ["TestKit"]),
   ],
   dependencies: [
     .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", .upToNextMajor(from: "2.1.1")),
@@ -45,5 +46,6 @@ let package = Package(
       name: "CoreUtils-Wrapper",
       path: "Sources/Core"
     ),
+    .target(name: "TestKit"),
   ]
 )
