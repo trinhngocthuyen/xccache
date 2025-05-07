@@ -77,7 +77,9 @@
         "SnapKit/SnapKit-Dynamic",
         "KingfisherWebP/KingfisherWebP"
       ],
-      "EXTests": []
+      "EXTests": [
+        "core-utils/TestKit"
+      ]
     }
   }
 }

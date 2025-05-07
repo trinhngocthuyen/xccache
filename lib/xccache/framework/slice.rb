@@ -28,6 +28,7 @@ module XCCache
           cmd << "-Xswiftc" << "-alias-module-names-in-module-interface"
           cmd << "-Xswiftc" << "-emit-module-interface"
           cmd << "-Xswiftc" << "-no-verify-emitted-module-interface"
+          sdk.swiftc_args.each { |arg| cmd << "-Xswiftc" << arg }
           Sh.run(cmd, suppress_err: /(dependency '.*' is not used by any target|unable to create symbolic link)/)
           create_framework
         end
