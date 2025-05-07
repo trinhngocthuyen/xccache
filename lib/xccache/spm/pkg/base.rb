@@ -60,7 +60,6 @@ module XCCache
         UI.section("Resolving package dependencies (package: #{root_dir.basename})", timing: true) do
           Sh.run("swift package resolve --package-path #{root_dir} 2>&1")
         end
-        create_symlinks_to_local_pkgs
         @resolved = true
       end
 
@@ -96,12 +95,6 @@ module XCCache
 
       def pkg_desc
         @pkg_desc ||= Description.in_dir(root_dir)
-      end
-
-      def create_symlinks_to_local_pkgs
-        pkg_desc.dependencies.select(&:local?).each do |dep|
-          dep.path.symlink_to(root_dir / ".build/checkouts/#{dep.slug}")
-        end
       end
     end
   end

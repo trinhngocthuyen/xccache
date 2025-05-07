@@ -66,6 +66,10 @@ module Xcodeproj
       pkgs.find { |p| p.slug == name }
     end
 
+    def xccache_config_group
+      self["xccache.config"] || new_group("xccache.config")
+    end
+
     private
 
     def pkg_key_in_hash(hash)
