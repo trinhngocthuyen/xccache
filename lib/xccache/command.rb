@@ -23,7 +23,7 @@ module XCCache
     end
 
     def str_to_sdks(str)
-      (str || "iphonesimulator").split(",").map { |s| Swift::Sdk.new(s) }
+      (str || config.default_sdk).split(",").map { |s| Swift::Sdk.new(s) }
     end
   end
 end
