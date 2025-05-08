@@ -3,7 +3,8 @@ require "xccache/utils/template"
 module XCCache
   class Framework
     class Slice
-      attr_reader :name, :module_name, :pkg_dir, :pkg_desc, :sdk, :config, :path, :tmpdir
+      attr_reader :name, :module_name, :pkg_dir, :pkg_desc, :sdk, :config, :path, :tmpdir, :library_evolution
+      alias library_evolution? library_evolution
 
       def initialize(options = {})
         @name = options[:name]
@@ -14,6 +15,7 @@ module XCCache
         @config = options[:config] || "debug"
         @path = options[:path]
         @tmpdir = options[:tmpdir]
+        @library_evolution = options[:library_evolution]
       end
 
       def build
@@ -22,13 +24,15 @@ module XCCache
           cmd << "--package-path" << pkg_dir
           cmd << "--target" << name
           cmd << "--sdk" << sdk.sdk_path
-          # Workaround for swiftinterface emission
-          # https://github.com/swiftlang/swift/issues/64669#issuecomment-1535335601
-          cmd << "-Xswiftc" << "-enable-library-evolution"
-          cmd << "-Xswiftc" << "-alias-module-names-in-module-interface"
-          cmd << "-Xswiftc" << "-emit-module-interface"
-          cmd << "-Xswiftc" << "-no-verify-emitted-module-interface"
           sdk.swiftc_args.each { |arg| cmd << "-Xswiftc" << arg }
+          if library_evolution?
+            # Workaround for swiftinterface emission
+            # https://github.com/swiftlang/swift/issues/64669#issuecomment-1535335601
+            cmd << "-Xswiftc" << "-enable-library-evolution"
+            cmd << "-Xswiftc" << "-alias-module-names-in-module-interface"
+            cmd << "-Xswiftc" << "-emit-module-interface"
+            cmd << "-Xswiftc" << "-no-verify-emitted-module-interface"
+          end
           Sh.run(cmd, suppress_err: /(dependency '.*' is not used by any target|unable to create symbolic link)/)
           create_framework
         end

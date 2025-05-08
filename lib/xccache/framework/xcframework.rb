@@ -1,7 +1,8 @@
 module XCCache
   class Framework
     class XCFramework
-      attr_reader :name, :module_name, :pkg_dir, :pkg_desc, :config, :sdks, :path
+      attr_reader :name, :module_name, :pkg_dir, :pkg_desc, :config, :sdks, :path, :library_evolution
+      alias library_evolution? library_evolution
 
       def initialize(options = {})
         @name = options[:name]
@@ -11,6 +12,7 @@ module XCCache
         @config = options[:config]
         @sdks = options[:sdks]
         @path = options[:path]
+        @library_evolution = options[:library_evolution]
         raise GeneralError, "Missing sdks for xcframework: #{name}" if @sdks.empty?
       end
 
@@ -55,12 +57,14 @@ module XCCache
             config: config,
             path: Dir.prepare(tmpdir / sdk.triple / "#{module_name}.framework"),
             tmpdir: tmpdir,
+            library_evolution: library_evolution?,
           )
         end
       end
 
       def create_xcframework(options = {})
         cmd = ["xcodebuild", "-create-xcframework"]
+        cmd << "-allow-internal-distribution" unless library_evolution?
         cmd << "-output" << options[:to]
         options[:from].each { |p| cmd << "-framework" << p }
         cmd << "> /dev/null" # Only care about errors
