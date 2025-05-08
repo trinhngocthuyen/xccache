@@ -10,6 +10,7 @@ import SDWebImage
 import KingfisherWebP
 import FirebaseCrashlytics
 import FacebookLogin
+import Wizard
 
 func swift_playground() {
   print(SwiftyBeaver.self)        // SwiftyBeaver
@@ -27,7 +28,12 @@ func swift_playground() {
   print(FBLoginButton.self)       // FBSDKLoginKit
 }
 
+func macro_playground() {
+  print(#hexColor(0xff0000))
+}
+
 func playground() {
   swift_playground()
   objc_playground()
+  macro_playground()
 }

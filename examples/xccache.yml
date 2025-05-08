@@ -1,4 +1,5 @@
 # ignore_local: true
 ignore:
-  # - ios-maps-sdk/GoogleMaps*
+  - swift-syntax/*
+  - wizard/*
 default_sdk: iphonesimulator

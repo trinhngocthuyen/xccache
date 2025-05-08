@@ -61,21 +61,27 @@
           "kind": "upToNextMajorVersion",
           "minimumVersion": "9.0.0"
         }
+      },
+      {
+        "relative_path": "LocalPackages/wizard",
+        "path": null,
+        "path_from_root": "LocalPackages/wizard"
       }
     ],
     "dependencies": {
       "EX": [
         "SwiftyBeaver/SwiftyBeaver",
         "Moya/Moya",
-        "core-utils/DebugKit",
-        "core-utils/ResourceKit",
-        "core-utils/Swizzler",
         "ios-maps-sdk/GoogleMaps",
         "facebook-ios-sdk/FacebookLogin",
         "firebase-ios-sdk/FirebaseCrashlytics",
         "SDWebImage/SDWebImage",
         "SnapKit/SnapKit-Dynamic",
-        "KingfisherWebP/KingfisherWebP"
+        "KingfisherWebP/KingfisherWebP",
+        "core-utils/DebugKit",
+        "core-utils/ResourceKit",
+        "core-utils/Swizzler",
+        "wizard/Wizard"
       ],
       "EXTests": [
         "core-utils/TestKit"
