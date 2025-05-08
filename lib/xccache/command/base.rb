@@ -13,8 +13,12 @@ module XCCache
         "Whether to merge with existing slices/sdks in the xcframework (default: true)",
       ].freeze
 
-      def self.installer_options
+      def self.install_options
         [SDK, SKIP_RESOLVING_DEPENDENCIES]
+      end
+
+      def self.build_options
+        install_options + [CONFIG, MERGE_SLICES]
       end
     end
   end

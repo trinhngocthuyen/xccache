@@ -7,12 +7,12 @@ module XCCache
       self.summary = "Use prebuilt cache for packages"
       def self.options
         [
-          *Options.installer_options,
+          *Options.install_options,
         ].concat(super)
       end
 
       def run
-        Installer::Use.new(**@install_options).install!
+        Installer::Use.new(ctx: self).install!
       end
     end
   end

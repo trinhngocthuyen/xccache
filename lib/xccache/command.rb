@@ -11,14 +11,20 @@ module XCCache
     self.default_subcommand = "use"
     self.summary = "xccache - a build caching tool"
 
+    attr_reader :install_options, :build_options
+
     def initialize(argv)
       super
       config.verbose = verbose unless verbose.nil?
-      @skip_resolving_dependencies = argv.flag?("skip-resolving-dependencies")
-      @sdks = str_to_sdks(argv.option("sdk"))
       @install_options = {
-        :sdks => @sdks,
-        :skip_resolving_dependencies => @skip_resolving_dependencies,
+        :sdks => str_to_sdks(argv.option("sdk")),
+        :skip_resolving_dependencies => argv.flag?("skip-resolving-dependencies"),
+      }
+      @build_options = {
+        **@install_options,
+        :config => argv.option("config"),
+        :recursive => argv.flag?("recursive"),
+        :merge_slices => argv.flag?("merge-slices", true),
       }
     end
 

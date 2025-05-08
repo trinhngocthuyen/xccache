@@ -6,9 +6,11 @@ module XCCache
     include PkgMixin
 
     def initialize(options = {})
+      ctx = options[:ctx]
+      raise GeneralError, "Missing context (Command) for #{self.class}" if ctx.nil?
       @umbrella_pkg = options[:umbrella_pkg]
-      @skip_resolving_dependencies = options[:skip_resolving_dependencies]
-      @sdks = options[:sdks]
+      @install_options = ctx.install_options
+      @build_options = ctx.build_options
     end
 
     def perform_install
@@ -16,10 +18,7 @@ module XCCache
       verify_projects!
       if @umbrella_pkg.nil?
         sync_lockfile
-        umbrella_pkg.prepare(
-          skip_resolve: @skip_resolving_dependencies,
-          sdks: @sdks,
-        )
+        umbrella_pkg.prepare(**@install_options)
       end
 
       yield

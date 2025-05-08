@@ -33,7 +33,7 @@ module XCCache
       end
 
       def build_target(target: nil, sdks: nil, config: nil, out_dir: nil, **options)
-        target_pkg_desc = pkg_desc_of_target(target, skip_resolve: options[:skip_resolve])
+        target_pkg_desc = pkg_desc_of_target(target, skip_resolving_dependencies: options[:skip_resolving_dependencies])
         if target_pkg_desc.binary_targets.any? { |t| t.name == target }
           return UI.warn("Target #{target} is a binary target -> no need to build")
         end
@@ -70,7 +70,7 @@ module XCCache
         raise GeneralError, "No Package.swift in #{root_dir}. Are you sure you're running on a package dir?"
       end
 
-      def pkg_desc_of_target(name, skip_resolve: false)
+      def pkg_desc_of_target(name, skip_resolving_dependencies: false)
         # The current package contains the given target
         return pkg_desc if pkg_desc.has_target?(name)
 
@@ -81,7 +81,7 @@ module XCCache
           )
         end
         # Otherwise, it's inside one of the dependencies. Need to resolve then find it
-        resolve unless skip_resolve
+        resolve unless skip_resolving_dependencies
 
         @descs ||= if Config.instance.in_installation?
                    then Description.descs_in_metadata_dir[0]
