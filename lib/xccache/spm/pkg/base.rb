@@ -51,6 +51,7 @@ module XCCache
           sdks: sdks,
           path: out_dir / basename,
           pkg_desc: target_pkg_desc,
+          library_evolution: options[:library_evolution],
         ).create(merge_slices: options[:merge_slices])
       end
 
