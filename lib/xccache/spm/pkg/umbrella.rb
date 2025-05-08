@@ -25,7 +25,7 @@ module XCCache
 
         def prepare(options = {})
           create
-          resolve unless options[:skip_resolve]
+          resolve unless options[:skip_resolving_dependencies]
           create_symlinks_for_convenience
           create_symlinks_to_local_pkgs
           gen_metadata

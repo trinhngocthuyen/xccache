@@ -7,7 +7,7 @@ module XCCache
       self.summary = "Roll back prebuilt cache for packages"
 
       def run
-        Installer::Rollback.new.install!
+        Installer::Rollback.new(ctx: self).install!
       end
     end
   end

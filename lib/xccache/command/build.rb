@@ -7,8 +7,7 @@ module XCCache
       self.summary = "Build packages to xcframeworks"
       def self.options
         [
-          *Options.installer_options,
-          Options::MERGE_SLICES,
+          *Options.build_options,
           ["--integrate/no-integrate", "Whether to integrate after building target (default: true)"],
           ["--recursive", "Whether to build their recursive targets if cache-missed (default: false)"],
         ].concat(super)
@@ -21,24 +20,20 @@ module XCCache
         super
         @targets = argv.arguments!
         @should_integrate = argv.flag?("integrate", true)
-        @recursive = argv.flag?("recursive")
-        @merge_slices = argv.flag?("merge-slices", true)
       end
 
       def run
         installer = Installer::Build.new(
+          ctx: self,
           targets: @targets,
-          recursive: @recursive,
-          merge_slices: @merge_slices,
-          **@install_options,
         )
         installer.install!
 
         # Reuse umbrella_pkg from previous installers
         return unless @should_integrate
         Installer::Use.new(
+          ctx: self,
           umbrella_pkg: installer.umbrella_pkg,
-          **@install_options,
         ).install!
       end
     end
