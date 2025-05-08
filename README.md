@@ -28,6 +28,18 @@ Check out this doc: [Getting Started](docs/getting-started.md)
 
 TLDR: Simply run `xccache` to set it up. Run `xccache --help` to explore the usages.
 
+## 📌 Features and Roadmap
+
+**Live features**
+- [x] Local cache: building/using/rolling back cache
+- [x] Cache visualization
+- [x] Switching between binary cache and source code
+
+**Planned features**
+- [ ] Remote cache: pulling/pushing cache
+- [ ] Support for Swift macros
+- [ ] Support for Swift plugins
+
 ## 🤝 Contribution
 Refer to the [contributing guidelines](CONTRIBUTING.md) for details.
 
