@@ -56,7 +56,7 @@ module XCCache
         end
 
         def targets
-          @targets ||= fetch("targets", Target)
+          @targets ||= fetch("targets", Target).map(&:downcast)
         end
 
         def binary_targets
@@ -97,6 +97,10 @@ module XCCache
             visited << cur
             nodes << cur
             yield cur if block_given?
+
+            # For macro impl, we don't need their dependencies, just the tool binary
+            # So, no need to care about swift-syntax dependencies
+            next if cur.macro?
             cur.direct_dependency_targets.each do |t|
               to_visit << t
               edges << [cur, t]

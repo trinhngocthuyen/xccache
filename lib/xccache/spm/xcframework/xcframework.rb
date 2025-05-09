@@ -1,22 +1,22 @@
+require "xccache/spm/build"
+
 module XCCache
-  class Framework
-    class XCFramework
-      attr_reader :name, :module_name, :pkg_dir, :pkg_desc, :config, :sdks, :path, :library_evolution
-      alias library_evolution? library_evolution
+  module SPM
+    class XCFramework < Buildable
+      attr_reader :slices
 
       def initialize(options = {})
-        @name = options[:name]
-        @module_name = @name.c99extidentifier
-        @pkg_dir = options[:pkg_dir]
-        @pkg_desc = options[:pkg_desc]
-        @config = options[:config]
-        @sdks = options[:sdks]
-        @path = options[:path]
-        @library_evolution = options[:library_evolution]
-        raise GeneralError, "Missing sdks for xcframework: #{name}" if @sdks.empty?
+        super
+        @slices ||= @sdks.map do |sdk|
+          FrameworkSlice.new(
+            **options,
+            sdks: [sdk],
+            path: Dir.prepare(tmpdir / sdk.triple / "#{module_name}.framework"),
+          )
+        end
       end
 
-      def create(merge_slices: false)
+      def build(merge_slices: false, **_options)
         tmp_new_path = tmpdir / "new.xcframework"
         tmp_existing_path = tmpdir / "existing.framework"
 
@@ -40,26 +40,7 @@ module XCCache
           path.parent.mkpath
           tmp_new_path.copy(to: path)
         end
-        tmpdir.rmtree
-      end
-
-      def tmpdir
-        @tmpdir ||= Dir.create_tmpdir
-      end
-
-      def slices
-        @slices ||= sdks.map do |sdk|
-          Framework::Slice.new(
-            name: name,
-            pkg_dir: pkg_dir,
-            pkg_desc: pkg_desc,
-            sdk: sdk,
-            config: config,
-            path: Dir.prepare(tmpdir / sdk.triple / "#{module_name}.framework"),
-            tmpdir: tmpdir,
-            library_evolution: library_evolution?,
-          )
-        end
+        UI.info("-> XCFramework: #{path.to_s.dark}")
       end
 
       def create_xcframework(options = {})

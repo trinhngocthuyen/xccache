@@ -81,6 +81,7 @@
         "core-utils/DebugKit",
         "core-utils/ResourceKit",
         "core-utils/Swizzler",
+        "core-utils/DisplayKit",
         "wizard/Wizard"
       ],
       "EXTests": [

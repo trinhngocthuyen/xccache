@@ -55,7 +55,7 @@ enum XCCache {
 
     var spm: PackageDescription.Package {
       let regularTargets = targets.map(\.spm)
-      let binaryTargets = targets.flatMap(\.flattenDeps).unique(by: \.name).compactMap(\.spmBinaryTarget)
+      let binaryTargets = targets.flatMap(\.nonMacroFlattenDeps).unique(by: \.name).compactMap(\.spmBinaryTarget)
       return .init(
         name: "xccache",
         platforms: PLATFORMS,
@@ -80,23 +80,43 @@ enum XCCache {
       .library(name: name, targets: [name])
     }
     var spm: PackageDescription.Target {
-      .target(name: name, dependencies: flattenDeps.map(\.spm), path: ".Sources/\(name)")
+      .target(
+        name: name,
+        dependencies: nonMacroFlattenDeps.map(\.spm),
+        path: ".Sources/\(name)",
+        swiftSettings: [
+          .unsafeFlags(macroFlags),
+        ]
+      )
     }
+    var nonMacroFlattenDeps: [Dependency] { flattenDeps.filter(\.nonMacro) }
     var flattenDeps: [Dependency] { deps.flatMap(\.toBinariesIfOk).unique(by: \.name) }
+    var macroFlags: [String] {
+      flattenDeps.filter(\.macro).flatMap { d in
+        ["-load-plugin-executable", "\(d.binaryURL.path())#\(d.bareName.withoutExtenstion)"]
+      }
+    }
   }
 
   // MARK: Dependency
   @MainActor
   class Dependency {
     let name: String
+    let bareName: String
     let binaryURL: URL
     let binary: Bool
-    private let bareName: String
+    let macro: Bool
+    var nonMacro: Bool { !macro }
 
     init(_ name: String) {
       self.name = name
       self.bareName = name.basename.withoutExtenstion
-      self.binaryURL = Config.binariesDir.appending(path: "\(bareName)/\(bareName).xcframework").readlink()
+      self.macro = bareName.hasSuffix(".macro")
+      self.binaryURL = if macro {
+        Config.binariesDir.appending(path: "\(bareName.withoutExtenstion)/\(bareName)").readlink()
+      } else {
+        Config.binariesDir.appending(path: "\(bareName)/\(bareName).xcframework").readlink()
+      }
       self.binary = name.hasSuffix(".binary") && binaryURL.exist
     }
     var spm: PackageDescription.Target.Dependency {
@@ -116,7 +136,7 @@ enum XCCache {
       } else {
         "\(bareName).xcframework"
       }
-      return binary ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(basename)") : nil
+      return binary && nonMacro ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(basename)") : nil
     }
   }
 

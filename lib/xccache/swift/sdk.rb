@@ -8,6 +8,7 @@ module XCCache
       NAME_TO_TRIPLE = {
         :iphonesimulator => "arm64-apple-ios-simulator",
         :iphoneos => "arm64-apple-ios",
+        :macosx => "arm64-apple-macosx",
       }.freeze
 
       def initialize(name)

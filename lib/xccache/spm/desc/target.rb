@@ -7,12 +7,26 @@ module XCCache
         include Cacheable
         cacheable :recursive_targets, :direct_dependency_targets, :direct_dependencies
 
+        Dir["#{__dir__}/#{File.basename(__FILE__, '.rb')}/*.rb"].sort.each { |f| require f }
+
         def xccache?
           name.end_with?(".xccache")
         end
 
+        def xccache_id
+          macro? ? "#{full_name}.macro" : full_name
+        end
+
         def type
           @type ||= raw["type"].to_sym
+        end
+
+        def downcast
+          cls = {
+            :binary => BinaryTarget,
+            :macro => MacroTarget,
+          }[type]
+          cls.nil? ? self : cast_to(cls)
         end
 
         def module_name
@@ -82,7 +96,7 @@ module XCCache
 
         def recursive_targets(platform: nil)
           children = direct_dependency_targets(platform: platform)
-          children += children.flat_map { |t| t.recursive_targets(platform: platform) }
+          children += children.flat_map { |t| t.macro? ? [t] : t.recursive_targets(platform: platform) }
           children.uniq
         end
 
@@ -104,6 +118,10 @@ module XCCache
 
         def match_platform?(_condition, _platform)
           true # FIXME: Handle this
+        end
+
+        def macro?
+          type == :macro
         end
 
         def binary?
