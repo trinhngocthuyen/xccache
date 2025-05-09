@@ -1,7 +1,7 @@
 require "json"
-require "xccache/framework/slice"
-require "xccache/framework/xcframework"
-require "xccache/framework/xcframework_metadata"
+require "xccache/spm/xcframework/slice"
+require "xccache/spm/xcframework/xcframework"
+require "xccache/spm/xcframework/metadata"
 require "xccache/swift/sdk"
 
 module XCCache
@@ -42,17 +42,22 @@ module XCCache
 
         out_dir = Pathname(out_dir || ".")
         out_dir /= target.name if options[:checksum]
-        basename = options[:checksum] ? "#{target.name}-#{target.checksum}.xcframework" : "#{target.name}.xcframework"
+        basename = options[:checksum] ? "#{target.name}-#{target.checksum}" : target.name
+        basename += target.macro? ? ".macro" : ".xcframework"
 
-        Framework::XCFramework.new(
-          name: target.name,
-          pkg_dir: root_dir,
-          config: config,
-          sdks: sdks,
-          path: out_dir / basename,
-          pkg_desc: target_pkg_desc,
-          library_evolution: options[:library_evolution],
-        ).create(merge_slices: options[:merge_slices])
+        Dir.create_tmpdir do |_tmpdir|
+          cls = target.macro? ? Macro : XCFramework
+          cls.new(
+            name: target.name,
+            pkg_dir: root_dir,
+            config: config,
+            sdks: sdks,
+            path: out_dir / basename,
+            tmpdir: Dir.create_tmpdir,
+            pkg_desc: target_pkg_desc,
+            library_evolution: options[:library_evolution],
+          ).build(**options)
+        end
       end
 
       def resolve(force: false)

@@ -9,11 +9,13 @@ let package = Package(
     .library(name: "Swizzler", targets: ["Swizzler"]),
     .library(name: "ResourceKit", targets: ["ResourceKit"]),
     .library(name: "DebugKit", targets: ["DebugKit"]),
+    .library(name: "DisplayKit", targets: ["DisplayKit"]),
     .library(name: "TestKit", targets: ["TestKit"]),
   ],
   dependencies: [
     .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", .upToNextMajor(from: "2.1.1")),
     .package(url: "https://github.com/Moya/Moya", .upToNextMajor(from: "15.0.3")),
+    .package(path: "../wizard"),
   ],
   targets: [
     .target(
@@ -40,6 +42,12 @@ let package = Package(
       publicHeadersPath: "Headers",
       cSettings: [
         .headerSearchPath("PrivateHeaders"),
+      ]
+    ),
+    .target(
+      name: "DisplayKit",
+      dependencies: [
+        .product(name: "Wizard", package: "wizard"),
       ]
     ),
     .target(

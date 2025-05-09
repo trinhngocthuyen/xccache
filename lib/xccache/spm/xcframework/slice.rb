@@ -1,39 +1,11 @@
 require "xccache/utils/template"
 
 module XCCache
-  class Framework
-    class Slice
-      attr_reader :name, :module_name, :pkg_dir, :pkg_desc, :sdk, :config, :path, :tmpdir, :library_evolution
-      alias library_evolution? library_evolution
-
-      def initialize(options = {})
-        @name = options[:name]
-        @module_name = @name.c99extidentifier
-        @pkg_dir = Pathname(options[:pkg_dir] || ".").expand_path
-        @pkg_desc = options[:pkg_desc]
-        @sdk = options[:sdk]
-        @config = options[:config] || "debug"
-        @path = options[:path]
-        @tmpdir = options[:tmpdir]
-        @library_evolution = options[:library_evolution]
-      end
-
-      def build
+  module SPM
+    class FrameworkSlice < Buildable
+      def build(_options = {})
         UI.section("Building slice: #{name} (#{config}, #{sdk})".bold) do
-          cmd = ["swift", "build"] + swift_build_args
-          cmd << "--package-path" << pkg_dir
-          cmd << "--target" << name
-          cmd << "--sdk" << sdk.sdk_path
-          sdk.swiftc_args.each { |arg| cmd << "-Xswiftc" << arg }
-          if library_evolution?
-            # Workaround for swiftinterface emission
-            # https://github.com/swiftlang/swift/issues/64669#issuecomment-1535335601
-            cmd << "-Xswiftc" << "-enable-library-evolution"
-            cmd << "-Xswiftc" << "-alias-module-names-in-module-interface"
-            cmd << "-Xswiftc" << "-emit-module-interface"
-            cmd << "-Xswiftc" << "-no-verify-emitted-module-interface"
-          end
-          Sh.run(cmd, suppress_err: /(dependency '.*' is not used by any target|unable to create symbolic link)/)
+          swift_build
           create_framework
         end
       end
@@ -188,19 +160,8 @@ module XCCache
         @products_dir ||= pkg_dir / ".build" / sdk.triple / config
       end
 
-      def swift_build_args
-        [
-          "--configuration", config,
-          "--triple", sdk.triple,
-        ]
-      end
-
       def use_clang?
         pkg_target.use_clang?
-      end
-
-      def pkg_target
-        @pkg_target ||= pkg_desc.get_target(name)
       end
 
       def resource_bundle_product_path

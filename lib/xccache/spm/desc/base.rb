@@ -6,7 +6,8 @@ module XCCache
       class BaseObject < JSONRepresentable
         include Config::Mixin
 
-        attr_accessor :root, :retrieve_pkg_desc
+        ATTRS = %i[root retrieve_pkg_desc].freeze
+        attr_accessor(*ATTRS)
 
         def name
           raw["name"]
@@ -26,6 +27,12 @@ module XCCache
 
         def to_s
           "<#{self.class} name=#{display_name}>"
+        end
+
+        def cast_to(cls)
+          o = cls.new(path, raw: raw)
+          ATTRS.each { |sym| o.send("#{sym}=", send(sym.to_s)) }
+          o
         end
 
         def pkg_name

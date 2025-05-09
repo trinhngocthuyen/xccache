@@ -5,6 +5,7 @@ import CoreUtils_Wrapper
 import DebugKit
 import ResourceKit
 import Swizzler
+import DisplayKit
 import GoogleMaps
 import SDWebImage
 import KingfisherWebP
@@ -20,6 +21,7 @@ func swift_playground() {
   print(CoreUtils_Wrapper.self)   // core-utils
   print(Swizzler.self)            // core-utils
   print(ResourceKit.self)         // core-utils
+  print(DisplayKit.self)          // core-utils
   print(GMSAddress.self)          // GoogleMaps
   print(SDImageCacheOptions.self) // SDWebImage)
   print(WebPProcessor.self)       // KingfisherWebP

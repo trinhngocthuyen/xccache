@@ -1,7 +1,7 @@
 require "xccache/core/syntax/plist"
 
 module XCCache
-  class Framework
+  module SPM
     class XCFramework
       class Metadata < PlistRepresentable
         class Library < Hash

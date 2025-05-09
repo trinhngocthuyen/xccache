@@ -11,7 +11,7 @@ module XCCache
             targets_data[agg_target.name] = agg_target.direct_dependencies.flat_map do |d|
               # If any associated targets is missed -> use original product form
               # Otherwise, replace with recursive targets' binaries
-              deps_data[d.full_name] = d.recursive_targets.map(&:full_name)
+              deps_data[d.full_name] = d.recursive_targets.map(&:xccache_id)
               if d.recursive_targets.all? { |t| cache_data[t] == :hit }
                 "#{d.full_name}.binary"
               else
@@ -62,14 +62,23 @@ module XCCache
         def verify_binary?(target, sdks)
           return true if target.binary?
 
-          bpath = binary_path(target.name)
-          bpath_with_checksum = binary_path(target.name, checksum: target.checksum)
-          # If checksum matches, create symlink from `A-abc123.xcframework` -> `A.framework`
+          bpath = binary_path(target.xccache_id)
+          bpath_with_checksum = binary_path(target.xccache_id, checksum: target.checksum)
+
+          check = proc do
+            # For macro, we just need the tool binary to exist
+            # For regular targets, the xcframework must satisfy the sdk constraints (ie. containing all the slices)
+            next bpath_with_checksum.exist? if target.macro?
+
+            metadata = XCFramework::Metadata.new(bpath_with_checksum / "Info.plist")
+            expected_triples = sdks.map { |sdk| sdk.triple(without_vendor: true) }
+            missing_triples = expected_triples - metadata.triples
+            missing_triples.empty?
+          end
+
+          # If requirements are meet, create symlink `A-abc123.xcframework` -> `A.framework`
           # Otherwise, remove symlink `A.xcframework`
-          metadata = Framework::XCFramework::Metadata.new(bpath_with_checksum / "Info.plist")
-          expected_triples = sdks.map { |sdk| sdk.triple(without_vendor: true) }
-          missing_triples = expected_triples - metadata.triples
-          if missing_triples.empty?
+          if check.call
             bpath_with_checksum.symlink_to(bpath)
           elsif bpath.exist?
             bpath.rmtree
@@ -79,15 +88,17 @@ module XCCache
 
         def binary_path(name, checksum: nil)
           suffix = checksum.nil? ? "" : "-#{checksum}"
-          p = config.spm_binaries_frameworks_dir / File.basename(name, ".binary")
-          p / "#{p.basename}#{suffix}.xcframework"
+          ext = File.extname(name) == ".macro" ? ".macro" : ".xcframework"
+          p = config.spm_binaries_frameworks_dir / File.basename(name, ".*")
+          p / "#{p.basename}#{suffix}#{ext}"
         end
 
         def target_to_cytoscape_node(x, cache_data)
           h = { :id => x.full_name, :cache => cache_data[x] }
-          h[:type] = "agg" if x.name.end_with?(".xccache")
+          h[:type] = if x.name.end_with?(".xccache") then "agg"
+                     elsif x.macro? then "macro" end
           h[:checksum] = x.checksum
-          h[:binary] = binary_path(x.name) if cache_data[x] == :hit
+          h[:binary] = binary_path(x.xccache_id) if cache_data[x] == :hit
           h
         end
       end
