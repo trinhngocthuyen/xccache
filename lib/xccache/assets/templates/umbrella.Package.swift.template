@@ -55,7 +55,7 @@ enum XCCache {
 
     var spm: PackageDescription.Package {
       let regularTargets = targets.map(\.spm)
-      let binaryTargets = targets.flatMap(\.nonMacroFlattenDeps).unique(by: \.name).compactMap(\.spmBinaryTarget)
+      let binaryTargets = targets.flatMap(\.flattenRegularDeps).unique(by: \.name).compactMap(\.spmBinaryTarget)
       return .init(
         name: "xccache",
         platforms: PLATFORMS,
@@ -82,20 +82,16 @@ enum XCCache {
     var spm: PackageDescription.Target {
       .target(
         name: name,
-        dependencies: nonMacroFlattenDeps.map(\.spm),
+        dependencies: flattenRegularDeps.map(\.spm),
         path: ".Sources/\(name)",
         swiftSettings: [
           .unsafeFlags(macroFlags),
         ]
       )
     }
-    var nonMacroFlattenDeps: [Dependency] { flattenDeps.filter(\.nonMacro) }
     var flattenDeps: [Dependency] { deps.flatMap(\.toBinariesIfOk).unique(by: \.name) }
-    var macroFlags: [String] {
-      flattenDeps.filter(\.macro).flatMap { d in
-        ["-load-plugin-executable", "\(d.binaryURL.path())#\(d.bareName.withoutExtenstion)"]
-      }
-    }
+    var flattenRegularDeps: [Dependency] { flattenDeps.filter(\.regular) }
+    var macroFlags: [String] { flattenDeps.filter(\.macroBinary).flatMap(\.macroFlags) }
   }
 
   // MARK: Dependency
@@ -106,19 +102,26 @@ enum XCCache {
     let binaryURL: URL
     let binary: Bool
     let macro: Bool
-    var nonMacro: Bool { !macro }
+    var regular: Bool { !macro }
+    var regularBinary: Bool { binary && regular }
+    var macroBinary: Bool { binary && macro }
 
     init(_ name: String) {
       self.name = name
-      self.bareName = name.basename.withoutExtenstion
-      self.macro = bareName.hasSuffix(".macro")
+      self.bareName = String(name.basename.split(separator: ".")[0])
+      self.macro = name.contains(".macro")
       self.binaryURL = if macro {
-        Config.binariesDir.appending(path: "\(bareName.withoutExtenstion)/\(bareName)").readlink()
+        Config.binariesDir.appending(path: "\(bareName)/\(bareName).macro").readlink()
       } else {
         Config.binariesDir.appending(path: "\(bareName)/\(bareName).xcframework").readlink()
       }
       self.binary = name.hasSuffix(".binary") && binaryURL.exist
     }
+
+    var macroFlags: [String] {
+      ["-load-plugin-executable", "\(binaryURL.path())#\(bareName)"]
+    }
+
     var spm: PackageDescription.Target.Dependency {
       if binary { return .byName(name: name) }
       return .product(name: bareName, package: name.slug)
@@ -136,7 +139,7 @@ enum XCCache {
       } else {
         "\(bareName).xcframework"
       }
-      return binary && nonMacro ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(basename)") : nil
+      return regularBinary ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(basename)") : nil
     }
   }
 
