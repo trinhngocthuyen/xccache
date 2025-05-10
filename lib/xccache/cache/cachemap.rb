@@ -12,7 +12,11 @@ module XCCache
       end
 
       def manifest_data
-        raw["manifest"] ||= { "targets" => {}, "deps" => {} }
+        raw["manifest"] ||= {
+          "targets" => {},
+          "deps" => {},
+          "macros" => {},
+        }
       end
 
       def missed?(name)

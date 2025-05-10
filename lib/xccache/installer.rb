@@ -23,8 +23,12 @@ module XCCache
 
       yield
       umbrella_pkg.write_manifest
+      umbrella_pkg.gen_xcconfigs
+      projects.each do |project|
+        add_xccache_refs_to_project(project)
+        inject_xcconfig_to_project(project)
+      end
       umbrella_pkg.gen_cachemap_viz
-      add_xccache_refs_to_projects
     end
 
     def sync_lockfile
@@ -72,19 +76,37 @@ module XCCache
       raise "No projects detected. Are you running on the correct project directory?" if projects.empty?
     end
 
-    def add_xccache_refs_to_projects
-      projects.each do |project|
-        group = project.xccache_config_group
-        add_file = proc { |p| group[p.basename.to_s] || group.new_file(p) }
-        add_file.call(config.spm_umbrella_sandbox / "Package.swift")
-        add_file.call(config.lockfile.path)
-        add_file.call(config.path) if config.path.exist?
-        next if group.synced_groups.any? { |g| g.name == "local-packages" }
+    def add_xccache_refs_to_project(project)
+      group = project.xccache_config_group
+      add_file = proc { |p| group[p.basename.to_s] || group.new_file(p) }
+      add_file.call(config.spm_umbrella_sandbox / "Package.swift")
+      add_file.call(config.lockfile.path)
+      add_file.call(config.path) if config.path.exist?
+      group.ensure_synced_group(name: "local-packages", path: config.spm_local_pkgs_dir)
+    end
 
-        group.new_synced_group(
-          name: "local-packages",
-          path: config.spm_local_pkgs_dir.relative_path_from(project.path.parent),
-        )
+    def inject_xcconfig_to_project(project)
+      group = project.xccache_config_group.ensure_synced_group(name: "xcconfigs", path: config.spm_xcconfig_dir)
+      project.targets.each do |target|
+        xcconfig_path = config.spm_xcconfig_dir / "#{target.name}.xcconfig"
+        target.build_configurations.each do |build_config|
+          if (existing = build_config.base_configuration_xcconfig)
+            next if existing.path == xcconfig_path
+
+            relative_path = xcconfig_path.relative_path_from(existing.path.parent)
+            next if existing.includes.include?(relative_path.to_s)
+
+            UI.info("Injecting base configuration for #{target} (#{build_config}) (at: #{existing.path})")
+            existing.path.write <<~DESC
+              #include "#{relative_path}" // Injected by xccache, for prebuilt macros support
+              #{existing.path.read.strip}
+            DESC
+          else
+            UI.info("Setting base configuration #{target} (#{build_config}) as #{xcconfig_path}")
+            build_config.base_configuration_reference_anchor = group
+            build_config.base_configuration_reference_relative_path = xcconfig_path.basename.to_s
+          end
+        end
       end
     end
   end

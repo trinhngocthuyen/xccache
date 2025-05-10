@@ -1,7 +1,7 @@
 module XCCache
   module SPM
     class Package
-      module UmbrellaBuilldMixin
+      module UmbrellaBuildMixin
         def build(options = {})
           to_build = targets_to_build(options)
           return UI.warn("Detected no targets to build among cache-missed targets") if to_build.empty?

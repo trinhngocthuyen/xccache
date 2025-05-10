@@ -12,9 +12,10 @@ module XCCache
         include Config::Mixin
         include UmbrellaCachemapMixin
         include UmbrellaDescsMixin
-        include UmbrellaBuilldMixin
+        include UmbrellaBuildMixin
         include UmbrellaManifestMixin
         include UmbrellaVizMixin
+        include UmbrellaXCConfigsMixin
 
         def initialize(options = {})
           super

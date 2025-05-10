@@ -57,7 +57,7 @@ module Xcodeproj
         end
 
         def absolute_path
-          path.nil? ? project.path.parent / relative_path : path
+          path.nil? ? project.dir / relative_path : path
         end
       end
 

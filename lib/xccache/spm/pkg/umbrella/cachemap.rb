@@ -6,23 +6,25 @@ module XCCache
           UI.section("Syncing cachemap (sdks: #{sdks.map(&:name)})")
           nodes, edges, parents = xccache_desc.traverse
           cache_data = gen_cache_data(nodes, parents, sdks)
-          targets_data, deps_data = {}, {}
+          targets_data, macros_data, deps_data = {}, {}, {}
           xccache_desc.targets.each do |agg_target|
-            targets_data[agg_target.name] = agg_target.direct_dependencies.flat_map do |d|
+            targets, macros = [], []
+            agg_target.direct_dependencies.each do |d|
+              all_hit = d.recursive_targets.all? { |t| cache_data[t] == :hit }
               # If any associated targets is missed -> use original product form
               # Otherwise, replace with recursive targets' binaries
               deps_data[d.full_name] = d.recursive_targets.map(&:xccache_id)
-              if d.recursive_targets.all? { |t| cache_data[t] == :hit }
-                "#{d.full_name}.binary"
-              else
-                d.full_name
-              end
-            end.uniq.sort_by(&:downcase)
+              targets << (all_hit ? "#{d.full_name}.binary" : d.full_name)
+              macros += d.recursive_targets.select(&:macro?).map(&:full_name) if all_hit
+            end
+            targets_data[agg_target.name] = targets.uniq.sort_by(&:downcase)
+            macros_data[agg_target.name] = macros.uniq
           end
 
           config.cachemap.raw = {
             "manifest" => {
               "targets" => targets_data,
+              "macros" => macros_data,
               "deps" => deps_data,
             },
             "cache" => cache_data.transform_keys(&:full_name),
