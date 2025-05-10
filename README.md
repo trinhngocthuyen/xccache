@@ -34,10 +34,10 @@ TLDR: Simply run `xccache` to set it up. Run `xccache --help` to explore the usa
 - [x] Local cache: building/using/rolling back cache
 - [x] Cache visualization
 - [x] Switching between binary cache and source code
+- [x] Support for Swift macros
 
 **Planned features**
 - [ ] Remote cache: pulling/pushing cache
-- [ ] Support for Swift macros
 - [ ] Support for Swift plugins
 
 ## 🤝 Contribution

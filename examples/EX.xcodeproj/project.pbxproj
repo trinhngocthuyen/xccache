@@ -46,12 +46,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6A1E86E654DF34A6D9F8EA12 /* xccache/packages/local */ = {
+		6A1E86E654DF34A6D9F8EA12 /* local-packages */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 			);
 			name = "local-packages";
 			path = xccache/packages/local;
+			sourceTree = "<group>";
+		};
+		B1278B41E2849A42CE2523AA /* xcconfigs */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			name = xcconfigs;
+			path = xccache/packages/xcconfigs;
 			sourceTree = "<group>";
 		};
 		F577C6312D96971200C83C96 /* EX */ = {
@@ -103,7 +111,8 @@
 				3B5B411E32E4429CC9EDBC87 /* Package.swift */,
 				D1B6F890297CAD42EA43AFB3 /* xccache.lock */,
 				1CBE8AAACA849C519746C865 /* xccache.yml */,
-				6A1E86E654DF34A6D9F8EA12 /* xccache/packages/local */,
+				6A1E86E654DF34A6D9F8EA12 /* local-packages */,
+				B1278B41E2849A42CE2523AA /* xcconfigs */,
 			);
 			name = xccache.config;
 			sourceTree = "<group>";
@@ -399,6 +408,8 @@
 		};
 		F577C63E2D96971300C83C96 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
+			baseConfigurationReferenceRelativePath = EX.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -429,6 +440,8 @@
 		};
 		F577C63F2D96971300C83C96 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
+			baseConfigurationReferenceRelativePath = EX.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -458,6 +471,8 @@
 		};
 		F5AF0FA22DAE09EF00AB812D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
+			baseConfigurationReferenceRelativePath = EXTests.xcconfig;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -474,6 +489,8 @@
 		};
 		F5AF0FA32DAE09EF00AB812D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
+			baseConfigurationReferenceRelativePath = EXTests.xcconfig;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;

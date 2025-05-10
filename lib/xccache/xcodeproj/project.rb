@@ -12,6 +12,10 @@ module Xcodeproj
       @relative_path ||= path.relative_path_from(Pathname(".").expand_path)
     end
 
+    def dir
+      path.parent
+    end
+
     def pkgs
       root_object.package_references
     end
