@@ -35,6 +35,8 @@ Read the overview: [here](overview.md).
 
 Following are some docs about what happens under the hood:
 - [Packaging as an xcframework](under-the-hood/packaging-as-xcframework.md)
+- [Ensuring `Bundle.module` when accessing resources](under-the-hood/ensuring-bundle-module.md)
+- [Macro as binary](under-the-hood/macro-as-binary.md)
 
 ## Working With Cache
 
