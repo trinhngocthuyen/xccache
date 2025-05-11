@@ -18,7 +18,7 @@ module XCCache
           config.cachemap.manifest_data["macros"].to_h do |target, macros|
             swift_flags = macros.map do |m|
               basename = File.basename(m, ".*")
-              binary_path = config.spm_binaries_frameworks_dir / basename / "#{basename}.macro"
+              binary_path = config.spm_binaries_dir / basename / "#{basename}.macro"
               "-load-plugin-executable #{binary_path}##{basename}"
             end
             hash = { "OTHER_SWIFT_FLAGS" => "$(inherited) #{swift_flags.join(' ')}" }
