@@ -71,13 +71,13 @@ module XCCache
 
         def create_symlinks_to_artifacts
           # Clean up broken symlinks
-          config.spm_binaries_frameworks_dir.glob("*/*.xcframework").each do |p|
+          config.spm_binaries_dir.glob("*/*.xcframework").each do |p|
             p.rmtree if p.symlink? && !p.readlink.exist?
           end
 
           UI.message("Creating symlinks to binary artifacts of targets: #{binary_targets.map(&:full_name).to_s.dark}")
           binary_targets.each do |target|
-            dst_path = config.spm_binaries_frameworks_dir / target.name / "#{target.name}.xcframework"
+            dst_path = config.spm_binaries_dir / target.name / "#{target.name}.xcframework"
             # For local xcframework, just symlink to the path
             # Zip frameworks (either of local or remote pkgs) are unzipped in the build artifacts
             target.local_binary_path.symlink_to(dst_path) if target.local_binary_path&.extname == ".xcframework"

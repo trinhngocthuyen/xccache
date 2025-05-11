@@ -91,7 +91,7 @@ module XCCache
         def binary_path(name, checksum: nil)
           suffix = checksum.nil? ? "" : "-#{checksum}"
           ext = File.extname(name) == ".macro" ? ".macro" : ".xcframework"
-          p = config.spm_binaries_frameworks_dir / File.basename(name, ".*")
+          p = config.spm_binaries_dir / File.basename(name, ".*")
           p / "#{p.basename}#{suffix}#{ext}"
         end
 

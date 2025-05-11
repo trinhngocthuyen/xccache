@@ -12,7 +12,7 @@ module XCCache
         perform_install do
           umbrella_pkg.build(
             targets: @targets,
-            out_dir: config.spm_binaries_frameworks_dir,
+            out_dir: config.spm_binaries_dir,
             checksum: true,
             **@build_options,
           )
