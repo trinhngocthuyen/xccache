@@ -41,6 +41,8 @@ module Xcodeproj
             build_phases.each do |phase|
               phase.files.select { |f| f.remove_from_project if f.product_ref == d }
             end
+            # Remove it from target dependencies
+            dependencies.each { |x| x.remove_from_project if x.product_ref == d }
             d.remove_from_project
           end
         end
