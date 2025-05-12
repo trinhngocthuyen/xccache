@@ -36,6 +36,10 @@ module XCCache
       @spm_xcconfig_dir ||= Dir.prepare(spm_sandbox / "xcconfigs")
     end
 
+    def spm_repo_dir
+      @spm_repo_dir ||= Dir.prepare(Pathname("~/.xccache/default").expand_path)
+    end
+
     def spm_binaries_dir
       @spm_binaries_dir ||= Dir.prepare(spm_umbrella_sandbox / "binaries")
     end
@@ -72,6 +76,10 @@ module XCCache
 
     def project_targets
       projects.flat_map(&:targets)
+    end
+
+    def remote_config
+      raw["remote"] || {}
     end
 
     def ignore_list

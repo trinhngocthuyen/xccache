@@ -31,3 +31,18 @@ ignore:
 ### `default_sdk`
 - Default: `iphonesimulator`
 - The default sdk to use. Valid values: `iphonesimulator`, `iphoneos`, `macos`, `appletvos`, `appletvsimulator`, `watchos`, `watchsimulator`, `xros`, `xrsimulator`.
+
+### `remote`
+- The configuration for remote cache (using Git, S3, etc.).
+
+```yml
+remote:
+  git: git@github.com/org/cache
+```
+
+```yml
+remote:
+  s3:
+    url: "https://your-s3-endpoint/bucket"
+    creds: "path/to/aws_creds.json"
+```

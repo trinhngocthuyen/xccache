@@ -1,3 +1,5 @@
 # ignore_local: true
 ignore: []
 default_sdk: iphonesimulator
+remote:
+#   git: "~/.xccache/debug"

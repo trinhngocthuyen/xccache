@@ -35,9 +35,10 @@ TLDR: Simply run `xccache` to set it up. Run `xccache --help` to explore the usa
 - [x] Cache visualization
 - [x] Switching between binary cache and source code
 - [x] Support for Swift macros
+- [x] Remote cache: pulling/pushing cache with Git
 
 **Planned features**
-- [ ] Remote cache: pulling/pushing cache
+- [ ] Remote cache: pulling/pushing cache with S3
 - [ ] Support for Swift plugins
 
 ## 🤝 Contribution

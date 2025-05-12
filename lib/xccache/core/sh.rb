@@ -15,8 +15,8 @@ module XCCache
         run(cmd, capture: true, log_cmd: false)[0].strip
       end
 
-      def run(cmd, options = {})
-        cmd = cmd.join(" ") if cmd.is_a?(Array)
+      def run(*args, **options)
+        cmd = args.join(" ")
         UI.message("$ #{cmd}".cyan.dark) if config.verbose? && options[:log_cmd] != false
 
         out, err = [], []
