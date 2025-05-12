@@ -65,7 +65,7 @@ module XCCache
           return true if target.binary?
 
           bpath = binary_path(target.xccache_id)
-          bpath_with_checksum = binary_path(target.xccache_id, checksum: target.checksum)
+          bpath_with_checksum = binary_path(target.xccache_id, checksum: target.checksum, in_repo: true)
 
           check = proc do
             # For macro, we just need the tool binary to exist
@@ -88,10 +88,11 @@ module XCCache
           bpath.exist?
         end
 
-        def binary_path(name, checksum: nil)
+        def binary_path(name, checksum: nil, in_repo: false)
           suffix = checksum.nil? ? "" : "-#{checksum}"
           ext = File.extname(name) == ".macro" ? ".macro" : ".xcframework"
-          p = config.spm_binaries_dir / File.basename(name, ".*")
+          binaries_dir = in_repo ? config.spm_repo_dir : config.spm_binaries_dir
+          p = binaries_dir / File.basename(name, ".*")
           p / "#{p.basename}#{suffix}#{ext}"
         end
 

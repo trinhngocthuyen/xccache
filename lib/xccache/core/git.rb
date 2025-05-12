@@ -6,14 +6,22 @@ module XCCache
       @root = Pathname(root)
     end
 
+    def run(*args, **kwargs)
+      Sh.run("git -C #{root}", *args, **kwargs)
+    end
+
     def sha
       run("rev-parse --short HEAD", capture: true, log_cmd: false)[0].strip
     end
 
-    private
+    def clean?
+      status("--porcelain", capture: true, log_cmd: false)[0].empty?
+    end
 
-    def run(cmd, options = {})
-      Sh.run("git -C #{root} #{cmd}", options)
+    %i[checkout fetch pull push clean add commit branch remote switch status].each do |name|
+      define_method(name) do |*args, **kwargs|
+        run(name, *args, **kwargs)
+      end
     end
   end
 end

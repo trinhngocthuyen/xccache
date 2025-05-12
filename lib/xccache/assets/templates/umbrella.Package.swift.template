@@ -40,6 +40,7 @@ enum XCCache {
   @MainActor
   struct Config {
     static let pkgDir = URL(filePath: #filePath).deletingLastPathComponent()
+    static let repoDir = URL.homeDirectory.appending(path: ".xccache/default")
     // NOTE: Do NOT change `binariesDir` to `static let`
     // Somehow, incremental resolution doesnt work causing the `binaryExist` wrongly cached
     static var binariesDir: URL { pkgDir.appending(path: "binaries") }
@@ -127,19 +128,7 @@ enum XCCache {
       return .product(name: bareName, package: name.slug)
     }
     var spmBinaryTarget: PackageDescription.Target? {
-      // The real link may have different basename in case of remote binary targets
-      // For ex. `binaries/Foo/Foo.xcframework (symlink)` -> `.build/artifacts/foo/Bar.xcframework`
-      // In this case, we should use `Foo.xcframework` (of the symlink instead coz it matches the target name)
-      // Workaround: If readlink() is inside binaries dir -> use basename of the resolved link.
-      // Otherwise, it wasn't built by xccache -> just use basename of the symlink
-      //
-      // Why do we need to resolve symlinks? Well, Xcode caches and uses the wrongly resolved links :(
-      let basename = if binaryURL.path().contains(Config.binariesDir.path()) {
-        binaryURL.basename
-      } else {
-        "\(bareName).xcframework"
-      }
-      return regularBinary ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(basename)") : nil
+      regularBinary ? .binaryTarget(name: name, path: "binaries/\(bareName)/\(bareName).xcframework") : nil
     }
   }
 
@@ -168,7 +157,15 @@ func parseJSON<T>(_ content: String) throws -> T {
 extension URL {
   var basename: String { lastPathComponent }
   var exist: Bool { FileManager.default.fileExists(atPath: readlink().path()) }
-  func readlink() -> URL { resolvingSymlinksInPath() }
+  /// Resolve symlinks recursively, equivalent to `readlink -f` in bash
+  func readlink() -> URL {
+    var prev = self, cur = resolvingSymlinksInPath()
+    while prev != cur {
+      prev = cur
+      cur = cur.resolvingSymlinksInPath()
+    }
+    return cur
+  }
 }
 
 extension String {
