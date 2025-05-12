@@ -28,7 +28,7 @@ module XCCache
       def create_storage
         remote_config = config.remote_config
         if (remote = remote_config["git"])
-          GitStorage.new(branch: @branch, remote: remote)
+          return GitStorage.new(branch: @branch, remote: remote)
         end
         Storage.new
       end
