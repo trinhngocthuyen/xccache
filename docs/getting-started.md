@@ -115,7 +115,7 @@ To use source code of a target instead of its binary, simply **remove the `.bina
 Run `xccache rollback`. This returns the project to the original state where product dependencies are specified in the *Link Binary With Libraries* section and `<Target>.xccache` is removed from this section.
 > [!WARNING]
 > Well, you're advised not to use this action if not necessary.\
-> If you want to use source code entirely, consider *purging the cache* instead.
+> If you want to use source code entirely, consider *purging the cache* (`xccache cache clean --all`) instead.
 
 ### Multiplatform Cache
 
