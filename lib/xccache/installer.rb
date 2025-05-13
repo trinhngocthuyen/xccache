@@ -16,7 +16,6 @@ module XCCache
     def perform_install
       UI.message("Using cache dir: #{config.spm_cache_dir}")
       config.in_installation = true
-      verify_projects!
       if @umbrella_pkg.nil?
         sync_lockfile
         umbrella_pkg.prepare(**@install_options)
@@ -54,6 +53,7 @@ module XCCache
     end
 
     def update_projects
+      verify_projects!
       projects.each do |project|
         yield project if block_given?
         project.save
