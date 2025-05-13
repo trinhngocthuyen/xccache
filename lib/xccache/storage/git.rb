@@ -7,7 +7,8 @@ module XCCache
     def initialize(options = {})
       super
       if (@remote = options[:remote])
-        @remote = File.expand_path(@remote) unless ["http", "https", "git"].include?(URI.parse(@remote).scheme)
+        schemes = ["http://", "https://", "git@"]
+        @remote = File.expand_path(@remote) unless schemes.any? { |x| @remote.start_with?(x) }
         ensure_remote
       end
       @branch = options[:branch]
@@ -27,7 +28,7 @@ module XCCache
 
       git.add(".")
       git.commit("-m \"Update cache at #{Time.new}\"")
-      git.push("origin #{branch}")
+      git.push("-u origin #{branch}")
     end
 
     private
@@ -37,6 +38,7 @@ module XCCache
     end
 
     def ensure_remote
+      git.init unless git.init?
       existing = git.remote("get-url origin || true", capture: true, log_cmd: false)[0].strip
       return if @remote == existing
       return git.remote("add origin #{@remote}") if existing.empty?

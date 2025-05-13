@@ -18,7 +18,11 @@ module XCCache
       status("--porcelain", capture: true, log_cmd: false)[0].empty?
     end
 
-    %i[checkout fetch pull push clean add commit branch remote switch status].each do |name|
+    def init?
+      !root.glob(".git").empty?
+    end
+
+    %i[init checkout fetch pull push clean add commit branch remote switch status].each do |name|
       define_method(name) do |*args, **kwargs|
         run(name, *args, **kwargs)
       end
