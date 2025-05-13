@@ -112,7 +112,8 @@ To use source code of a target instead of its binary, simply **remove the `.bina
 > [!IMPORTANT]
 > After modifying the JSON in Package.swift, remember to trigger resolving package versions again (File -> Packages -> Resolve Package Versions). Xcode doesn't automatically reload packages upon changes in this file.
 
-<video src="https://github.com/user-attachments/assets/61095ed4-b221-405d-b3e9-5f6c9218f58c"></video>
+<!-- <video src="https://github.com/user-attachments/assets/61095ed4-b221-405d-b3e9-5f6c9218f58c"></video> -->
+<img src="res/switching_binary_to_source.gif">
 
 ### Rolling Back Cache
 
