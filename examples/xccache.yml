@@ -2,4 +2,6 @@
 ignore: []
 default_sdk: iphonesimulator
 remote:
-#   git: "~/.xccache/debug"
+  # s3:
+  #   uri: "s3://xccache/binaries"
+  # git: "~/.xccache/debug"

@@ -15,7 +15,7 @@ module XCCache
         run(cmd, capture: true, log_cmd: false)[0].strip
       end
 
-      def run(*args, **options)
+      def run(*args, env: nil, **options)
         cmd = args.join(" ")
         UI.message("$ #{cmd}".cyan.dark) if config.verbose? && options[:log_cmd] != false
 
@@ -35,7 +35,8 @@ module XCCache
           end
         end
 
-        Open3.popen3(cmd) do |_stdin, stdout, stderr, wait_thr|
+        popen3_args = env ? [env, cmd] : [cmd]
+        Open3.popen3(*popen3_args) do |_stdin, stdout, stderr, wait_thr|
           stdout_thread = Thread.new { stdout.each { |l| handle_out.call(l) } }
           stderr_thread = Thread.new { stderr.each { |l| handle_err.call(l) } }
           [stdout_thread, stderr_thread].each(&:join)
