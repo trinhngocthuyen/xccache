@@ -4,7 +4,7 @@ PATH
     xccache (0.0.1)
       claide
       parallel
-      xcodeproj
+      xcodeproj (>= 1.26.0)
 
 GEM
   remote: https://rubygems.org/
