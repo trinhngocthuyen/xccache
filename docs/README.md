@@ -1,4 +1,4 @@
-[< README](/README.md)
+[< 🏠 Github](https://github.com/trinhngocthuyen/xccache)
 
 # 📚 XCCache Knowledge Base
 ![xccache](res/xccache.png)
