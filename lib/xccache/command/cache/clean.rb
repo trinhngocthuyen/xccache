@@ -19,8 +19,8 @@ module XCCache
         end
 
         def run
-          to_remove = @targets.flat_map { |t| config.spm_repo_dir.glob("#{t}/*") }
-          to_remove = config.spm_repo_dir.glob("*/*") if @all
+          to_remove = @targets.flat_map { |t| config.spm_cache_dir.glob("#{t}/*") }
+          to_remove = config.spm_cache_dir.glob("*/*") if @all
           to_remove.each do |p|
             UI.info("Removing #{p.basename.to_s.yellow}")
             p.rmtree unless @dry

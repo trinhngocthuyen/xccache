@@ -20,6 +20,12 @@ module XCCache
     attr_accessor :in_installation
     alias in_installation? in_installation
 
+    attr_writer :install_config
+
+    def install_config
+      @install_config || "debug"
+    end
+
     def sandbox
       @sandbox = Dir.prepare("xccache").expand_path
     end
@@ -36,8 +42,8 @@ module XCCache
       @spm_xcconfig_dir ||= Dir.prepare(spm_sandbox / "xcconfigs")
     end
 
-    def spm_repo_dir
-      @spm_repo_dir ||= Dir.prepare(Pathname("~/.xccache/default").expand_path)
+    def spm_cache_dir
+      @spm_cache_dir ||= Dir.prepare(Pathname("~/.xccache/#{install_config}").expand_path)
     end
 
     def spm_binaries_dir
@@ -79,7 +85,7 @@ module XCCache
     end
 
     def remote_config
-      raw["remote"] || {}
+      pick_per_install_config(raw["remote"] || {})
     end
 
     def ignore_list
@@ -105,6 +111,12 @@ module XCCache
 
     def default_sdk
       raw["default_sdk"] || "iphonesimulator"
+    end
+
+    private
+
+    def pick_per_install_config(hash)
+      hash[install_config] || hash["default"] || {}
     end
   end
 end

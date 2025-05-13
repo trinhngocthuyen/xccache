@@ -14,6 +14,7 @@ module XCCache
     end
 
     def perform_install
+      UI.message("Using cache dir: #{config.spm_cache_dir}")
       config.in_installation = true
       verify_projects!
       if @umbrella_pkg.nil?

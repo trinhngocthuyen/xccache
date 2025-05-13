@@ -34,7 +34,7 @@ module XCCache
     private
 
     def git
-      @git ||= Git.new(config.spm_repo_dir)
+      @git ||= Git.new(config.spm_cache_dir)
     end
 
     def ensure_remote

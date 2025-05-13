@@ -4,7 +4,7 @@ module XCCache
   class Command
     class Options
       SDK = ["--sdk=foo,bar", "SDKs (iphonesimulator, iphoneos, etc.)"].freeze
-      CONFIG = ["--config=foo", "Configuration (debug, release)"].freeze
+      CONFIG = ["--config=foo", "Configuration (debug, release) (default: debug)"].freeze
       SKIP_RESOLVING_DEPENDENCIES = [
         "--skip-resolving-dependencies", "Skip resolving package dependencies",
       ].freeze
@@ -18,11 +18,11 @@ module XCCache
       ].freeze
 
       def self.install_options
-        [SDK, SKIP_RESOLVING_DEPENDENCIES]
+        [SDK, CONFIG, SKIP_RESOLVING_DEPENDENCIES]
       end
 
       def self.build_options
-        install_options + [CONFIG, MERGE_SLICES, LIBRARY_EVOLUTION]
+        install_options + [MERGE_SLICES, LIBRARY_EVOLUTION]
       end
     end
   end

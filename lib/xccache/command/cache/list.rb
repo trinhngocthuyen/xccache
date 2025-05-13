@@ -5,7 +5,7 @@ module XCCache
         self.summary = "Listing cache"
 
         def run
-          target_paths = config.spm_repo_dir.glob("*")
+          target_paths = config.spm_cache_dir.glob("*")
           target_paths.each do |target_path|
             next if (paths = target_path.glob("*")).empty?
             descs = paths.map { |p| "  #{p.basename.to_s.green}" }

@@ -40,7 +40,6 @@ enum XCCache {
   @MainActor
   struct Config {
     static let pkgDir = URL(filePath: #filePath).deletingLastPathComponent()
-    static let repoDir = URL.homeDirectory.appending(path: ".xccache/default")
     // NOTE: Do NOT change `binariesDir` to `static let`
     // Somehow, incremental resolution doesnt work causing the `binaryExist` wrongly cached
     static var binariesDir: URL { pkgDir.appending(path: "binaries") }

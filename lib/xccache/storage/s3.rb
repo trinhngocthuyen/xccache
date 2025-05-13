@@ -12,11 +12,11 @@ module XCCache
     end
 
     def pull
-      s3_sync(src: @uri, dst: config.spm_repo_dir)
+      s3_sync(src: @uri, dst: config.spm_cache_dir)
     end
 
     def push
-      s3_sync(src: config.spm_repo_dir, dst: @uri)
+      s3_sync(src: config.spm_cache_dir, dst: @uri)
     end
 
     private
