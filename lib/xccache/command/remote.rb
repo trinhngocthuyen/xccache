@@ -10,6 +10,7 @@ module XCCache
       self.summary = "Working with remote cache"
       def self.options
         [
+          Options::CONFIG,
           ["--branch=foo", "Cache branch (if using git) (default: main)"],
         ].concat(super)
       end

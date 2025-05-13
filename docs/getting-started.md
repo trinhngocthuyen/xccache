@@ -14,6 +14,7 @@
   - [Switching Between Binary and Source Code](#switching-between-binary-and-source-code)
   - [Rolling Back Cache](#rolling-back-cache)
   - [Multiplatform Cache](#multiplatform-cache)
+  - [Per-Configuration Cache](#per-configuration-cache)
   - [Sharing Remote Cache](#sharing-remote-cache)
 - [Working With Swift Packages](#working-with-swift-packages)
   - [Building a Swift Package Target](#building-a-swift-package-target)
@@ -128,6 +129,14 @@ xccache build SwiftyBeaver --sdk=iphonesimulator
 xccache build SwiftyBeaver --sdk=iphoneos # <-- here, xcframework contains both sdks: iphonesimulator and iphoneos
 
 xccache build SwiftyBeaver --sdk=macos --no-merge-slices # <-- here, xcframework contains only macos sdk
+```
+
+### Per-Configuration Cache
+
+Cache of different build configurations (debug/release) is hosted in separate directories `~/.xccache/<configuration>`. The build configuration is defaulted to `debug`. To specify a different build configuration, use the `--config` argument.
+```sh
+xccache build SwiftyBeaver --config=release
+xccache --config=release
 ```
 
 ### Sharing Remote Cache

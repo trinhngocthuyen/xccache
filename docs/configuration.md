@@ -33,20 +33,26 @@ ignore:
 - The default sdk to use. Valid values: `iphonesimulator`, `iphoneos`, `macos`, `appletvos`, `appletvsimulator`, `watchos`, `watchsimulator`, `xros`, `xrsimulator`.
 
 ### `remote`
-- The configuration for remote cache (using Git, S3, etc.).
+- The remote cache configuration (using Git, S3, etc.).
+
+NOTE: This configuration is per build/install configuration (debug/release), as follows.
 
 **Using Git**
 ```yml
 remote:
-  git: git@github.com/org/cache
+  debug: # remote cache config for debug
+    git: git@github.com/org/cache
 ```
 
 **Using S3**
 ```yml
 remote:
-  s3:
-    uri: "s3://xccache/binaries"
-    creds: "path/to/aws_creds.json"
+  debug: # remote cache config for debug
+    git: https://github.com/trinhngocthuyen/.cache.git
+  release: # remote cache config for debug
+    s3:
+      uri: "s3://xccache/binaries"
+      creds: "path/to/aws_creds.json"
 ```
 - `s3:uri`: The S3 URI, ex. `s3://xccache/binaries`
 - `s3:creds`: The path to the json credentials (default: `~/.xccache/s3.creds.json`). This json contains the access key id and secret access key as follows:
