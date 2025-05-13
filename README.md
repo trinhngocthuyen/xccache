@@ -28,6 +28,10 @@ Check out this doc: [Getting Started](docs/getting-started.md)
 
 TLDR: Simply run `xccache` to set it up. Run `xccache --help` to explore the usages.
 
+If caches are in place, you should see this in Xcode build logs.
+
+<img src="docs/res/xcode_process_xcframeworks.png" width="580px">
+
 ## 📌 Features and Roadmap
 
 Check out this doc: [Features and Roadmap](docs/features-roadmap.md)

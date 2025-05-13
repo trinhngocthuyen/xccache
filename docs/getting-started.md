@@ -18,6 +18,9 @@
   - [Sharing Remote Cache](#sharing-remote-cache)
 - [Working With Swift Packages](#working-with-swift-packages)
   - [Building a Swift Package Target](#building-a-swift-package-target)
+- [Managing Dependencies](#managing-dependencies)
+  - [Adding a Dependency](#adding-a-dependency)
+  - [Removing a Dependency](#removing-a-dependency)
 - [Configuration](#configuration)
 </details>
 
@@ -155,5 +158,43 @@ Packaging a Swift package target as binary is not as easy as it seems, which inv
 ```sh
 xccache pkg build <Target>
 ```
+
+## Managing Dependencies
+### Adding a Dependency
+
+To add a new package, or new product dependencies (in the *Link Binary With Libraries* section), you can just add it the way you usually do (via Xcode), then just run `xccache` again.
+After that, you should see the changes reflected in xccache.lock.
+
+<img src="res/lockfile_add_new_dep.png" width="500px">
+
+Alternatively, you can directly modify the lockfile with the changes above, and run `xccache`. This way, you can avoid modifying the xcodeproj file.
+
+### Removing a Dependency
+
+Just directly update the lockfile:
+- Remove it from the dependencies section
+- Remove it from the packages section if not in use
+
+```json
+  ...
+  "dependencies": {
+    "EX": [
+      "Moya/Moya",
+      "SwiftyBeaver/SwiftyBeaver", # <-- Remove this if not in use
+      ...
+    ]
+  },
+  "packages": [
+    { # <-- Remove this if not in use
+      "repositoryURL": "https://github.com/SwiftyBeaver/SwiftyBeaver",
+      "requirement": {
+        "kind": "upToNextMajorVersion",
+        "minimumVersion": "2.1.1"
+      }
+    }
+    ...
+  ]
+```
+
 ## Configuration
 Check out this doc: [Configuration](configuration.md)
