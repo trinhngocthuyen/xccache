@@ -24,7 +24,7 @@ Check out these docs to understand more about xccache:
 - [🩺 Troubleshooting](troubleshooting.md)
 
 ## 🤝 Contribution
-Refer to the [contributing guidelines](/CONTRIBUTING.md) for details.
+Refer to the [contributing guidelines](../CONTRIBUTING.md) for details.
 
 ## ⚖️ License
 The tool is available as open-source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

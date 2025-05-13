@@ -4,24 +4,38 @@
 
 <details>
 <summary>Table of Contents</summary>
-
-- [Quick Start](#quick-start)
-- [Understanding the Tool](#understanding-the-tool)
-- [Working With Cache](#working-with-cache)
-  - [Building Cache](#building-cache)
-  - [Using Cache](#using-cache)
-  - [Viewing Cachemap Visualization](#viewing-cachemap-visualization)
-  - [Switching Between Binary and Source Code](#switching-between-binary-and-source-code)
-  - [Rolling Back Cache](#rolling-back-cache)
-  - [Multiplatform Cache](#multiplatform-cache)
-  - [Per-Configuration Cache](#per-configuration-cache)
-  - [Sharing Remote Cache](#sharing-remote-cache)
-- [Working With Swift Packages](#working-with-swift-packages)
-  - [Building a Swift Package Target](#building-a-swift-package-target)
-- [Managing Dependencies](#managing-dependencies)
-  - [Adding a Dependency](#adding-a-dependency)
-  - [Removing a Dependency](#removing-a-dependency)
-- [Configuration](#configuration)
+<ul>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#understanding-the-tool">Understanding the Tool</a></li>
+<li>
+  <a href="#working-with-cache">Working With Cache</a>
+  <ul>
+  <li><a href="#building-cache">Building Cache</a></li>
+  <li><a href="#using-cache">Using Cache</a></li>
+  <li><a href="#viewing-cachemap-visualization">Viewing Cachemap Visualization</a></li>
+  <li><a href="#switching-between-binary-and-source-code">Switching Between Binary and Source Code</a></li>
+  <li><a href="#rolling-back-cache">Rolling Back Cache</a></li>
+  <li><a href="#multiplatform-cache">Multiplatform Cache</a></li>
+  <li><a href="#per-configuration-cache">Per-Configuration Cache</a></li>
+  <li><a href="#sharing-remote-cache">Sharing Remote Cache</a></li>
+  <li><a href="#sharing-remote-cache">Sharing Remote Cache</a></li>
+  </ul>
+</li>
+<li>
+  <a href="#working-with-swift-packages">Working With Swift Packages</a>
+  <ul>
+  <li><a href="#building-a-swift-package-target">Building a Swift Package Target</a></li>
+  </ul>
+</li>
+<li>
+  <a href="#managing-dependencies">Managing Dependencies</a>
+  <ul>
+  <li><a href="#adding-a-dependency">Adding a Dependency</a></li>
+  <li><a href="#removing-a-dependency">Removing a Dependency</a></li>
+  </ul>
+</li>
+<li><a href="#configuration">Configuration</a></li>
+</ul>
 </details>
 
 ## Quick Start
