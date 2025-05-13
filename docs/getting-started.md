@@ -13,6 +13,8 @@
   - [Viewing Cachemap Visualization](#viewing-cachemap-visualization)
   - [Switching Between Binary and Source Code](#switching-between-binary-and-source-code)
   - [Rolling Back Cache](#rolling-back-cache)
+  - [Multiplatform Cache](#multiplatform-cache)
+  - [Sharing Remote Cache](#sharing-remote-cache)
 - [Working With Swift Packages](#working-with-swift-packages)
   - [Building a Swift Package Target](#building-a-swift-package-target)
 - [Configuration](#configuration)
@@ -127,6 +129,15 @@ xccache build SwiftyBeaver --sdk=iphoneos # <-- here, xcframework contains both 
 
 xccache build SwiftyBeaver --sdk=macos --no-merge-slices # <-- here, xcframework contains only macos sdk
 ```
+
+### Sharing Remote Cache
+Cache can be shared among team with remote cache, using Git or S3.
+```sh
+xccache remote pull # <-- pull cache
+xccache remote push # <-- push cache
+```
+
+Refer to the [remote configuration](configuration#remote) for the setup.
 
 ## Working With Swift Packages
 ### Building a Swift Package Target

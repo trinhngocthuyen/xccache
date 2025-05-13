@@ -29,6 +29,8 @@ module XCCache
         remote_config = config.remote_config
         if (remote = remote_config["git"])
           return GitStorage.new(branch: @branch, remote: remote)
+        elsif (s3_config = remote_config["s3"])
+          return S3Storage.new(uri: s3_config["uri"], creds_path: s3_config["creds"])
         end
         Storage.new
       end

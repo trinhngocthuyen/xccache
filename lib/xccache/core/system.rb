@@ -1,8 +1,15 @@
 require "digest"
+require "mkmf"
 
 class String
   def c99extidentifier
     gsub(/[^a-zA-Z0-9.]/, "_")
+  end
+end
+
+class File
+  def self.which(bin)
+    find_executable0(bin)
   end
 end
 
