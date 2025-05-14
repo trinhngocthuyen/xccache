@@ -36,6 +36,21 @@ If caches are in place, you should see this in Xcode build logs.
 
 👉🏻 Check it out: [here](docs/case-study-kickstarter.md) 🎉
 
+
+## 📑 Documentation
+
+Check out these docs to understand more about xccache:
+
+- [🔧 How to Install](docs/how-to-install.md)
+- [📝 Overview](docs/overview.md)
+- [🚀 Getting Started](docs/getting-started.md)
+- [📖 Under the Hood](docs/under-the-hood)
+  - [Packaging as an xcframework](docs/under-the-hood/packaging-as-xcframework.md)
+  - [Ensuring `Bundle.module` When Accessing Resources](docs/under-the-hood/ensuring-bundle-module.md)
+  - [Macro as Binary](docs/under-the-hood/macro-as-binary.md)
+- [🩺 Troubleshooting](docs/troubleshooting.md)
+- [✍🏼 Case Study: Using XCCache in Kickstarter iOS Project](docs/case-study-kickstarter.md)
+
 ## 📌 Features and Roadmap
 
 Check out this doc: [Features and Roadmap](docs/features-roadmap.md)

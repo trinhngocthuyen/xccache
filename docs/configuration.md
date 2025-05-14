@@ -40,7 +40,7 @@ NOTE: This configuration is per build/install configuration (debug/release), as 
 **Using Git**
 ```yml
 remote:
-  debug: # remote cache config for debug
+  debug: # remote cache config for debug & release
     git: git@github.com/org/cache
 ```
 
@@ -49,7 +49,7 @@ remote:
 remote:
   debug: # remote cache config for debug
     git: https://github.com/trinhngocthuyen/.cache.git
-  release: # remote cache config for debug
+  release: # remote cache config for release
     s3:
       uri: "s3://xccache/binaries"
       creds: "path/to/aws_creds.json"

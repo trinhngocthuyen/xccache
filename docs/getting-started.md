@@ -120,7 +120,7 @@ Example: 👉 [ex-viz/cachemap](ex-viz/cachemap.html).
 
 Open this html in your browser to better understand the depenencies in your project.
 
-<img src="res/cachemap.png" width="700px">
+<a href="ex-viz/cachemap.html" target="_blank"><img src="res/cachemap.png" width="700px"></a>
 
 ### Switching Between Binary and Source Code
 
