@@ -37,7 +37,7 @@ If caches are in place, you should see this in Xcode build logs.
 Check out this doc: [Features and Roadmap](docs/features-roadmap.md)
 
 ## 🤝 Contribution
-Refer to the [contributing guidelines](CONTRIBUTING.md) for details.
+Refer to the [contributing guidelines](docs/contributing.md) for details.
 
 ## ⚖️ License
 The tool is available as open-source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
