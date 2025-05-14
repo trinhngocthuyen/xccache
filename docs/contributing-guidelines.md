@@ -1,3 +1,5 @@
+[< Knowledge Base](README.md)
+
 # 🤝 Contributing
 
 You are more than welcome to contribute to the project in various ways:
