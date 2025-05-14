@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cachemap Visualization</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://unpkg.com/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://unpkg.com/cytoscape@3.31.2/dist/cytoscape.min.js"></script>
+  <script src="https://unpkg.com/layout-base/layout-base.js"></script>
+  <script src="https://unpkg.com/cose-base/cose-base.js"></script>
+  <script src="https://unpkg.com/cytoscape-fcose/cytoscape-fcose.js"></script>
+</head>
+<body>
+  <div class="container">
+    <aside id="sidebar">
+      <div class="toggle-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M512 256A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM271 135c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-87 87 87 87c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L167 273c-9.4-9.4-9.4-24.6 0-33.9L271 135z"/></svg></div>
+      <div class="sidebar-content">
+        <h3 class="title">Cachemap Visualization</h3>
+        <section class="legend">
+          <div class="section-header">Cache result</div>
+          <div>
+            <div class="hit"><span class="node">A</span> hit <span class="desc">77% (34/44)</span></div>
+            <div class="missed"><span class="node">B</span> missed <span class="desc">23% (10/44)</span></div>
+            <div class="ignored"><span class="node">C</span> ignored <span class="desc">0% (0/44)</span></div>
+          </div>
+        </section>
+        <section class="metadata">
+          <div class="section-header">Metadata</div>
+          <div>
+            <div class="info">Workspace: <a href="https://github.com/trinhngocthuyen/xccache/tree/main/examples">examples</a></div>
+            <div class="info">Lockfile: <a href="https://github.com/trinhngocthuyen/xccache/tree/main/examples/xccache.lock">xccache.lock</a></div>
+            <div class="info">Binaries: <a href="https://github.com/trinhngocthuyen/xccache/tree/main/examples/xccache/packages/umbrella/binaries">xccache/packages/umbrella/binaries</a></div>
+          </div>
+        </section>
+        <section class="node-info">
+          <div class="section-header">Cache info</div>
+          <div>
+            <div class="info">Target: <span class="value target">TBU</span></div>
+            <div class="info">Checksum: <span class="value checksum">TBU</span></div>
+            <div class="info">Binary: <a class="value binary" href="">TBU</a></div>
+            <div class="info"><p class="others">TBU</p></div>
+          </div>
+        </section>
+      </div>
+    </aside>
+    <div id="cy"></div>
+    <div class="footnote">Powered by <a href="https://github.com/trinhngocthuyen/xccache">xccache</a></div>
+  </div>
+  <script src="assets/cachemap.js"></script>
+  <script>
+    $('.toggle-btn').on('click', () => $('#sidebar').toggleClass('collapsed'));
+  </script>
+</body>
+</html>

@@ -32,6 +32,10 @@ If caches are in place, you should see this in Xcode build logs.
 
 <img src="docs/res/xcode_process_xcframeworks.png" width="580px">
 
+#### Case Study: For Kickstarter iOS project
+
+👉🏻 Check it out: [here](docs/case-study-kickstarter.md) 🎉
+
 ## 📌 Features and Roadmap
 
 Check out this doc: [Features and Roadmap](docs/features-roadmap.md)

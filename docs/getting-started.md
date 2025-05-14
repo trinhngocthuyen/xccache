@@ -40,6 +40,8 @@
 
 ## Quick Start
 
+[✍🏼 Case Study: Using XCCache in Kickstarter iOS Project](case-study-kickstarter.md) ← Read here.
+
 Simply run `xccache` under the root directory of the project. Then, you should see:
 - **`xccache.lock`**: containing the info about packages in the project alongside the products being used. You're recommended to track this file in git.
 - The `xccache` directory: containing build intermediates for the integration. This directory is similar to the `Pods` directory (in CocoaPods). Do NOT remove this directory. Instead, please ignore it from git.
@@ -113,7 +115,10 @@ In Xcode build log, you should see xcframeworks of the cache-hit targets being p
 
 ### Viewing Cachemap Visualization
 
-Whenever cache is integrated into your project (via `xccache`, `xccache use`, or `xccache build`), the tool generates an html (at `xccache/cachemap.html`) that visualizes the cache dependencies. Open this html in your browser to better understand the depenencies in your project.
+Whenever cache is integrated into your project (via `xccache`, `xccache use`, or `xccache build`), the tool generates an html (at `xccache/cachemap.html`) that visualizes the cache dependencies.\
+Example: 👉 [ex-viz/cachemap](ex-viz/cachemap.html).
+
+Open this html in your browser to better understand the depenencies in your project.
 
 <img src="res/cachemap.png" width="700px">
 

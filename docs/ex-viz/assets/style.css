@@ -1,0 +1,94 @@
+:root {
+  --primary-color: #1492A0;
+  --bg-color: color-mix(in srgb, var(--primary-color), white 80%);
+}
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.6;
+}
+a { color: var(--primary-color) }
+a:hover { color: #339966; }
+.fa-solid { color: var(--primary-color) }
+.container {
+  display: flex;
+  height: 100vh;
+}
+#cy {
+  flex: 1;
+}
+#sidebar {
+  position: relative;
+  background-color: var(--bg-color);
+  width: 250px;
+  transition: all 0.3s ease;
+}
+.sidebar-content {
+  width: calc(250px - 32px);
+  padding: 16px;
+  transform: translateX(0px);
+  transition: all 0.3s ease;
+}
+#sidebar.collapsed {
+  width: 0;
+}
+#sidebar.collapsed .sidebar-content{
+  transform: translateX(-250px);
+}
+#sidebar.collapsed .toggle-btn {
+  right: -36px;
+  transform: rotate(180deg);
+}
+.toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  fill: var(--primary-color);
+  transition: all 0.3s;
+}
+#sidebar .title {
+  color: var(--primary-color);
+  font-size: 16px;
+  margin-top: 0;
+}
+#sidebar section {
+  padding: 16px 0;
+}
+#sidebar .section-header {
+  color: color-mix(in srgb, var(--primary-color), grey 20%);
+  font-weight: bold;
+  margin-block-end: 4px;
+}
+.node-info {
+  display: none;
+}
+.metadata .info {
+  font-size: 10px;
+}
+.info {
+  color: #888;
+}
+.info .value {
+  color: #666;
+}
+.footnote {
+  color: #888;
+  position: absolute;
+  left: 16px;
+  bottom: 8px;
+}
+.node {
+  border-radius: 3px;
+  padding: 1px 3px;
+  color: white;
+  background-color: var(--color)
+}
+.desc { color: var(--color) }
+.hit { --color: #339966 }
+.missed { --color: #ff6f00 }
+.ignored { --color: #888 }
