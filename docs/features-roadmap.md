@@ -10,4 +10,5 @@
 - [x] Remote cache: pulling/pushing cache with Git, S3.
 
 **Planned features**
+- [ ] Support for CocoaPods-based projects
 - [ ] Support for Swift plugins

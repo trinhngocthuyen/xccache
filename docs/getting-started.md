@@ -85,7 +85,7 @@ xccache build FirebaseCrashlytics --recursive
 Run `xccache use` or simply `xccache` to integrate cache to the project. Note that cache, after being built with `xccache build`, is automatically integrated to the project. You don't need to run `xccache use` in this case.
 
 In the package manifest (Package.swift) of the umbrella package (named xccache), you should see a generated JSON string as follows:
-```swift
+```
 let JSON = """
 {
   "EXTests.xccache": [],
@@ -138,7 +138,7 @@ Run `xccache rollback`. This returns the project to the original state where pro
 
 ### Multiplatform Cache
 
-An xcframework can include slices for multiple platforms. Use the `--sdk` option to specify the sdk (iphonesimulator, iphoneos, etc.) to use. If not specified, it uses the [`default_sdk`](configuration#default_sdk) configuration in the config if exist. Otherwise, it defaults to `iphonesimulator`.
+An xcframework can include slices for multiple platforms. Use the `--sdk` option to specify the sdk (iphonesimulator, iphoneos, etc.) to use. If not specified, it uses the [`default_sdk`](configuration.md#default_sdk) configuration in the config if exist. Otherwise, it defaults to `iphonesimulator`.
 
 When building cache, the tool **merges existing slices with the newly created** to reduce unnecessary builds for multiplatform support. This behavior is controlled by the `--merge-slices` flag (default: `true`). To disable it, ie. replacing the existing xcframework if exists, specify `--no-merge-slices`.
 
@@ -164,7 +164,7 @@ xccache remote pull # <-- pull cache
 xccache remote push # <-- push cache
 ```
 
-Refer to the [remote configuration](configuration#remote) for the setup.
+Refer to the [remote configuration](configuration.md#remote) for the setup.
 
 ## Working With Swift Packages
 ### Building a Swift Package Target
@@ -190,24 +190,21 @@ Just directly update the lockfile:
 - Remove it from the dependencies section
 - Remove it from the packages section if not in use
 
-```json
-  ...
+```
   "dependencies": {
     "EX": [
       "Moya/Moya",
-      "SwiftyBeaver/SwiftyBeaver", # <-- Remove this if not in use
-      ...
+      "SwiftyBeaver/SwiftyBeaver", // <-- Remove this if not in use
     ]
   },
   "packages": [
-    { # <-- Remove this if not in use
+    { // <-- Remove this if not in use
       "repositoryURL": "https://github.com/SwiftyBeaver/SwiftyBeaver",
       "requirement": {
         "kind": "upToNextMajorVersion",
         "minimumVersion": "2.1.1"
       }
     }
-    ...
   ]
 ```
 
