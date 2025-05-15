@@ -92,9 +92,9 @@ let JSON = """
 {
   "EXTests.xccache": [],
   "EX.xccache": [
-    "core-utils/DebugKit",           // <-- Using CACHE (xcframework)
+    "core-utils/DebugKit",           // <-- Using SOURCE CODE
     "core-utils/ResourceKit",
-    "core-utils/Swizzler.binary",    // <-- Using SOURCE CODE
+    "core-utils/Swizzler.binary",    // <-- Using CACHE (xcframework)
     "firebase-ios-sdk/FirebaseCrashlytics.binary",
     "ios-maps-sdk/GoogleMaps.binary",
     "KingfisherWebP/KingfisherWebP.binary",
