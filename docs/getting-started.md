@@ -116,11 +116,10 @@ In Xcode build log, you should see xcframeworks of the cache-hit targets being p
 ### Viewing Cachemap Visualization
 
 Whenever cache is integrated into your project (via `xccache`, `xccache use`, or `xccache build`), the tool generates an html (at `xccache/cachemap.html`) that visualizes the cache dependencies.\
-Example: 👉 [ex-viz/cachemap](ex-viz/cachemap.html).
+Example: 👉 [ex-viz/cachemap](https://trinhngocthuyen.com/xccache/ex-viz/cachemap).
 
 Open this html in your browser to better understand the depenencies in your project.
-
-<a href="ex-viz/cachemap.html" target="_blank"><img src="res/cachemap.png" width="700px"></a>
+<a href="https://trinhngocthuyen.com/xccache/ex-viz/cachemap" target="_blank"><img src="res/cachemap.png" width="700px"></a>
 
 ### Switching Between Binary and Source Code
 
