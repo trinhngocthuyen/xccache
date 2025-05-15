@@ -4,6 +4,7 @@ gemspec
 
 group :development do
   gem "bundler", "> 1.3"
+  gem "cocoapods"
   gem "pry-nav"
   gem "rspec"
   gem "rubocop"

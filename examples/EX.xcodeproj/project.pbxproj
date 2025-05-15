@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18015FE4127D04486B2BAD13 /* Pods_EX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0184A8149B4A10C83904E5F4 /* Pods_EX.framework */; };
+		3D493558AB28DAB0C39CDCFD /* Pods_EXTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79357B87DBBA76582551FBAB /* Pods_EXTests.framework */; };
 		F50E8E3C2DA668CA00D96A31 /* EX.xccache in Frameworks */ = {isa = PBXBuildFile; productRef = 72815BF879FB306E2CE3E550 /* EX.xccache */; };
 		F577C6A92D96A3BD00C83C96 /* config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F577C6A82D96A3BD00C83C96 /* config.xcconfig */; };
 		F5AF10312DAE15A400AB812D /* EXTests.xccache in Frameworks */ = {isa = PBXBuildFile; productRef = 4ED0A0AC1D877357F53D194E /* EXTests.xccache */; };
@@ -36,8 +38,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0184A8149B4A10C83904E5F4 /* Pods_EX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CBE8AAACA849C519746C865 /* xccache.yml */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.yaml; path = xccache.yml; sourceTree = "<group>"; };
+		2CFC8136D10CA2330B0572A3 /* Pods-EXTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EXTests.debug.xcconfig"; path = "Target Support Files/Pods-EXTests/Pods-EXTests.debug.xcconfig"; sourceTree = "<group>"; };
+		35080DAB9B492886321CC96D /* Pods-EXTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EXTests.release.xcconfig"; path = "Target Support Files/Pods-EXTests/Pods-EXTests.release.xcconfig"; sourceTree = "<group>"; };
 		3B5B411E32E4429CC9EDBC87 /* Package.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Package.swift; path = xccache/packages/umbrella/Package.swift; sourceTree = "<group>"; };
+		79357B87DBBA76582551FBAB /* Pods_EXTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EXTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7DE26B4CDDF8EACF9DDA2B36 /* Pods-EX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EX.release.xcconfig"; path = "Target Support Files/Pods-EX/Pods-EX.release.xcconfig"; sourceTree = "<group>"; };
+		8FAC301B07A2C3C1761ED775 /* Pods-EX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EX.debug.xcconfig"; path = "Target Support Files/Pods-EX/Pods-EX.debug.xcconfig"; sourceTree = "<group>"; };
 		D1B6F890297CAD42EA43AFB3 /* xccache.lock */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = xccache.lock; sourceTree = "<group>"; };
 		F577C62F2D96971200C83C96 /* EX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F577C6A82D96A3BD00C83C96 /* config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = config.xcconfig; sourceTree = "<group>"; };
@@ -46,19 +54,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6A1E86E654DF34A6D9F8EA12 /* local-packages */ = {
+		6A1E86E654DF34A6D9F8EA12 /* xccache/packages/local */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 			);
-			name = "local-packages";
 			path = xccache/packages/local;
 			sourceTree = "<group>";
 		};
-		B1278B41E2849A42CE2523AA /* xcconfigs */ = {
+		B1278B41E2849A42CE2523AA /* xccache/packages/xcconfigs */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 			);
-			name = xcconfigs;
 			path = xccache/packages/xcconfigs;
 			sourceTree = "<group>";
 		};
@@ -91,6 +97,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F50E8E3C2DA668CA00D96A31 /* EX.xccache in Frameworks */,
+				18015FE4127D04486B2BAD13 /* Pods_EX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +106,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5AF10312DAE15A400AB812D /* EXTests.xccache in Frameworks */,
+				3D493558AB28DAB0C39CDCFD /* Pods_EXTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,10 +119,22 @@
 				3B5B411E32E4429CC9EDBC87 /* Package.swift */,
 				D1B6F890297CAD42EA43AFB3 /* xccache.lock */,
 				1CBE8AAACA849C519746C865 /* xccache.yml */,
-				6A1E86E654DF34A6D9F8EA12 /* local-packages */,
-				B1278B41E2849A42CE2523AA /* xcconfigs */,
+				6A1E86E654DF34A6D9F8EA12 /* xccache/packages/local */,
+				B1278B41E2849A42CE2523AA /* xccache/packages/xcconfigs */,
 			);
 			name = xccache.config;
+			sourceTree = "<group>";
+		};
+		5C90813FE924F8E4817B1958 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8FAC301B07A2C3C1761ED775 /* Pods-EX.debug.xcconfig */,
+				7DE26B4CDDF8EACF9DDA2B36 /* Pods-EX.release.xcconfig */,
+				2CFC8136D10CA2330B0572A3 /* Pods-EXTests.debug.xcconfig */,
+				35080DAB9B492886321CC96D /* Pods-EXTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		F577C6262D96971200C83C96 = {
@@ -128,6 +148,7 @@
 				F577C73D2D99B03000C83C96 /* Frameworks */,
 				F577C6302D96971200C83C96 /* Products */,
 				4EF401BCDE41633C982927C2 /* xccache.config */,
+				5C90813FE924F8E4817B1958 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -143,6 +164,8 @@
 		F577C73D2D99B03000C83C96 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0184A8149B4A10C83904E5F4 /* Pods_EX.framework */,
+				79357B87DBBA76582551FBAB /* Pods_EXTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -154,6 +177,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F577C63D2D96971300C83C96 /* Build configuration list for PBXNativeTarget "EX" */;
 			buildPhases = (
+				FB20F90910359F932AA65EDD /* [CP] Check Pods Manifest.lock */,
 				F577C62B2D96971200C83C96 /* Sources */,
 				F577C62C2D96971200C83C96 /* Frameworks */,
 				F577C62D2D96971200C83C96 /* Resources */,
@@ -178,6 +202,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F5AF0FA42DAE09EF00AB812D /* Build configuration list for PBXNativeTarget "EXTests" */;
 			buildPhases = (
+				B088EFFD0D8B56D6281C7D89 /* [CP] Check Pods Manifest.lock */,
 				F5AF0F982DAE09EF00AB812D /* Sources */,
 				F5AF0F992DAE09EF00AB812D /* Frameworks */,
 				F5AF0F9A2DAE09EF00AB812D /* Resources */,
@@ -228,7 +253,7 @@
 			mainGroup = F577C6262D96971200C83C96;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */,
+				B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "umbrella" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F577C6302D96971200C83C96 /* Products */;
@@ -258,6 +283,53 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B088EFFD0D8B56D6281C7D89 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-EXTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FB20F90910359F932AA65EDD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-EX-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F577C62B2D96971200C83C96 /* Sources */ = {
@@ -408,7 +480,8 @@
 		};
 		F577C63E2D96971300C83C96 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
+			baseConfigurationReference = 8FAC301B07A2C3C1761ED775 /* Pods-EX.debug.xcconfig */;
+			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xccache/packages/xcconfigs */;
 			baseConfigurationReferenceRelativePath = EX.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -440,7 +513,8 @@
 		};
 		F577C63F2D96971300C83C96 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
+			baseConfigurationReference = 7DE26B4CDDF8EACF9DDA2B36 /* Pods-EX.release.xcconfig */;
+			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xccache/packages/xcconfigs */;
 			baseConfigurationReferenceRelativePath = EX.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -471,7 +545,8 @@
 		};
 		F5AF0FA22DAE09EF00AB812D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
+			baseConfigurationReference = 2CFC8136D10CA2330B0572A3 /* Pods-EXTests.debug.xcconfig */;
+			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xccache/packages/xcconfigs */;
 			baseConfigurationReferenceRelativePath = EXTests.xcconfig;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -489,7 +564,8 @@
 		};
 		F5AF0FA32DAE09EF00AB812D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
+			baseConfigurationReference = 35080DAB9B492886321CC96D /* Pods-EXTests.release.xcconfig */;
+			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xccache/packages/xcconfigs */;
 			baseConfigurationReferenceRelativePath = EXTests.xcconfig;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -538,7 +614,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */ = {
+		B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "umbrella" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = xccache/packages/umbrella;
 		};
@@ -547,12 +623,12 @@
 /* Begin XCSwiftPackageProductDependency section */
 		4ED0A0AC1D877357F53D194E /* EXTests.xccache */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */;
+			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "umbrella" */;
 			productName = EXTests.xccache;
 		};
 		72815BF879FB306E2CE3E550 /* EX.xccache */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */;
+			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "umbrella" */;
 			productName = EX.xccache;
 		};
 /* End XCSwiftPackageProductDependency section */
