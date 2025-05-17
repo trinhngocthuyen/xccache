@@ -111,7 +111,7 @@ module XCCache
 
         ACTION:
           The tool already removed those invalid products from the target.
-          Please help RE-ADD THOSE PRODUCTS to the target.
+          Please help RE-ADD THOSE PRODUCTS to the target. Then re-run the command again.
       DESC
     end
 
