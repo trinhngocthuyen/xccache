@@ -43,6 +43,11 @@ module XCCache
         UI.puts("[ERROR] #{message}".red)
       end
 
+      def error!(message)
+        error(message)
+        raise GeneralError, message
+      end
+
       def puts(message)
         $stdout.puts("#{' ' * self.indent}#{message}")
       end

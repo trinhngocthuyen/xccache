@@ -14,6 +14,7 @@ module XCCache
     end
 
     def perform_install
+      verify_projects!
       UI.message("Using cache dir: #{config.spm_cache_dir}")
       config.in_installation = true
       if @umbrella_pkg.nil?
@@ -53,7 +54,6 @@ module XCCache
     end
 
     def update_projects
-      verify_projects!
       projects.each do |project|
         yield project if block_given?
         project.save
@@ -75,6 +75,44 @@ module XCCache
 
     def verify_projects!
       raise "No projects detected. Are you running on the correct project directory?" if projects.empty?
+      projects.each { |project| verify_product_dependencies!(project) }
+    end
+
+    def verify_product_dependencies!(project)
+      invalid = project.targets.flat_map(&:pkg_product_dependencies).reject(&:pkg)
+      return if invalid.empty?
+
+      invalid.each(&:remove_from_project)
+      project.save
+
+      items_desc = invalid.map { |d| "• #{d.to_hash}" }.join("\n")
+      UI.error! <<~DESC
+        Invalid product dependency:
+
+        #{items_desc}
+
+        REASON:
+          A product dependency must have a valid reference to its package.
+          In this case, the package reference might be missing, or having a mismatched UDID.
+            -----------------------------------------------------
+            78A6451F74BE75DC0D90CDBD /* PRODUCT-X */ = {
+              isa = XCSwiftPackageProductDependency;
+              <---- 👈 HERE: Missing `package`
+              productName = PRODUCT-X;
+            };
+            -----------------------------------------------------
+            78A6451F74BE75DC0D90CDBD /* PRODUCT-Y */ = {
+              isa = XCSwiftPackageProductDependency;
+              package = <MISMATCHED_UDID> /* XCRemoteSwiftPackageReference "PACKAGE-Y" */; <---- 👈 HERE: Mismatched UDID
+              productName = PRODUCT-Y;
+            };
+            -----------------------------------------------------
+          The xcodeproj might possibly be corrupted.
+
+        ACTION:
+          The tool already removed those invalid products from the target.
+          Please help RE-ADD THOSE PRODUCTS to the target.
+      DESC
     end
 
     def add_xccache_refs_to_project(project)
