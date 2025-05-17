@@ -9,9 +9,7 @@ module Xcodeproj
         end
 
         def pkg
-          return package unless package.nil?
-
-          Log.warn("Missing pkg for #{inspect}")
+          package unless package.nil?
         end
       end
     end
