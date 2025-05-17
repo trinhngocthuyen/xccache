@@ -82,10 +82,14 @@ module XCCache
       invalid = project.targets.flat_map(&:pkg_product_dependencies).reject(&:pkg)
       return if invalid.empty?
 
-      invalid.each(&:remove_from_project)
+      # Remove invalid product dependencies
+      project.targets.each do |target|
+        target.remove_pkg_product_dependencies { |d| d.pkg.nil? }
+      end
       project.save
 
-      items_desc = invalid.map { |d| "• #{d.to_hash}" }.join("\n")
+      items_desc = invalid.map { |x| "• #{x.to_hash}" }.join("\n")
+      pkgs_desc = project.pkgs.map { |x| "• #{x.display_name}" }.join("\n")
       UI.error! <<~DESC
         Invalid product dependency:
 
@@ -107,11 +111,13 @@ module XCCache
               productName = PRODUCT-Y;
             };
             -----------------------------------------------------
-          The xcodeproj might possibly be corrupted.
+        🚩 Are you sure the packages were added to the project? Found packages:
+        #{pkgs_desc}
 
         ACTION:
-          The tool already removed those invalid products from the target.
-          Please help RE-ADD THOSE PRODUCTS to the target. Then re-run the command again.
+          - Ensure packages were added to the project
+          - The tool already removed those invalid products from the target.
+            Please help RE-ADD THOSE PRODUCTS to the target. Then re-run the command again.
       DESC
     end
 
