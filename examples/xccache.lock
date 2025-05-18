@@ -2,6 +2,19 @@
   "EX.xcodeproj": {
     "packages": [
       {
+        "path_from_root": "LocalPackages/core-utils"
+      },
+      {
+        "path_from_root": "LocalPackages/wizard"
+      },
+      {
+        "repositoryURL": "https://github.com/facebook/facebook-ios-sdk",
+        "requirement": {
+          "kind": "upToNextMajorVersion",
+          "minimumVersion": "9.0.0"
+        }
+      },
+      {
         "repositoryURL": "https://github.com/firebase/firebase-ios-sdk",
         "requirement": {
           "kind": "upToNextMajorVersion",
@@ -9,17 +22,10 @@
         }
       },
       {
-        "repositoryURL": "https://github.com/yeatse/KingfisherWebP",
+        "repositoryURL": "https://github.com/googlemaps/ios-maps-sdk",
         "requirement": {
           "kind": "upToNextMajorVersion",
-          "minimumVersion": "1.6.0"
-        }
-      },
-      {
-        "repositoryURL": "https://github.com/SwiftyBeaver/SwiftyBeaver",
-        "requirement": {
-          "kind": "upToNextMajorVersion",
-          "minimumVersion": "2.1.1"
+          "minimumVersion": "9.4.0"
         }
       },
       {
@@ -27,18 +33,6 @@
         "requirement": {
           "kind": "upToNextMajorVersion",
           "minimumVersion": "15.0.3"
-        }
-      },
-      {
-        "relative_path": "LocalPackages/core-utils",
-        "path": null,
-        "path_from_root": "LocalPackages/core-utils"
-      },
-      {
-        "repositoryURL": "https://github.com/googlemaps/ios-maps-sdk",
-        "requirement": {
-          "kind": "upToNextMajorVersion",
-          "minimumVersion": "9.4.0"
         }
       },
       {
@@ -56,32 +50,34 @@
         }
       },
       {
-        "repositoryURL": "https://github.com/facebook/facebook-ios-sdk",
+        "repositoryURL": "https://github.com/SwiftyBeaver/SwiftyBeaver",
         "requirement": {
           "kind": "upToNextMajorVersion",
-          "minimumVersion": "9.0.0"
+          "minimumVersion": "2.1.1"
         }
       },
       {
-        "relative_path": "LocalPackages/wizard",
-        "path": null,
-        "path_from_root": "LocalPackages/wizard"
+        "repositoryURL": "https://github.com/yeatse/KingfisherWebP",
+        "requirement": {
+          "kind": "upToNextMajorVersion",
+          "minimumVersion": "1.6.0"
+        }
       }
     ],
     "dependencies": {
       "EX": [
-        "SwiftyBeaver/SwiftyBeaver",
-        "Moya/Moya",
-        "ios-maps-sdk/GoogleMaps",
-        "facebook-ios-sdk/FacebookLogin",
-        "firebase-ios-sdk/FirebaseCrashlytics",
-        "SDWebImage/SDWebImage",
-        "SnapKit/SnapKit-Dynamic",
-        "KingfisherWebP/KingfisherWebP",
         "core-utils/DebugKit",
+        "core-utils/DisplayKit",
         "core-utils/ResourceKit",
         "core-utils/Swizzler",
-        "core-utils/DisplayKit",
+        "facebook-ios-sdk/FacebookLogin",
+        "firebase-ios-sdk/FirebaseCrashlytics",
+        "ios-maps-sdk/GoogleMaps",
+        "KingfisherWebP/KingfisherWebP",
+        "Moya/Moya",
+        "SDWebImage/SDWebImage",
+        "SnapKit/SnapKit-Dynamic",
+        "SwiftyBeaver/SwiftyBeaver",
         "wizard/Wizard"
       ],
       "EXTests": [

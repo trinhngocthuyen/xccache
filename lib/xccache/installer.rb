@@ -34,10 +34,14 @@ module XCCache
 
     def sync_lockfile
       UI.info("Syncing lockfile")
+      known_dependencies = lockfile.known_product_dependencies
       update_projects do |project|
-        lockfile.deep_merge!(project.display_name => lockfile_hash_for_project(project))
+        lockfile.deep_merge!(
+          project.display_name => lockfile_hash_for_project(project, known_dependencies)
+        )
       end
       lockfile.save
+      lockfile.verify!
     end
 
     def lockfile
@@ -62,10 +66,15 @@ module XCCache
 
     private
 
-    def lockfile_hash_for_project(project)
+    def lockfile_hash_for_project(project, known_dependencies)
       deps_by_targets = project.targets.to_h do |target|
-        deps = target.non_xccache_pkg_product_dependencies.select(&:pkg).map { |d| "#{d.pkg.slug}/#{d.product_name}" }
-        [target.name, deps]
+        deps = target.non_xccache_pkg_product_dependencies.map do |dep|
+          next dep.full_name unless dep.pkg.nil?
+          known = known_dependencies.find { |x| File.basename(x) == dep.product_name }
+          UI.warn("-> Assuming #{known} for #{dep.full_name}".dark) if known
+          known || dep.full_name
+        end
+        [target.name, deps.sort]
       end
       {
         "packages" => project.non_xccache_pkgs.map(&:to_h),
@@ -75,50 +84,6 @@ module XCCache
 
     def verify_projects!
       raise "No projects detected. Are you running on the correct project directory?" if projects.empty?
-      projects.each { |project| verify_product_dependencies!(project) }
-    end
-
-    def verify_product_dependencies!(project)
-      invalid = project.targets.flat_map(&:pkg_product_dependencies).reject(&:pkg)
-      return if invalid.empty?
-
-      # Remove invalid product dependencies
-      project.targets.each do |target|
-        target.remove_pkg_product_dependencies { |d| d.pkg.nil? }
-      end
-      project.save
-
-      items_desc = invalid.map { |x| "• #{x.to_hash}" }.join("\n")
-      pkgs_desc = project.pkgs.map { |x| "• #{x.display_name}" }.join("\n")
-      UI.error! <<~DESC
-        Invalid product dependency:
-
-        #{items_desc}
-
-        REASON:
-          A product dependency must have a valid reference to its package.
-          In this case, the package reference might be missing, or having a mismatched UDID.
-            -----------------------------------------------------
-            78A6451F74BE75DC0D90CDBD /* PRODUCT-X */ = {
-              isa = XCSwiftPackageProductDependency;
-              <---- 👈 HERE: Missing `package`
-              productName = PRODUCT-X;
-            };
-            -----------------------------------------------------
-            78A6451F74BE75DC0D90CDBD /* PRODUCT-Y */ = {
-              isa = XCSwiftPackageProductDependency;
-              package = <MISMATCHED_UDID> /* XCRemoteSwiftPackageReference "PACKAGE-Y" */; <---- 👈 HERE: Mismatched UDID
-              productName = PRODUCT-Y;
-            };
-            -----------------------------------------------------
-        🚩 Are you sure the packages were added to the project? Found packages:
-        #{pkgs_desc}
-
-        ACTION:
-          - Ensure packages were added to the project
-          - The tool already removed those invalid products from the target.
-            Please help RE-ADD THOSE PRODUCTS to the target. Then re-run the command again.
-      DESC
     end
 
     def add_xccache_refs_to_project(project)
