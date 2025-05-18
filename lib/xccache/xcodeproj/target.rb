@@ -30,21 +30,11 @@ module Xcodeproj
         end
 
         def remove_xccache_product_dependencies
-          remove_pkg_product_dependencies { |d| d.pkg.xccache_pkg? }
+          remove_pkg_product_dependencies { |d| d.pkg&.xccache_pkg? }
         end
 
         def remove_pkg_product_dependencies(&block)
-          package_product_dependencies.select(&block).each do |d|
-            XCCache::UI.info(
-              "(-) Remove #{d.product_name.red} from product dependencies of target #{display_name.bold}"
-            )
-            build_phases.each do |phase|
-              phase.files.select { |f| f.remove_from_project if f.product_ref == d }
-            end
-            # Remove it from target dependencies
-            dependencies.each { |x| x.remove_from_project if x.product_ref == d }
-            d.remove_from_project
-          end
+          package_product_dependencies.select(&block).each(&:remove_alongside_related)
         end
       end
     end

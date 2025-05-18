@@ -29,8 +29,8 @@ module Xcodeproj
     end
 
     def has_pkg?(hash)
-      id = hash[pkg_key_in_hash(hash)]
-      pkgs.any? { |p| p.id == id }
+      pkg_hash = XCCache::Lockfile::Pkg.from_h(hash)
+      pkgs.any? { |p| p.id == pkg_hash.id }
     end
 
     def has_xccache_pkg?
@@ -38,14 +38,14 @@ module Xcodeproj
     end
 
     def add_pkg(hash)
-      key = pkg_key_in_hash(hash)
-      is_local = ["relative_path", "path"].include?(key)
+      pkg_hash = XCCache::Lockfile::Pkg.from_h(hash)
+      pkg_hash["relative_path"] = pkg_hash.relative_path_from_dir(dir).to_s if pkg_hash.key == "path_from_root"
 
-      Log.message("Add package #{hash[key].bold} to project #{display_name.bold}")
-      cls = is_local ? XCLocalSwiftPackageReference : XCRemoteSwiftPackageReference
+      Log.message("Add package #{pkg_hash.id.bold} to project #{display_name.bold}")
+      cls = pkg_hash.local? ? XCLocalSwiftPackageReference : XCRemoteSwiftPackageReference
       ref = new(cls)
       custom_keys = ["path_from_root"]
-      hash.each { |k, v| ref.send("#{k}=", v) unless custom_keys.include?(k) }
+      pkg_hash.each { |k, v| ref.send("#{k}=", v) unless custom_keys.include?(k) }
       root_object.package_references << ref
       ref
     end
@@ -72,12 +72,6 @@ module Xcodeproj
 
     def xccache_config_group
       self["xccache.config"] || new_group("xccache.config")
-    end
-
-    private
-
-    def pkg_key_in_hash(hash)
-      ["repositoryURL", "relative_path", "path"].find { |k| hash.key?(k) }
     end
   end
 end
