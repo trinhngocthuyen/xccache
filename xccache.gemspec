@@ -11,9 +11,10 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/trinhngocthuyen/xccache"
   spec.license       = "MIT"
 
-  spec.files         = Dir["{lib,bin}/**/*"]
+  spec.files         = Dir["{lib,libexec,bin,ext}/**/*"]
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+  spec.extensions    = ["ext/xccache-proxy/extconf.rb"]
 
   spec.add_dependency "claide"
   spec.add_dependency "parallel"
