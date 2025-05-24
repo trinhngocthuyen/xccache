@@ -83,6 +83,9 @@
       "EXTests": [
         "core-utils/TestKit"
       ]
+    },
+    "platforms": {
+      "ios": "17.6"
     }
   }
 }

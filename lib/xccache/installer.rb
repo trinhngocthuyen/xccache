@@ -79,7 +79,14 @@ module XCCache
       {
         "packages" => project.non_xccache_pkgs.map(&:to_h),
         "dependencies" => deps_by_targets,
+        "platforms" => platforms_for_project(project),
       }
+    end
+
+    def platforms_for_project(project)
+      project
+        .targets.map { |t| [t.platform_name.to_s, t.deployment_target] }
+        .sort.reverse.to_h # sort descendingly -> min value is picked for the hash
     end
 
     def verify_projects!
