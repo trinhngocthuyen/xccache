@@ -27,7 +27,6 @@ module XCCache
         def prepare(options = {})
           create
           resolve unless options[:skip_resolving_dependencies]
-          create_symlinks_for_convenience
           create_symlinks_to_local_pkgs
           gen_metadata
           resolve_recursive_dependencies
@@ -51,13 +50,6 @@ module XCCache
             dir = Dir.prepare(root_dir / ".Sources" / "#{target.name}.xccache")
             (dir / "dummy.swift").write("")
           end
-        end
-
-        def create_symlinks_for_convenience
-          # Symlinks for convenience
-          (root_dir / "binaries").symlink_to(root_dir.parent / "binaries")
-          (root_dir / ".build").symlink_to(root_dir.parent / ".build")
-          (root_dir / ".build/checkouts").symlink_to(root_dir.parent / "checkouts")
         end
 
         def create_symlinks_to_local_pkgs
