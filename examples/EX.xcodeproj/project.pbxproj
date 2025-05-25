@@ -37,7 +37,7 @@
 
 /* Begin PBXFileReference section */
 		1CBE8AAACA849C519746C865 /* xccache.yml */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.yaml; path = xccache.yml; sourceTree = "<group>"; };
-		3B5B411E32E4429CC9EDBC87 /* Package.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Package.swift; path = xccache/packages/umbrella/Package.swift; sourceTree = "<group>"; };
+		3B5B411E32E4429CC9EDBC87 /* Package.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Package.swift; path = xccache/packages/proxy/Package.swift; sourceTree = "<group>"; };
 		D1B6F890297CAD42EA43AFB3 /* xccache.lock */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = xccache.lock; sourceTree = "<group>"; };
 		F577C62F2D96971200C83C96 /* EX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F577C6A82D96A3BD00C83C96 /* config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = config.xcconfig; sourceTree = "<group>"; };
@@ -228,7 +228,7 @@
 			mainGroup = F577C6262D96971200C83C96;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */,
+				B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/proxy" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F577C6302D96971200C83C96 /* Products */;
@@ -538,21 +538,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */ = {
+		B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/proxy" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = xccache/packages/umbrella;
+			relativePath = xccache/packages/proxy;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		4ED0A0AC1D877357F53D194E /* EXTests.xccache */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */;
+			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/proxy" */;
 			productName = EXTests.xccache;
 		};
 		72815BF879FB306E2CE3E550 /* EX.xccache */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/umbrella" */;
+			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/proxy" */;
 			productName = EX.xccache;
 		};
 /* End XCSwiftPackageProductDependency section */

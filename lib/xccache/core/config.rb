@@ -58,6 +58,10 @@ module XCCache
       @spm_artifacts_dir ||= spm_build_dir / "artifacts"
     end
 
+    def spm_proxy_sandbox
+      @spm_proxy_sandbox ||= Dir.prepare(spm_sandbox / "proxy")
+    end
+
     def spm_umbrella_sandbox
       @spm_umbrella_sandbox ||= Dir.prepare(spm_sandbox / "umbrella")
     end

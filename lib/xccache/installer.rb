@@ -15,6 +15,7 @@ module XCCache
 
     def perform_install
       verify_projects!
+      projects.each { |project| migrate_umbrella_to_proxy(project) }
       UI.message("Using cache dir: #{config.spm_cache_dir}")
       config.in_installation = true
       if @umbrella_pkg.nil?
@@ -23,7 +24,6 @@ module XCCache
       end
 
       yield
-      umbrella_pkg.write_manifest
       umbrella_pkg.gen_xcconfigs
       projects.each do |project|
         add_xccache_refs_to_project(project)
@@ -96,7 +96,7 @@ module XCCache
     def add_xccache_refs_to_project(project)
       group = project.xccache_config_group
       add_file = proc { |p| group[p.basename.to_s] || group.new_file(p) }
-      add_file.call(config.spm_umbrella_sandbox / "Package.swift")
+      add_file.call(config.spm_proxy_sandbox / "Package.swift")
       add_file.call(config.lockfile.path)
       add_file.call(config.path) if config.path.exist?
       group.ensure_synced_group(name: "local-packages", path: config.spm_local_pkgs_dir)
@@ -124,6 +124,22 @@ module XCCache
             build_config.base_configuration_reference_relative_path = xcconfig_path.basename.to_s
           end
         end
+      end
+    end
+
+    def migrate_umbrella_to_proxy(project)
+      return unless project.xccache_pkg&.slug == "umbrella"
+
+      UI.info <<~DESC
+        Migrating from umbrella to proxy for project #{project.display_name}
+        You should notice changes in project files from xccache/package/umbrella -> xccache/package/proxy.
+        Don't worry, this is expected.
+      DESC
+        .yellow
+
+      project.xccache_pkg.relative_path = "xccache/packages/proxy"
+      if (group = project.xccache_config_group) && (ref = group["Package.swift"])
+        ref.path = "xccache/packages/proxy/Package.swift"
       end
     end
   end

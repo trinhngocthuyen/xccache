@@ -2,6 +2,7 @@ require "xccache/swift/swiftc"
 require "xccache/utils/template"
 require "xccache/cache/cachemap"
 require "xccache/spm/pkg/base"
+require "xccache/proxy"
 
 Dir["#{__dir__}/#{File.basename(__FILE__, '.rb')}/*.rb"].sort.each { |f| require f }
 
@@ -10,10 +11,10 @@ module XCCache
     class Package
       class Umbrella < Package
         include Config::Mixin
+        include ProxyMixin
         include UmbrellaCachemapMixin
         include UmbrellaDescsMixin
         include UmbrellaBuildMixin
-        include UmbrellaManifestMixin
         include UmbrellaVizMixin
         include UmbrellaXCConfigsMixin
 
@@ -42,14 +43,7 @@ module XCCache
         end
 
         def create
-          UI.info("Creating umbrella package")
-          # Initially, write json with the original data in lockfile (without cache)
-          write_manifest(no_cache: true)
-          # Create dummy sources dirs prefixed with `.` so that they do not show up in Xcode
-          config.project_targets.each do |target|
-            dir = Dir.prepare(root_dir / ".Sources" / "#{target.name}.xccache")
-            (dir / "dummy.swift").write("")
-          end
+          run_xccache_proxy("gen-umbrella")
         end
 
         def create_symlinks_to_local_pkgs
