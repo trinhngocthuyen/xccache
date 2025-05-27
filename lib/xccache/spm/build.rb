@@ -35,7 +35,7 @@ module XCCache
           cmd << "-Xswiftc" << "-emit-module-interface"
           cmd << "-Xswiftc" << "-no-verify-emitted-module-interface"
         end
-        Sh.run(cmd, suppress_err: /(dependency '.*' is not used by any target|unable to create symbolic link)/)
+        Sh.run(cmd)
       end
 
       def swift_build_args

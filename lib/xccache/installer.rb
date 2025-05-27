@@ -1,9 +1,11 @@
 require "xccache/spm"
+require "xccache/installer/integration"
 Dir["#{__dir__}/#{File.basename(__FILE__, '.rb')}/*.rb"].sort.each { |f| require f }
 
 module XCCache
   class Installer
     include PkgMixin
+    include IntegrationMixin
 
     def initialize(options = {})
       ctx = options[:ctx]
@@ -15,21 +17,20 @@ module XCCache
 
     def perform_install
       verify_projects!
+      projects.each { |project| migrate_umbrella_to_proxy(project) }
       UI.message("Using cache dir: #{config.spm_cache_dir}")
       config.in_installation = true
-      if @umbrella_pkg.nil?
-        sync_lockfile
-        umbrella_pkg.prepare(**@install_options)
-      end
+      sync_lockfile
+      proxy_pkg.prepare(@install_options)
 
-      yield
-      umbrella_pkg.write_manifest
-      umbrella_pkg.gen_xcconfigs
+      yield if block_given?
+
+      gen_supporting_files
       projects.each do |project|
         add_xccache_refs_to_project(project)
         inject_xcconfig_to_project(project)
       end
-      umbrella_pkg.gen_cachemap_viz
+      gen_cachemap_viz
     end
 
     def sync_lockfile
@@ -79,7 +80,14 @@ module XCCache
       {
         "packages" => project.non_xccache_pkgs.map(&:to_h),
         "dependencies" => deps_by_targets,
+        "platforms" => platforms_for_project(project),
       }
+    end
+
+    def platforms_for_project(project)
+      project
+        .targets.map { |t| [t.platform_name.to_s, t.deployment_target] }
+        .sort.reverse.to_h # sort descendingly -> min value is picked for the hash
     end
 
     def verify_projects!
@@ -89,7 +97,7 @@ module XCCache
     def add_xccache_refs_to_project(project)
       group = project.xccache_config_group
       add_file = proc { |p| group[p.basename.to_s] || group.new_file(p) }
-      add_file.call(config.spm_umbrella_sandbox / "Package.swift")
+      add_file.call(config.spm_proxy_sandbox / "Package.swift")
       add_file.call(config.lockfile.path)
       add_file.call(config.path) if config.path.exist?
       group.ensure_synced_group(name: "local-packages", path: config.spm_local_pkgs_dir)
@@ -117,6 +125,22 @@ module XCCache
             build_config.base_configuration_reference_relative_path = xcconfig_path.basename.to_s
           end
         end
+      end
+    end
+
+    def migrate_umbrella_to_proxy(project)
+      return unless project.xccache_pkg&.slug == "umbrella"
+
+      UI.info <<~DESC
+        Migrating from umbrella to proxy for project #{project.display_name}
+        You should notice changes in project files from xccache/package/umbrella -> xccache/package/proxy.
+        Don't worry, this is expected.
+      DESC
+        .yellow
+
+      project.xccache_pkg.relative_path = "xccache/packages/proxy"
+      if (group = project.xccache_config_group) && (ref = group["Package.swift"])
+        ref.path = "xccache/packages/proxy/Package.swift"
       end
     end
   end

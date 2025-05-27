@@ -46,11 +46,16 @@ Simply run `xccache` under the root directory of the project. Then, you should s
 - **`xccache.lock`**: containing the info about packages in the project alongside the products being used. You're recommended to track this file in git.
 - The `xccache` directory: containing build intermediates for the integration. This directory is similar to the `Pods` directory (in CocoaPods). Do NOT remove this directory. Instead, please ignore it from git.
 
-> [!NOTE]
-> If you see product dependencies of a Swift package being removed from the *Link Binary With Libraries* section, it is expected.\
-> In return, this plugin adds another `<Target>.xccache` product which includes your product dependencies.
+If you see product dependencies of a Swift package being removed from the *Link Binary With Libraries* section, it is expected.\
+In return, this plugin adds another `<Target>.xccache` product which includes your product dependencies.
 
 <img src="res/umbrella_product_dependencies.png" width="580px">
+
+Also, you may notice that all packages turn into local packages. This is perfectly normal as the tool creates special packages called *proxy packages* to manipulate cache of a package.
+
+If you have local/development packages, they are accessible under the `local-packages` group in the project structure.
+
+<img src="res/proxy_local.png" width="300px">
 
 ## Understanding the Tool
 Read the overview: [here](overview.md).
@@ -86,29 +91,10 @@ xccache build FirebaseCrashlytics --recursive
 ### Using Cache
 Run `xccache use` or simply `xccache` to integrate cache to the project. Note that cache, after being built with `xccache build`, is automatically integrated to the project. You don't need to run `xccache use` in this case.
 
-In the package manifest (Package.swift) of the umbrella package (named xccache), you should see a generated JSON string as follows:
-```
-let JSON = """
-{
-  "EXTests.xccache": [],
-  "EX.xccache": [
-    "core-utils/DebugKit",           // <-- Using SOURCE CODE
-    "core-utils/ResourceKit",
-    "core-utils/Swizzler.binary",    // <-- Using CACHE (xcframework)
-    "firebase-ios-sdk/FirebaseCrashlytics.binary",
-    "ios-maps-sdk/GoogleMaps.binary",
-    "KingfisherWebP/KingfisherWebP.binary",
-    "Moya/Moya.binary",
-    "SDWebImage/SDWebImage.binary",
-    "SnapKit/SnapKit-Dynamic.binary",
-    "SwiftyBeaver/SwiftyBeaver.binary"
-  ]
-}
-"""
-```
-This JSON describes the integrated dependencies:
-- A target suffixed with `.binary` (ex. `SwiftyBeaver/SwiftyBeaver.binary`) means its cache is available and is integrated in favor of source code.
-- A target not ending with `.binary` (ex. `core-utils/Swizzler`) means it's integrated using source code.
+In the Package Dependencies section in Xcode, you should notice a special package call `xccache`.
+The `binaries` directory of this package reflects the cache being used. For example, in the following image, `SwiftyBeaver` is integrated as binary.
+
+<img src="res/proxy_binary.png" width="300px">
 
 In Xcode build log, you should see xcframeworks of the cache-hit targets being processed by Xcode.
 <img src="res/xcode_process_xcframeworks.png" width="580px">
@@ -123,15 +109,17 @@ Open this html in your browser to better understand the depenencies in your proj
 
 ### Switching Between Binary and Source Code
 
-Switching between binary and source code forms can be done easily with a simple action.
+By default, the tool attemtps to use cache if exists. In case you want to force-switch to source mode for specific targets, there are a few approaches you may consider:
 
-To use source code of a target instead of its binary, simply **remove the `.binary` suffix**. For example, changing from `SwiftyBeaver/SwiftyBeaver.binary` to `SwiftyBeaver/SwiftyBeaver` results in this target being compiled with sources. This allows developers to jump between the two modes without the hassle of changing the xcodeproj files.
+(1) Run `xccache off <targets>` (ex. `xccache off DebugKit ResourceKit`).\
+Note that the preferences set by this command is not persistent. This means, the next time you run `xccache`, those targets will not be remembered; cache will be integrated if exists.
+
+(2) If you're looking for a persistent preferences, consider adding them to the [`ignore`](configuration.md#ignore) list in the configuration file.
+
+(3) Or, you can simply just delete the cache, ex. `rm -rf ~/.xccache/debug/DebugKit`.
 
 > [!IMPORTANT]
-> After modifying the JSON in Package.swift, remember to trigger resolving package versions again (File -> Packages -> Resolve Package Versions). Xcode doesn't automatically reload packages upon changes in this file.
-
-<!-- <video src="https://github.com/user-attachments/assets/61095ed4-b221-405d-b3e9-5f6c9218f58c"></video> -->
-<img src="res/switching_binary_to_source.gif">
+> After running any xccache command, remember to trigger resolving package versions again (File -> Packages -> Resolve Package Versions). Xcode doesn't automatically reload packages upon changes.
 
 ### Rolling Back Cache
 

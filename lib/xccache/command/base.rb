@@ -5,9 +5,6 @@ module XCCache
     class Options
       SDK = ["--sdk=foo,bar", "SDKs (iphonesimulator, iphoneos, etc.)"].freeze
       CONFIG = ["--config=foo", "Configuration (debug, release) (default: debug)"].freeze
-      SKIP_RESOLVING_DEPENDENCIES = [
-        "--skip-resolving-dependencies", "Skip resolving package dependencies",
-      ].freeze
       MERGE_SLICES = [
         "--merge-slices/--no-merge-slices",
         "Whether to merge with existing slices/sdks in the xcframework (default: true)",
@@ -18,7 +15,7 @@ module XCCache
       ].freeze
 
       def self.install_options
-        [SDK, CONFIG, SKIP_RESOLVING_DEPENDENCIES]
+        [SDK, CONFIG]
       end
 
       def self.build_options

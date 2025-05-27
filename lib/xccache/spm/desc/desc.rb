@@ -5,33 +5,9 @@ module XCCache
     class Package
       class Description < BaseObject
         include Cacheable
-        cacheable :resolve_recursive_dependencies
 
-        def self.descs_in_metadata_dir
-          descs = Config.instance.spm_metadata_dir.glob("*.json").map { |p| Description.new(p) }
-          [descs, combine_descs(descs)]
-        end
-
-        def self.in_dir(dir, save_to_dir: nil)
-          path = save_to_dir / "#{dir.basename}.json" unless save_to_dir.nil?
-          begin
-            raw = JSON.parse(Sh.capture_output("swift package dump-package --package-path #{dir}"))
-            Description.new(path, raw: raw)
-          rescue StandardError => e
-            UI.error("Failed to dump package in #{dir}. Error: #{e}")
-          end
-        end
-
-        def self.descs_in_dir(root_dir, save_to_dir: nil)
-          dirs = [root_dir] + root_dir.glob(".build/checkouts/*").reject { |p| p.glob("Package*.swift").empty? }
-          descs = dirs.parallel_map do |dir|
-            desc = Description.in_dir(dir, save_to_dir: save_to_dir)
-            unless save_to_dir.nil?
-              desc.save
-              desc.save(to: desc.path.parent / "#{desc.name}.json") if desc.name != dir.basename.to_s
-            end
-            desc
-          end
+        def self.descs_in_metadata_dir(dir)
+          descs = dir.glob("*.json").map { |p| Description.new(p) }
           [descs, combine_descs(descs)]
         end
 
@@ -75,10 +51,6 @@ module XCCache
           matched_products = products.select { |p| p.name == name }
           matched_products
             .flat_map { |p| targets.select { |t| p.target_names.include?(t.name) } }
-        end
-
-        def resolve_recursive_dependencies(platform: nil)
-          products.to_h { |p| [p, p.recursive_targets(platform: platform)] }
         end
 
         def local?

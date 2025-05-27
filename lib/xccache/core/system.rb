@@ -14,8 +14,9 @@ class File
 end
 
 class Dir
-  def self.prepare(dir)
+  def self.prepare(dir, clean: false)
     dir = Pathname(dir)
+    dir.rmtree if clean && dir.exist?
     dir.mkpath
     dir
   end

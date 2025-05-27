@@ -7,7 +7,7 @@ module XCCache
 
     def initialize(name)
       @name = name
-      @path = Gem.find_files("xccache/assets/templates/#{name}.template").first
+      @path = ROOT / "lib/xccache/assets/templates/#{name}.template"
     end
 
     def render(hash = {}, save_to: nil)

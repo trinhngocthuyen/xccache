@@ -8,6 +8,10 @@ module XCCache
       @raw = raw || load || {}
     end
 
+    def reload
+      @raw = load || {}
+    end
+
     def load
       raise NotImplementedError
     end
