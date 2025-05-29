@@ -45,7 +45,7 @@ module XCCache
         basename = options[:checksum] ? "#{target.name}-#{target.checksum}" : target.name
         basename += target.macro? ? ".macro" : ".xcframework"
 
-        Dir.create_tmpdir do |_tmpdir|
+        Dir.create_tmpdir do |tmpdir|
           cls = target.macro? ? Macro : XCFramework
           cls.new(
             name: target.name,
@@ -53,7 +53,7 @@ module XCCache
             config: config,
             sdks: sdks,
             path: out_dir / basename,
-            tmpdir: Dir.create_tmpdir,
+            tmpdir: tmpdir,
             pkg_desc: target_pkg_desc,
             library_evolution: options[:library_evolution],
           ).build(**options)
