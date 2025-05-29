@@ -15,12 +15,12 @@ module XCCache
 
     def initialize(argv)
       super
+      set_ansi_mode
       config.verbose = verbose unless verbose.nil?
       config.install_config = argv.option("config", "debug")
       @install_options = {
         :sdks => str_to_sdks(argv.option("sdk")),
         :config => config.install_config,
-        :skip_resolving_dependencies => argv.flag?("skip-resolving-dependencies"),
       }
       @build_options = {
         **@install_options,
@@ -32,6 +32,15 @@ module XCCache
 
     def str_to_sdks(str)
       (str || config.default_sdk).split(",").map { |s| Swift::Sdk.new(s) }
+    end
+
+    private
+
+    def set_ansi_mode
+      config.ansi = ansi_output?
+      return if ansi_output?
+      Colored2.disable!
+      String.send(:define_method, :colorize) { |s, _| s }
     end
   end
 end

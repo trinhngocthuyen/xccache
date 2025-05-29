@@ -3,10 +3,11 @@ module XCCache
     include Config::Mixin
 
     def umbrella_pkg
-      @umbrella_pkg ||= SPM::Package::Umbrella.new(
-        root_dir: config.spm_umbrella_sandbox,
-        warn_if_not_direct_target: false,
-      )
+      proxy_pkg.umbrella
+    end
+
+    def proxy_pkg
+      @proxy_pkg ||= SPM::Package::Proxy.new(root_dir: config.spm_proxy_sandbox)
     end
   end
 end

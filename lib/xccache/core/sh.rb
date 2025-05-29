@@ -18,27 +18,13 @@ module XCCache
       def run(*args, env: nil, **options)
         cmd = args.join(" ")
         UI.message("$ #{cmd}".cyan.dark) if config.verbose? && options[:log_cmd] != false
+        return system(cmd) || (raise GeneralError, "Command '#{cmd}' failed") unless options[:capture]
 
         out, err = [], []
-        handle_out = proc do |line|
-          if options[:capture]
-            out << line
-          else
-            UI.puts line
-          end
-        end
-        handle_err = proc do |line|
-          if options[:capture]
-            err << line
-          else
-            UI.puts line.strip.yellow unless options[:suppress_err]&.match(line)
-          end
-        end
-
         popen3_args = env ? [env, cmd] : [cmd]
         Open3.popen3(*popen3_args) do |_stdin, stdout, stderr, wait_thr|
-          stdout_thread = Thread.new { stdout.each { |l| handle_out.call(l) } }
-          stderr_thread = Thread.new { stderr.each { |l| handle_err.call(l) } }
+          stdout_thread = Thread.new { stdout.each { |l| out << l } }
+          stderr_thread = Thread.new { stderr.each { |l| err << l } }
           [stdout_thread, stderr_thread].each(&:join)
           result = wait_thr.value
           result.exitstatus

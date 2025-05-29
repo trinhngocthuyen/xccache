@@ -41,7 +41,7 @@ module Xcodeproj
       pkg_hash = XCCache::Lockfile::Pkg.from_h(hash)
       pkg_hash["relative_path"] = pkg_hash.relative_path_from_dir(dir).to_s if pkg_hash.key == "path_from_root"
 
-      Log.message("Add package #{pkg_hash.id.bold} to project #{display_name.bold}")
+      Log.info("Add package #{pkg_hash.id.bold} to project #{display_name.bold}")
       cls = pkg_hash.local? ? XCLocalSwiftPackageReference : XCRemoteSwiftPackageReference
       ref = new(cls)
       custom_keys = ["path_from_root"]
@@ -51,13 +51,13 @@ module Xcodeproj
     end
 
     def add_xccache_pkg
-      sandbox_path = XCCache::Config.instance.spm_umbrella_sandbox
+      sandbox_path = XCCache::Config.instance.spm_proxy_sandbox
       add_pkg("relative_path" => sandbox_path.relative_path_from(path.parent).to_s)
     end
 
     def remove_pkgs(&block)
       pkgs.select(&block).each do |pkg|
-        XCCache::UI.info("(-) Remove #{pkg.display_name.red} from package refs of project #{display_name.bold}")
+        Log.info("(-) Remove #{pkg.display_name.red} from package refs of project #{display_name.bold}")
         pkg.remove_from_project
       end
     end

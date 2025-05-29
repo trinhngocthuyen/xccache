@@ -57,10 +57,7 @@ module XCCache
         end
 
         def src_dir
-          @src_dir ||= begin
-            path = root.raw.fetch("packageKind", {}).fetch("root", [])[0]
-            Pathname.new(path) unless path.nil?
-          end
+          @src_dir ||= Pathname(root.raw["path"]).parent
         end
       end
     end

@@ -19,14 +19,14 @@ module Xcodeproj
         end
 
         def add_pkg_product_dependency(name)
-          Log.message("(+) Add dependency #{name.blue} to target #{display_name.bold}")
+          Log.info("(+) Add dependency #{name.blue} to target #{display_name.bold}")
           pkg_name, product_name = name.split("/")
           pkg = project.get_pkg(pkg_name)
           pkg_product_dependencies << pkg.create_target_dependency_ref(product_name).product_ref
         end
 
         def add_xccache_product_dependency
-          add_pkg_product_dependency("umbrella/#{name}.xccache")
+          add_pkg_product_dependency("proxy/#{name}.xccache")
         end
 
         def remove_xccache_product_dependencies

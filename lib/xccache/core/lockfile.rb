@@ -27,6 +27,10 @@ module XCCache
         return id if key == "relative_path"
         (Pathname.pwd / id).relative_path_from(dir) if key == "path_from_root"
       end
+
+      def local_absolute_path
+        Pathname.pwd / self["path_from_root"] if local?
+      end
     end
 
     def hash_for_project(project)

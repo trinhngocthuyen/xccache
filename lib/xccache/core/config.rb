@@ -13,8 +13,9 @@ module XCCache
       @instance ||= new(Pathname("xccache.yml").expand_path)
     end
 
-    attr_accessor :verbose
+    attr_accessor :verbose, :ansi
     alias verbose? verbose
+    alias ansi? ansi
 
     # To distinguish if it's within an installation, or standalone like `xccache pkg build`
     attr_accessor :in_installation
@@ -35,11 +36,11 @@ module XCCache
     end
 
     def spm_local_pkgs_dir
-      @spm_local_pkgs_dir ||= Dir.prepare(spm_sandbox / "local")
+      @spm_local_pkgs_dir ||= Dir.prepare(spm_sandbox / "local", clean: true)
     end
 
     def spm_xcconfig_dir
-      @spm_xcconfig_dir ||= Dir.prepare(spm_sandbox / "xcconfigs")
+      @spm_xcconfig_dir ||= Dir.prepare(spm_sandbox / "xcconfigs", clean: true)
     end
 
     def spm_cache_dir
@@ -47,7 +48,7 @@ module XCCache
     end
 
     def spm_binaries_dir
-      @spm_binaries_dir ||= Dir.prepare(spm_umbrella_sandbox / "binaries")
+      @spm_binaries_dir ||= Dir.prepare(spm_sandbox / "binaries", clean: true)
     end
 
     def spm_build_dir
@@ -56,6 +57,10 @@ module XCCache
 
     def spm_artifacts_dir
       @spm_artifacts_dir ||= spm_build_dir / "artifacts"
+    end
+
+    def spm_proxy_sandbox
+      @spm_proxy_sandbox ||= Dir.prepare(spm_sandbox / "proxy")
     end
 
     def spm_umbrella_sandbox
@@ -71,6 +76,7 @@ module XCCache
     end
 
     def cachemap
+      require "xccache/cache/cachemap"
       @cachemap ||= Cache::Cachemap.new(sandbox / "cachemap.json")
     end
 

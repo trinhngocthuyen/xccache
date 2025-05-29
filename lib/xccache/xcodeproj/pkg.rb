@@ -17,7 +17,7 @@ module Xcodeproj
         end
 
         def xccache_pkg?
-          local? && id == "xccache/packages/umbrella"
+          local? && ["xccache/packages/umbrella", "xccache/packages/proxy"].include?(id)
         end
 
         def non_xccache_pkg?

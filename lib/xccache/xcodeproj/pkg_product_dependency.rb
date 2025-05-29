@@ -12,12 +12,12 @@ module Xcodeproj
           return package if package
           return if @warned_missing_pkg
           @warned_missing_pkg = true
-          XCCache::UI.warn("Missing pkg of product dependency #{uuid}: #{to_hash}")
+          Log.warn("Missing pkg of product dependency #{uuid}: #{to_hash}")
         end
 
         def remove_alongside_related
           target = referrers.find { |x| x.is_a?(PBXNativeTarget) }
-          XCCache::UI.info(
+          Log.info(
             "(-) Remove #{product_name.red} from product dependencies of target #{target.display_name.bold}"
           )
           target.dependencies.each { |x| x.remove_from_project if x.product_ref == self }

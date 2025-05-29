@@ -57,3 +57,5 @@ build-iPhoneSimulator/
 .rubocop-https?--*
 
 .vscode/
+libexec/.local/
+libexec/.download/

@@ -14,7 +14,7 @@ In case of cache miss, it automatically uses the original dependency.
 ### Cache Validation Model
 (1) **Checksum-based**: An xcframework is associated with a checksum of its package. If the checksum does not match -> cache miss.
 
-(2) **Cache miss propagation**: Cache miss in a target results in cache miss in its dependents. For example, if `pkg/A` depends on `pkg/X` and `pkg/X` is cache-missed, then `pkg/A` is also a cache miss regardless of whether there exist a binary (xcframework) that matches the checksum.
+<!-- (2) **Cache miss propagation**: Cache miss in a target results in cache miss in its dependents. For example, if `pkg/A` depends on `pkg/X` and `pkg/X` is cache-missed, then `pkg/A` is also a cache miss regardless of whether there exist a binary (xcframework) that matches the checksum. -->
 
 ## Under the Hood
 - [Packaging as an xcframework](under-the-hood/packaging-as-xcframework.md)
