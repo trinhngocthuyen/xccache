@@ -3,7 +3,7 @@ module XCCache
     attr_reader :root
 
     def initialize(root)
-      @root = Pathname(root)
+      @root = Pathname(root).expand_path
     end
 
     def run(*args, **kwargs)
