@@ -11,3 +11,8 @@ test:
 
 ex.%:
 	cd examples && make $*
+
+proxy.build:
+	mkdir -p libexec/.local
+	cd tools/xccache-proxy && make build CONFIGURATION=release
+	cp tools/xccache-proxy/.build/release/xccache-proxy libexec/.local/

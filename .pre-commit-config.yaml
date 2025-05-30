@@ -1,4 +1,4 @@
-exclude: ^(VERSION|.*\.xcframework|.*\.lock|.*\.json)
+exclude: ^(VERSION|tools|.*\.xcframework|.*\.lock|.*\.json)
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0

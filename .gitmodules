@@ -1,0 +1,3 @@
+[submodule "tools/xccache-proxy"]
+	path = tools/xccache-proxy
+	url = git@github.com:trinhngocthuyen/xccache-proxy.git

@@ -35,3 +35,14 @@ By default, pre-commit auto lints and formats your changes. Therefore, make sure
 In case you want to trigger the format, simply run `make format`.
 
 **Step 5: Commit changes and create pull requests**
+
+### xccache-proxy
+
+[xccache-proxy](https://github.com/trinhngocthuyen/xccache-proxy) is an internal tool (at: tools/xccache-proxy) used for generating proxy packages (to manipulate cache).
+
+Its binary is downloaded from remote, to `libexec/.download/<version>/xccache-proxy`. When there's a binary at `libexec/.local/xccache-proxy`, this binary is picked up for the execution.
+
+Using the local xccache-proxy binary is preferred for local development. If you're making changes in xccache-proxy and want to test against this repo (xccache), simply build the binary by:
+```sh
+make proxy.build
+```
