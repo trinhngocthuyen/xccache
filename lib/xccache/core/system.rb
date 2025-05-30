@@ -14,8 +14,9 @@ class File
 end
 
 class Dir
-  def self.prepare(dir, clean: false)
+  def self.prepare(dir, clean: false, expand: false)
     dir = Pathname(dir)
+    dir = dir.expand_path if expand
     dir.rmtree if clean && dir.exist?
     dir.mkpath
     dir
