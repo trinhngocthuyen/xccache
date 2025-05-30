@@ -53,8 +53,6 @@ In return, this plugin adds another `<Target>.xccache` product which includes yo
 
 Also, you may notice that all packages turn into local packages. This is perfectly normal as the tool creates special packages called *proxy packages* to manipulate cache of a package.
 
-If you have local/development packages, they are accessible under the `local-packages` group in the project structure.
-
 <img src="res/proxy_local.png" width="300px">
 
 ## Understanding the Tool
