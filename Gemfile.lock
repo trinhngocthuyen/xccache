@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    xccache (1.0.0)
+    xccache (1.0.1)
       claide
       parallel
       xcodeproj (>= 1.26.0)
