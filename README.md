@@ -48,6 +48,7 @@ Check out these docs to understand more about xccache:
   - [Packaging as an xcframework](docs/under-the-hood/packaging-as-xcframework.md)
   - [Ensuring `Bundle.module` When Accessing Resources](docs/under-the-hood/ensuring-bundle-module.md)
   - [Macro as Binary](docs/under-the-hood/macro-as-binary.md)
+  - [Proxy Packages](docs/under-the-hood/proxy-packages.md)
 - [🩺 Troubleshooting](docs/troubleshooting.md)
 - [✍🏼 Case Study: Using XCCache in Kickstarter iOS Project](docs/case-study-kickstarter.md)
 
