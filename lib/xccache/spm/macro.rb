@@ -3,12 +3,9 @@ require_relative "build"
 module XCCache
   module SPM
     class Macro < Buildable
-      attr_reader :macosx_sdk
-
       def initialize(options = {})
         super
         @library_evolution = false # swift-syntax is not compatible with library evolution
-        @macosx_sdk = Swift::Sdk.new(:macosx)
       end
 
       def build(_options = {})
@@ -37,7 +34,7 @@ module XCCache
       end
 
       def products_dir
-        @products_dir ||= pkg_dir / ".build" / macosx_sdk.triple / config
+        @products_dir ||= pkg_dir / ".build" / "arm64-apple-macosx" / config
       end
     end
   end

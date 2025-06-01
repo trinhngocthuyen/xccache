@@ -3,7 +3,7 @@ require "xccache/installer"
 module XCCache
   class Command
     class Options
-      SDK = ["--sdk=foo,bar", "SDKs (iphonesimulator, iphoneos, etc.)"].freeze
+      SDK = ["--sdk=foo,bar", "SDKs (iphonesimulator, iphoneos, macos, etc.)"].freeze
       CONFIG = ["--config=foo", "Configuration (debug, release) (default: debug)"].freeze
       MERGE_SLICES = [
         "--merge-slices/--no-merge-slices",

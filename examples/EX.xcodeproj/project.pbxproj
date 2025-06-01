@@ -39,6 +39,7 @@
 		1CBE8AAACA849C519746C865 /* xccache.yml */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.yaml; path = xccache.yml; sourceTree = "<group>"; };
 		3B5B411E32E4429CC9EDBC87 /* Package.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Package.swift; path = xccache/packages/proxy/Package.swift; sourceTree = "<group>"; };
 		D1B6F890297CAD42EA43AFB3 /* xccache.lock */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = xccache.lock; sourceTree = "<group>"; };
+		F543A1AF2DEC83B2003588FF /* EXMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EXMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F577C62F2D96971200C83C96 /* EX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F577C6A82D96A3BD00C83C96 /* config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = config.xcconfig; sourceTree = "<group>"; };
 		F5AF0F9C2DAE09EF00AB812D /* EXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,6 +61,13 @@
 			);
 			name = xcconfigs;
 			path = xccache/packages/xcconfigs;
+			sourceTree = "<group>";
+		};
+		F543A1B02DEC83B2003588FF /* EXMac */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			path = EXMac;
 			sourceTree = "<group>";
 		};
 		F577C6312D96971200C83C96 /* EX */ = {
@@ -86,6 +94,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F543A1AC2DEC83B2003588FF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F577C62C2D96971200C83C96 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -125,6 +140,7 @@
 				F577C70A2D96CD1C00C83C96 /* .xcconfigs */,
 				F577C6312D96971200C83C96 /* EX */,
 				F5AF0F9D2DAE09EF00AB812D /* EXTests */,
+				F543A1B02DEC83B2003588FF /* EXMac */,
 				F577C73D2D99B03000C83C96 /* Frameworks */,
 				F577C6302D96971200C83C96 /* Products */,
 				4EF401BCDE41633C982927C2 /* xccache.config */,
@@ -136,6 +152,7 @@
 			children = (
 				F577C62F2D96971200C83C96 /* EX.app */,
 				F5AF0F9C2DAE09EF00AB812D /* EXTests.xctest */,
+				F543A1AF2DEC83B2003588FF /* EXMac.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -150,6 +167,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		F543A1AE2DEC83B2003588FF /* EXMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F543A1BA2DEC83B3003588FF /* Build configuration list for PBXNativeTarget "EXMac" */;
+			buildPhases = (
+				F543A1AB2DEC83B2003588FF /* Sources */,
+				F543A1AC2DEC83B2003588FF /* Frameworks */,
+				F543A1AD2DEC83B2003588FF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				F543A1B02DEC83B2003588FF /* EXMac */,
+			);
+			name = EXMac;
+			packageProductDependencies = (
+				DE812D90983849B5CA0FFC2A /* EXMac.xccache */,
+			);
+			productName = EXMac;
+			productReference = F543A1AF2DEC83B2003588FF /* EXMac.app */;
+			productType = "com.apple.product-type.application";
+		};
 		F577C62E2D96971200C83C96 /* EX */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F577C63D2D96971300C83C96 /* Build configuration list for PBXNativeTarget "EX" */;
@@ -205,9 +245,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1620;
+				LastSwiftUpdateCheck = 1630;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
+					F543A1AE2DEC83B2003588FF = {
+						CreatedOnToolsVersion = 16.3;
+					};
 					F577C62E2D96971200C83C96 = {
 						CreatedOnToolsVersion = 16.2;
 						LastSwiftMigration = 1620;
@@ -237,11 +280,19 @@
 			targets = (
 				F577C62E2D96971200C83C96 /* EX */,
 				F5AF0F9B2DAE09EF00AB812D /* EXTests */,
+				F543A1AE2DEC83B2003588FF /* EXMac */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F543A1AD2DEC83B2003588FF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F577C62D2D96971200C83C96 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -260,6 +311,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F543A1AB2DEC83B2003588FF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F577C62B2D96971200C83C96 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -285,6 +343,64 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		F543A1B82DEC83B3003588FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
+			baseConfigurationReferenceRelativePath = EXMac.xcconfig;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = EXMac/EXMac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thuyen.EXMac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F543A1B92DEC83B3003588FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
+			baseConfigurationReferenceRelativePath = EXMac.xcconfig;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = EXMac/EXMac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thuyen.EXMac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		F577C63B2D96971300C83C96 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F577C6A82D96A3BD00C83C96 /* config.xcconfig */;
@@ -508,6 +624,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F543A1BA2DEC83B3003588FF /* Build configuration list for PBXNativeTarget "EXMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F543A1B82DEC83B3003588FF /* Debug */,
+				F543A1B92DEC83B3003588FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F577C62A2D96971200C83C96 /* Build configuration list for PBXProject "EX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -554,6 +679,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/proxy" */;
 			productName = EX.xccache;
+		};
+		DE812D90983849B5CA0FFC2A /* EXMac.xccache */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/proxy" */;
+			productName = EXMac.xccache;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
