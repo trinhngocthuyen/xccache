@@ -23,6 +23,10 @@ module XCCache
 
     attr_writer :install_config
 
+    def ensure_file!
+      Template.new("xccache.yml").render(save_to: path) unless path.exist?
+    end
+
     def install_config
       @install_config || "debug"
     end

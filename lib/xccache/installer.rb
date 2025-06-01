@@ -19,6 +19,7 @@ module XCCache
       verify_projects!
       projects.each { |project| migrate_umbrella_to_proxy(project) }
       UI.message("Using cache dir: #{config.spm_cache_dir}")
+      config.ensure_file!
       config.in_installation = true
       sync_lockfile
       proxy_pkg.prepare(@install_options)
@@ -99,7 +100,7 @@ module XCCache
       add_file = proc { |p| group[p.basename.to_s] || group.new_file(p) }
       add_file.call(config.spm_proxy_sandbox / "Package.swift")
       add_file.call(config.lockfile.path)
-      add_file.call(config.path) if config.path.exist?
+      add_file.call(config.path)
       group.ensure_synced_group(name: "local-packages", path: config.spm_local_pkgs_dir)
     end
 
