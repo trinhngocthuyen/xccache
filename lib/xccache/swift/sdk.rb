@@ -8,11 +8,19 @@ module XCCache
       NAME_TO_TRIPLE = {
         :iphonesimulator => "arm64-apple-ios-simulator",
         :iphoneos => "arm64-apple-ios",
-        :macosx => "arm64-apple-macosx",
+        :macos => "arm64-apple-macos",
+        :watchos => "arm64-apple-watchos",
+        :watchsimulator => "arm64-apple-watchos-simulator",
+        :appletvos => "arm64-apple-tvos",
+        :appletvsimulator => "arm64-apple-tvos-simulator",
+        :xros => "arm64-apple-xros",
+        :xrsimulator => "arm64-apple-xros-simulator",
       }.freeze
 
       def initialize(name)
         @name = name
+        return if NAME_TO_TRIPLE.key?(name.to_sym)
+        raise GeneralError, "Unknown sdk: #{name}. Must be one of #{NAME_TO_TRIPLE.keys}"
       end
 
       def to_s
@@ -25,11 +33,15 @@ module XCCache
         res
       end
 
+      def sdk_name
+        name == "macos" ? "macosx" : name
+      end
+
       def sdk_path
         # rubocop:disable Layout/LineLength
         # /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk
         # rubocop:enable Layout/LineLength
-        @sdk_path ||= Pathname(Sh.capture_output("xcrun --sdk #{name} --show-sdk-path")).realpath
+        @sdk_path ||= Pathname(Sh.capture_output("xcrun --sdk #{sdk_name} --show-sdk-path")).realpath
       end
 
       def sdk_platform_developer_path

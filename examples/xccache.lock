@@ -82,10 +82,14 @@
       ],
       "EXTests": [
         "core-utils/TestKit"
+      ],
+      "EXMac": [
+        "SwiftyBeaver/SwiftyBeaver"
       ]
     },
     "platforms": {
-      "ios": "17.6"
+      "ios": "17.6",
+      "osx": "15.4"
     }
   }
 }
