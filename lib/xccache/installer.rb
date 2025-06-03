@@ -87,7 +87,8 @@ module XCCache
 
     def platforms_for_project(project)
       project
-        .targets.map { |t| [t.platform_name.to_s, t.deployment_target] }
+        .targets.select(&:platform_name)
+        .map { |t| [t.platform_name.to_s, t.deployment_target] }
         .sort.reverse.to_h # sort descendingly -> min value is picked for the hash
     end
 
