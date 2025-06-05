@@ -10,7 +10,7 @@ module XCCache
       end
 
       def targets_to_build(options)
-        items = options[:targets] || []
+        items = (options[:targets] || []).map { |x| File.basename(x) }
         items = config.cachemap.missed.map { |x| File.basename(x) } if items.empty?
         targets = items.map { |x| umbrella_pkg.get_target(x) }
 
