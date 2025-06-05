@@ -28,16 +28,31 @@ module XCCache
       end
 
       def print_stats
-        hit, missed, ignored = %i[hit missed ignored].map { |type| get_cache_data(type) }
-        total_count = cache_data.count
-        UI.message <<~DESC
-          -------------------------------------------------------------------
-          Cache stats
-          • Hit (#{hit.count}/#{total_count}): #{hit.to_s.green.dark}
-          • Missed (#{missed.count}/#{total_count}): #{missed.to_s.yellow.dark}
-          • Ignored (#{ignored.count}/#{total_count}): #{ignored.to_s.dark}
-          -------------------------------------------------------------------
-        DESC
+        verbose = Config.instance.verbose?
+        colors = { :hit => "green", :missed => "yellow" }
+        descs = %i[hit missed ignored].to_h do |type|
+          colorize = proc { |s| colors.key?(type) ? s.send(colors[type]).dark : s.dark }
+          items = get_cache_data(type)
+          percent = cache_data.count.positive? ? items.count.to_f / cache_data.count * 100 : 0
+          desc = "#{type} #{percent.round}% (#{items.count}/#{cache_data.count})"
+          desc = "#{desc} #{colorize.call(items.to_s)}" if verbose && !items.empty?
+          [type, desc]
+        end
+        if verbose
+          UI.info <<~DESC
+            -------------------------------------------------------------------
+            Cache stats
+            #{descs.values.map { |s| "• #{s.capitalize}" }.join("\n")}
+            -------------------------------------------------------------------
+          DESC
+        else
+          UI.info <<~DESC
+            -------------------------------------------------------------------
+            Cache stats: #{descs.values.join(', ')}
+            To see the full stats, use --verbose in the xccache command
+            -------------------------------------------------------------------
+          DESC
+        end
       end
 
       def get_cache_data(type)
