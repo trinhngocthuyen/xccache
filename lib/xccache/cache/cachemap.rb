@@ -35,6 +35,7 @@ module XCCache
           items = get_cache_data(type)
           percent = cache_data.count.positive? ? items.count.to_f / cache_data.count * 100 : 0
           desc = "#{type} #{percent.round}% (#{items.count}/#{cache_data.count})"
+          desc = desc.capitalize if verbose
           desc = "#{desc} #{colorize.call(items.to_s)}" if verbose && !items.empty?
           [type, desc]
         end
@@ -42,7 +43,7 @@ module XCCache
           UI.info <<~DESC
             -------------------------------------------------------------------
             Cache stats
-            #{descs.values.map { |s| "• #{s.capitalize}" }.join("\n")}
+            #{descs.values.map { |s| "• #{s}" }.join("\n")}
             -------------------------------------------------------------------
           DESC
         else
