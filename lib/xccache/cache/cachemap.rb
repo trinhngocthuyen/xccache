@@ -57,15 +57,18 @@ module XCCache
       end
 
       def get_cache_data(type)
-        cache_data.select { |k, v| v == type && !k.end_with?(".xccache") }.keys
+        cache_data.select { |_, v| v == type }.keys
       end
 
       def update_from_graph(graph)
-        cache_data = graph["cache"].to_h do |k, v|
-          next [k, :hit] if v
-          next [k, :ignored] if Config.instance.ignore?(k)
-          [k, :missed]
-        end
+        cache_data =
+          graph["cache"]
+          .reject { |k, _| k.end_with?(".xccache") }
+          .to_h do |k, v|
+            next [k, :hit] if v
+            next [k, :ignored] if Config.instance.ignore?(k)
+            [k, :missed]
+          end
 
         deps = graph["deps"]
         edges = deps.flat_map { |k, xs| xs.map { |v| { :source => k, :target => v } } }
