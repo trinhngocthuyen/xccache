@@ -3,38 +3,45 @@ require "xccache/core/sh"
 module XCCache
   module Swift
     class Sdk
-      attr_reader :name
+      attr_reader :name, :arch, :vendor, :platform
+      attr_accessor :version
 
-      NAME_TO_TRIPLE = {
-        :iphonesimulator => "arm64-apple-ios-simulator",
-        :iphoneos => "arm64-apple-ios",
-        :macos => "arm64-apple-macos",
-        :watchos => "arm64-apple-watchos",
-        :watchsimulator => "arm64-apple-watchos-simulator",
-        :appletvos => "arm64-apple-tvos",
-        :appletvsimulator => "arm64-apple-tvos-simulator",
-        :xros => "arm64-apple-xros",
-        :xrsimulator => "arm64-apple-xros-simulator",
+      NAME_TO_PLATFORM = {
+        :iphonesimulator => :ios,
+        :iphoneos => :ios,
+        :macos => :macos,
+        :watchos => :watchos,
+        :watchsimulator => :watchos,
+        :appletvos => :tvos,
+        :appletvsimulator => :tvos,
+        :xros => :xros,
+        :xrsimulator => :xros,
       }.freeze
 
-      def initialize(name)
-        @name = name
-        return if NAME_TO_TRIPLE.key?(name.to_sym)
-        raise GeneralError, "Unknown sdk: #{name}. Must be one of #{NAME_TO_TRIPLE.keys}"
+      def initialize(name, version: nil)
+        @name = name.to_sym
+        @vendor = "apple"
+        @arch = "arm64"
+        @platform = NAME_TO_PLATFORM.fetch(@name, @name)
+        @version = version
+        return if NAME_TO_PLATFORM.key?(@name)
+        raise GeneralError, "Unknown sdk: #{@name}. Must be one of #{NAME_TO_PLATFORM.keys}"
       end
 
       def to_s
-        name
+        name.to_s
       end
 
-      def triple(without_vendor: false)
-        res = NAME_TO_TRIPLE[name.to_sym]
-        res = res.sub("-apple", "") if without_vendor
-        res
+      def triple(with_vendor: true, with_version: false)
+        cmps = [arch]
+        cmps << vendor if with_vendor
+        cmps << (with_version && version ? "#{platform}#{version}" : platform.to_s)
+        cmps << "simulator" if simulator?
+        cmps.join("-")
       end
 
       def sdk_name
-        name == "macos" ? "macosx" : name
+        name == :macos ? :macosx : name
       end
 
       def sdk_path
@@ -55,6 +62,10 @@ module XCCache
           "-F#{developer_library_frameworks_path}",
           "-I#{developer_usr_lib_path}",
         ]
+      end
+
+      def simulator?
+        name.to_s.end_with?("simulator")
       end
     end
   end

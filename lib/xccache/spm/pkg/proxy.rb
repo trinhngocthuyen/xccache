@@ -30,7 +30,7 @@ module XCCache
         end
 
         def invalidate_cache(sdks: [])
-          UI.message("Invalidating cache (sdks: #{sdks.map(&:name)})")
+          UI.message("Invalidating cache (sdks: #{sdks.map(&:to_s).join(', ')})")
 
           config.spm_cache_dir.glob("*/*.{xcframework,macro}").each do |p|
             cmps = p.basename(".*").to_s.split("-")
@@ -45,7 +45,7 @@ module XCCache
 
             # For regular targets, the xcframework must satisfy the sdk constraints (ie. containing all the slices)
             metadata = XCFramework::Metadata.new(p / "Info.plist")
-            expected_triples = sdks.map { |sdk| sdk.triple(without_vendor: true) }
+            expected_triples = sdks.map { |sdk| sdk.triple(with_vendor: false) }
             missing_triples = expected_triples - metadata.triples
             missing_triples.empty? ? accept_cache.call : reject_cache.call
           end

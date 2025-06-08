@@ -19,6 +19,10 @@ module XCCache
           raw["_metadata"] ||= {}
         end
 
+        def platforms
+          @platforms ||= raw.fetch("platforms", []).to_h { |h| [h["platformName"].to_sym, h["version"]] }
+        end
+
         def dependencies
           @dependencies ||= fetch("dependencies", Dependency)
         end
