@@ -62,6 +62,7 @@ module XCCache
             path: binary_path,
             tmpdir: tmpdir,
             pkg_desc: target_pkg_desc,
+            ctx_desc: pkg_desc || target_pkg_desc,
             library_evolution: options[:library_evolution],
           ).build(**options)
         end
@@ -73,6 +74,10 @@ module XCCache
         return if @resolved
         xccache_proxy.run("resolve --pkg #{root_dir} --metadata #{metadata_dir}")
         @resolved = true
+      end
+
+      def pkg_desc
+        descs_by_name[root_dir.basename.to_s]
       end
 
       def pkg_desc_of_target(name, **options)

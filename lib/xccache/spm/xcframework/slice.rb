@@ -33,14 +33,14 @@ module XCCache
         if use_clang?
           cmd = ["xcrun", "clang"]
           cmd << "-x" << "objective-c"
-          cmd << "-target" << sdk.triple << "-isysroot" << sdk.sdk_path
+          cmd << "-target" << sdk.triple(with_version: true) << "-isysroot" << sdk.sdk_path
           cmd << "-o" << obj_path.to_s
           cmd << "-c" << source_path
         else
           cmd = ["xcrun", "swiftc"]
           cmd << "-emit-library" << "-emit-object"
           cmd << "-module-name" << module_name
-          cmd << "-target" << sdk.triple << "-sdk" << sdk.sdk_path
+          cmd << "-target" << sdk.triple(with_version: true) << "-sdk" << sdk.sdk_path
           cmd << "-o" << obj_path.to_s
           cmd << source_path
         end

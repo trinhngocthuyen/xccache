@@ -9,12 +9,14 @@ module XCCache
         @module_name = @name.c99extidentifier
         @pkg_dir = Pathname(options[:pkg_dir] || ".").expand_path
         @pkg_desc = options[:pkg_desc]
+        @ctx_desc = options[:ctx_desc] # Context desc, could be an umbrella or a standalone pkg
         @sdks = options[:sdks] || []
         @sdk = options[:sdk] || @sdks&.first
         @config = options[:config] || "debug"
         @path = options[:path]
         @tmpdir = options[:tmpdir]
         @library_evolution = options[:library_evolution]
+        @sdks.each { |sdk| sdk.version = @ctx_desc.platforms[sdk.platform] } if @ctx_desc
       end
 
       def build(options = {})
@@ -41,7 +43,7 @@ module XCCache
       def swift_build_args
         [
           "--configuration", config,
-          "--triple", sdk.triple,
+          "--triple", sdk.triple(with_version: true),
         ]
       end
 
