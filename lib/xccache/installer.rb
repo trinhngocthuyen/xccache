@@ -17,6 +17,7 @@ module XCCache
 
     def perform_install
       verify_projects!
+      recreate_config_dirs
       projects.each { |project| migrate_umbrella_to_proxy(project) }
       UI.message("Using cache dir: #{config.spm_cache_dir}")
       config.ensure_file!
@@ -106,9 +107,9 @@ module XCCache
     end
 
     def inject_xcconfig_to_project(project)
-      group = project.xccache_config_group.ensure_synced_group(name: "xcconfigs", path: config.spm_xcconfig_dir)
+      group = project.xccache_config_group.ensure_synced_group(name: "xcconfigs", path: config.spm_xcconfigs_dir)
       project.targets.each do |target|
-        xcconfig_path = config.spm_xcconfig_dir / "#{target.name}.xcconfig"
+        xcconfig_path = config.spm_xcconfigs_dir / "#{target.name}.xcconfig"
         target.build_configurations.each do |build_config|
           if (existing = build_config.base_configuration_xcconfig)
             next if existing.path == xcconfig_path
@@ -144,6 +145,15 @@ module XCCache
       if (group = project.xccache_config_group) && (ref = group["Package.swift"])
         ref.path = "xccache/packages/proxy/Package.swift"
       end
+    end
+
+    def recreate_config_dirs
+      [
+        config.spm_binaries_dir,
+        config.spm_local_pkgs_dir,
+        config.spm_xcconfigs_dir,
+        config.spm_metadata_dir,
+      ].each { |p| Dir.prepare(p, clean: true) }
     end
   end
 end
