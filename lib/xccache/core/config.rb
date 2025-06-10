@@ -40,11 +40,11 @@ module XCCache
     end
 
     def spm_local_pkgs_dir
-      @spm_local_pkgs_dir ||= Dir.prepare(spm_sandbox / "local", clean: true)
+      @spm_local_pkgs_dir ||= Dir.prepare(spm_sandbox / "local")
     end
 
-    def spm_xcconfig_dir
-      @spm_xcconfig_dir ||= Dir.prepare(spm_sandbox / "xcconfigs", clean: true)
+    def spm_xcconfigs_dir
+      @spm_xcconfigs_dir ||= Dir.prepare(spm_sandbox / "xcconfigs")
     end
 
     def spm_cache_dir
@@ -52,7 +52,7 @@ module XCCache
     end
 
     def spm_binaries_dir
-      @spm_binaries_dir ||= Dir.prepare(spm_sandbox / "binaries", clean: true)
+      @spm_binaries_dir ||= Dir.prepare(spm_sandbox / "binaries")
     end
 
     def spm_build_dir

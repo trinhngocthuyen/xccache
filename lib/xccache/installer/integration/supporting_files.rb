@@ -11,7 +11,7 @@ module XCCache
 
       def gen_xcconfigs
         macros_config_by_targets.each do |target, hash|
-          xcconfig_path = config.spm_xcconfig_dir / "#{target}.xcconfig"
+          xcconfig_path = config.spm_xcconfigs_dir / "#{target}.xcconfig"
           UI.message("XCConfig of target #{target} at: #{xcconfig_path}")
           Xcodeproj::Config.new(hash).save_as(xcconfig_path)
         end
