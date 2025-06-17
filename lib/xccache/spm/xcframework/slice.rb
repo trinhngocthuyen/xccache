@@ -4,10 +4,9 @@ module XCCache
   module SPM
     class FrameworkSlice < Buildable
       def build(_options = {})
-        UI.section("Building slice: #{name} (#{config}, #{sdk})".bold) do
-          swift_build
-          create_framework
-        end
+        live_log.puts("Building #{name}.framework (#{config}, #{sdk})".cyan, sticky: true)
+        swift_build
+        create_framework
       end
 
       private
@@ -21,7 +20,7 @@ module XCCache
         # WORKAROUND:
         # - Overriding resource_bundle_accessor.swift to add `Frameworks/<Target>.framework` to the search list
         # - Compiling this file into an `.o` file before using `libtool` to create the framework binary
-        UI.message("Override resource_bundle_accessor")
+        live_log.info("Override resource_bundle_accessor")
         template_name = use_clang? ? "resource_bundle_accessor.m" : "resource_bundle_accessor.swift"
         source_path = tmpdir / File.basename(template_name)
         obj_path = products_dir / "#{module_name}.build" / "#{source_path.basename}.o"
@@ -44,7 +43,7 @@ module XCCache
           cmd << "-o" << obj_path.to_s
           cmd << source_path
         end
-        Sh.run(cmd)
+        sh(cmd)
       end
 
       def create_framework
@@ -67,7 +66,7 @@ module XCCache
         cmd = ["libtool", "-static"]
         cmd << "-o" << "#{path}/#{module_name}"
         cmd << "-filelist" << objlist_path.to_s
-        Sh.run(cmd)
+        sh(cmd)
         FileUtils.chmod("+x", path / module_name)
       end
 
@@ -85,7 +84,7 @@ module XCCache
       def create_modules
         copy_swiftmodules unless use_clang?
 
-        UI.message("Creating framework modulemap")
+        live_log.info("Creating framework modulemap")
         Template.new("framework.modulemap").render(
           { :module_name => module_name, :target => name },
           save_to: modules_dir / "module.modulemap"
@@ -93,7 +92,7 @@ module XCCache
       end
 
       def copy_headers
-        UI.message("Copying headers")
+        live_log.info("Copying headers")
         swift_header_paths = products_dir.glob("#{module_name}.build/*-Swift.h")
         paths = swift_header_paths + pkg_target.header_paths
         paths.each { |p| process_header(p) }
@@ -130,7 +129,7 @@ module XCCache
       end
 
       def copy_swiftmodules
-        UI.message("Copying swiftmodules")
+        live_log.info("Copying swiftmodules")
         swiftmodule_dir = Dir.prepare("#{modules_dir}/#{module_name}.swiftmodule")
         swiftinterfaces = products_dir.glob("#{module_name}.build/#{module_name}.swiftinterface")
         to_copy = products_dir.glob("Modules/#{module_name}.*") + swiftinterfaces
@@ -141,7 +140,7 @@ module XCCache
 
       def copy_resource_bundles
         resolve_resource_symlinks
-        UI.message("Copy resource bundle to framework: #{resource_bundle_product_path.basename}")
+        live_log.info("Copying resource bundle to framework: #{resource_bundle_product_path.basename}")
         resource_bundle_product_path.copy(to_dir: path)
       end
 

@@ -17,5 +17,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "claide"
   spec.add_dependency "parallel"
+  spec.add_dependency "tty-cursor"
+  spec.add_dependency "tty-screen"
   spec.add_dependency "xcodeproj", ">= 1.26.0"
 end

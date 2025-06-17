@@ -22,14 +22,19 @@ module XCCache
 
       def build(options = {})
         validate!
-        targets = options.delete(:targets) || []
+        targets = (options.delete(:targets) || []).map { |t| t.split("/")[-1] }
         raise GeneralError, "No targets were specified" if targets.empty?
 
-        targets.map { |t| t.split("/")[-1] }.each_with_index do |t, i|
-          UI.section("\n▶ Building target: #{t} (#{i + 1}/#{targets.count})".bold.magenta) do
-            build_target(**options, target: t)
+        Dir.create_tmpdir do |tmpdir|
+          targets.each_with_index do |t, i|
+            target_tmpdir = Dir.prepare(tmpdir / t)
+            log_dir = Dir.prepare(options[:log_dir] || target_tmpdir)
+            live_log = LiveLog.new(tee: log_dir / "build_#{t}.log")
+            live_log.capture("[#{i + 1}/#{targets.count}] Building target: #{t}") do
+              build_target(**options, target: t, live_log: live_log, tmpdir: target_tmpdir)
+            end
           rescue StandardError => e
-            UI.error("Failed to build target: #{t}. Error: #{e}")
+            UI.error("Error: #{e}\n" + "For details, check out: #{live_log.tee}".yellow.bold)
             raise e unless Config.instance.ignore_build_errors?
           end
         end
@@ -52,20 +57,19 @@ module XCCache
         basename = options[:checksum] ? "#{target.name}-#{target.checksum}" : target.name
         binary_path = out_dir / "#{basename}#{ext}"
 
-        Dir.create_tmpdir do |tmpdir|
-          cls = target.macro? ? Macro : XCFramework
-          cls.new(
-            name: target.name,
-            pkg_dir: root_dir,
-            config: config,
-            sdks: sdks,
-            path: binary_path,
-            tmpdir: tmpdir,
-            pkg_desc: target_pkg_desc,
-            ctx_desc: pkg_desc || target_pkg_desc,
-            library_evolution: options[:library_evolution],
-          ).build(**options)
-        end
+        cls = target.macro? ? Macro : XCFramework
+        cls.new(
+          name: target.name,
+          pkg_dir: root_dir,
+          config: config,
+          sdks: sdks,
+          path: binary_path,
+          tmpdir: options[:tmpdir],
+          pkg_desc: target_pkg_desc,
+          ctx_desc: pkg_desc || target_pkg_desc,
+          library_evolution: options[:library_evolution],
+          live_log: options[:live_log],
+        ).build(**options)
         return if (symlinks_dir = options[:symlinks_dir]).nil?
         binary_path.symlink_to(symlinks_dir / target.name / "#{target.name}#{ext}")
       end

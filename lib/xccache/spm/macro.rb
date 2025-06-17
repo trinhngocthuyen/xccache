@@ -21,7 +21,7 @@ module XCCache
         # -> WORKAROUND: Find the associated regular target and build it, then collect the tool binary
         # ---------------------------------------------------------------------------------
         associated_target = pkg_desc.targets.find { |t| t.direct_dependency_targets.include?(pkg_target) }
-        UI.message(
+        live_log.info(
           "#{name.yellow.dark} is a macro target. " \
           "Will build the associated target #{associated_target.name.dark} to get the tool binary."
         )
@@ -30,7 +30,7 @@ module XCCache
         raise GeneralError, "Tool binary not exist at: #{binary_path}" unless binary_path.exist?
         binary_path.copy(to: path)
         FileUtils.chmod("+x", path)
-        UI.info("-> Macro binary: #{path.to_s.dark}")
+        live_log.info("-> Macro binary: #{path}")
       end
 
       def products_dir

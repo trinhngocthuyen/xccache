@@ -1,7 +1,8 @@
 module XCCache
   module SPM
     class Buildable
-      attr_reader :name, :module_name, :pkg_dir, :pkg_desc, :sdk, :sdks, :config, :path, :tmpdir, :library_evolution
+      attr_reader :name, :module_name, :pkg_dir, :pkg_desc, :sdk, :sdks, :config, :path, :tmpdir, :library_evolution,
+                  :live_log
       alias library_evolution? library_evolution
 
       def initialize(options = {})
@@ -17,6 +18,7 @@ module XCCache
         @tmpdir = options[:tmpdir]
         @library_evolution = options[:library_evolution]
         @sdks.each { |sdk| sdk.version = @ctx_desc.platforms[sdk.platform] } if @ctx_desc
+        @live_log = options[:live_log]
       end
 
       def build(options = {})
@@ -37,7 +39,11 @@ module XCCache
           cmd << "-Xswiftc" << "-emit-module-interface"
           cmd << "-Xswiftc" << "-no-verify-emitted-module-interface"
         end
-        Sh.run(cmd)
+        sh(cmd)
+      end
+
+      def sh(cmd)
+        Sh.run(cmd, live_log: live_log)
       end
 
       def swift_build_args
