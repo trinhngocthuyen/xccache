@@ -5,13 +5,13 @@ module XCCache
   module UI
     @indent = 0
 
-    class << self
+    module Mixin
       include Config::Mixin
       attr_accessor :indent
 
       def section(title, timing: false)
         start = Time.new if timing
-        UI.puts(title)
+        ui_cls.puts(title)
         self.indent += 2
         res = yield if block_given?
         self.indent -= 2
@@ -22,25 +22,25 @@ module XCCache
                      else
                        "#{duration / 3600}h"
                      end
-          UI.puts("-> Finished: #{title.dark} (#{duration})")
+          ui_cls.puts("-> Finished: #{title.dark} (#{duration})")
         end
         res
       end
 
       def message(message)
-        UI.puts(message) if config.verbose?
+        ui_cls.puts(message) if config.verbose?
       end
 
       def info(message)
-        UI.puts(message)
+        ui_cls.puts(message)
       end
 
       def warn(message)
-        UI.puts(message.yellow)
+        ui_cls.puts(message.yellow)
       end
 
       def error(message)
-        UI.puts("[ERROR] #{message}".red)
+        ui_cls.puts("[ERROR] #{message}".red)
       end
 
       def error!(message)
@@ -51,6 +51,16 @@ module XCCache
       def puts(message)
         $stdout.puts("#{' ' * self.indent}#{message}")
       end
+
+      private
+
+      def ui_cls
+        UI
+      end
+    end
+
+    class << self
+      include Mixin
     end
   end
 end

@@ -5,6 +5,7 @@ module XCCache
     class Options
       SDK = ["--sdk=foo,bar", "SDKs (iphonesimulator, iphoneos, macos, etc.)"].freeze
       CONFIG = ["--config=foo", "Configuration (debug, release) (default: debug)"].freeze
+      LOG_DIR = ["--log-dir=foo", "Build log directory"].freeze
       MERGE_SLICES = [
         "--merge-slices/--no-merge-slices",
         "Whether to merge with existing slices/sdks in the xcframework (default: true)",
@@ -19,7 +20,7 @@ module XCCache
       end
 
       def self.build_options
-        install_options + [MERGE_SLICES, LIBRARY_EVOLUTION]
+        install_options + [LOG_DIR, MERGE_SLICES, LIBRARY_EVOLUTION]
       end
     end
   end

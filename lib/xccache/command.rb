@@ -24,6 +24,7 @@ module XCCache
       }
       @build_options = {
         **@install_options,
+        :log_dir => argv.option("log-dir"),
         :recursive => argv.flag?("recursive"),
         :merge_slices => argv.flag?("merge-slices", true),
         :library_evolution => argv.flag?("library-evolution"),
