@@ -4,11 +4,12 @@ module XCCache
       class Proxy < Package
         class Executable
           REPO_URL = "https://github.com/trinhngocthuyen/xccache-proxy".freeze
-          VERSION_OR_SHA = "1.0.0rc1".freeze
+          VERSION_OR_SHA = "1.0.0".freeze
 
           def run(cmd)
             env = { "FORCE_OUTPUT" => "console", "FORCE_COLOR" => "1" } if Config.instance.ansi?
             cmd = cmd.is_a?(Array) ? [bin_path.to_s] + cmd : [bin_path.to_s, cmd]
+            cmd << "--verbose" if Config.instance.verbose?
             Sh.run(cmd, env: env)
           end
 
