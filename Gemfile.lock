@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    xccache (1.0.4)
+    xccache (1.0.5)
       claide
       parallel
       tty-cursor
