@@ -1,5 +1,6 @@
 require "digest"
 require "mkmf"
+require "tmpdir"
 
 class String
   def c99extidentifier
