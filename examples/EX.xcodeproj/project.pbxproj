@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F50E8E3C2DA668CA00D96A31 /* EX.xccache in Frameworks */ = {isa = PBXBuildFile; productRef = 72815BF879FB306E2CE3E550 /* EX.xccache */; };
+		F515B0712E59899E00E7B934 /* EXMac.xccache in Frameworks */ = {isa = PBXBuildFile; productRef = DE812D90983849B5CA0FFC2A /* EXMac.xccache */; };
 		F577C6A92D96A3BD00C83C96 /* config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F577C6A82D96A3BD00C83C96 /* config.xcconfig */; };
 		F5AF10312DAE15A400AB812D /* EXTests.xccache in Frameworks */ = {isa = PBXBuildFile; productRef = 4ED0A0AC1D877357F53D194E /* EXTests.xccache */; };
 /* End PBXBuildFile section */
@@ -36,8 +37,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		03FE1AC774C3BFF066F9086D /* EXMac.xcconfig */ = {isa = PBXFileReference; explicitFileType = text.xcconfig; name = EXMac.xcconfig; path = xccache/packages/xcconfigs/EXMac.xcconfig; sourceTree = "<group>"; };
+		06B36DF2D0AFEA6575280B2C /* EX.xcconfig */ = {isa = PBXFileReference; explicitFileType = text.xcconfig; name = EX.xcconfig; path = xccache/packages/xcconfigs/EX.xcconfig; sourceTree = "<group>"; };
 		1CBE8AAACA849C519746C865 /* xccache.yml */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.yaml; path = xccache.yml; sourceTree = "<group>"; };
 		3B5B411E32E4429CC9EDBC87 /* Package.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Package.swift; path = xccache/packages/proxy/Package.swift; sourceTree = "<group>"; };
+		3E26AD64D477B9054EAA0B0F /* EXTests.xcconfig */ = {isa = PBXFileReference; explicitFileType = text.xcconfig; name = EXTests.xcconfig; path = xccache/packages/xcconfigs/EXTests.xcconfig; sourceTree = "<group>"; };
 		D1B6F890297CAD42EA43AFB3 /* xccache.lock */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = xccache.lock; sourceTree = "<group>"; };
 		F543A1AF2DEC83B2003588FF /* EXMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EXMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F577C62F2D96971200C83C96 /* EX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EX.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,47 +51,29 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6A1E86E654DF34A6D9F8EA12 /* local-packages */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			name = "local-packages";
-			path = xccache/packages/local;
-			sourceTree = "<group>";
-		};
 		B1278B41E2849A42CE2523AA /* xcconfigs */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			name = xcconfigs;
 			path = xccache/packages/xcconfigs;
 			sourceTree = "<group>";
 		};
 		F543A1B02DEC83B2003588FF /* EXMac */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = EXMac;
 			sourceTree = "<group>";
 		};
 		F577C6312D96971200C83C96 /* EX */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = EX;
 			sourceTree = "<group>";
 		};
 		F577C70A2D96CD1C00C83C96 /* .xcconfigs */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = .xcconfigs;
 			sourceTree = "<group>";
 		};
 		F5AF0F9D2DAE09EF00AB812D /* EXTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = EXTests;
 			sourceTree = "<group>";
 		};
@@ -98,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F515B0712E59899E00E7B934 /* EXMac.xccache in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,10 +113,20 @@
 				3B5B411E32E4429CC9EDBC87 /* Package.swift */,
 				D1B6F890297CAD42EA43AFB3 /* xccache.lock */,
 				1CBE8AAACA849C519746C865 /* xccache.yml */,
-				6A1E86E654DF34A6D9F8EA12 /* local-packages */,
 				B1278B41E2849A42CE2523AA /* xcconfigs */,
+				69C34D7791FED82F1B92FFE4 /* xcconfigs */,
 			);
 			name = xccache.config;
+			sourceTree = "<group>";
+		};
+		69C34D7791FED82F1B92FFE4 /* xcconfigs */ = {
+			isa = PBXGroup;
+			children = (
+				3E26AD64D477B9054EAA0B0F /* EXTests.xcconfig */,
+				06B36DF2D0AFEA6575280B2C /* EX.xcconfig */,
+				03FE1AC774C3BFF066F9086D /* EXMac.xcconfig */,
+			);
+			name = xcconfigs;
 			sourceTree = "<group>";
 		};
 		F577C6262D96971200C83C96 = {
@@ -345,8 +342,7 @@
 /* Begin XCBuildConfiguration section */
 		F543A1B82DEC83B3003588FF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
-			baseConfigurationReferenceRelativePath = EXMac.xcconfig;
+			baseConfigurationReference = 03FE1AC774C3BFF066F9086D /* EXMac.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -374,8 +370,7 @@
 		};
 		F543A1B92DEC83B3003588FF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
-			baseConfigurationReferenceRelativePath = EXMac.xcconfig;
+			baseConfigurationReference = 03FE1AC774C3BFF066F9086D /* EXMac.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -437,6 +432,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = S35NJ68C7W;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -501,6 +497,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = S35NJ68C7W;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -524,8 +521,7 @@
 		};
 		F577C63E2D96971300C83C96 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
-			baseConfigurationReferenceRelativePath = EX.xcconfig;
+			baseConfigurationReference = 06B36DF2D0AFEA6575280B2C /* EX.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -556,8 +552,7 @@
 		};
 		F577C63F2D96971300C83C96 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
-			baseConfigurationReferenceRelativePath = EX.xcconfig;
+			baseConfigurationReference = 06B36DF2D0AFEA6575280B2C /* EX.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -587,8 +582,7 @@
 		};
 		F5AF0FA22DAE09EF00AB812D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
-			baseConfigurationReferenceRelativePath = EXTests.xcconfig;
+			baseConfigurationReference = 3E26AD64D477B9054EAA0B0F /* EXTests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -605,8 +599,7 @@
 		};
 		F5AF0FA32DAE09EF00AB812D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = B1278B41E2849A42CE2523AA /* xcconfigs */;
-			baseConfigurationReferenceRelativePath = EXTests.xcconfig;
+			baseConfigurationReference = 3E26AD64D477B9054EAA0B0F /* EXTests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -672,17 +665,14 @@
 /* Begin XCSwiftPackageProductDependency section */
 		4ED0A0AC1D877357F53D194E /* EXTests.xccache */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/proxy" */;
 			productName = EXTests.xccache;
 		};
 		72815BF879FB306E2CE3E550 /* EX.xccache */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/proxy" */;
 			productName = EX.xccache;
 		};
 		DE812D90983849B5CA0FFC2A /* EXMac.xccache */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B2E7BCB26476643957BDE5D8 /* XCLocalSwiftPackageReference "xccache/packages/proxy" */;
 			productName = EXMac.xccache;
 		};
 /* End XCSwiftPackageProductDependency section */
