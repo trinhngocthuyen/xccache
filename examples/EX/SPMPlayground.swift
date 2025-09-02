@@ -34,6 +34,10 @@ func macro_playground() {
   print(#hexColor(0xff0000))
 }
 
+func plugin_playground() {
+  print(R.string.localizable.greeting_message())
+}
+
 func playground() {
   swift_playground()
   objc_playground()
