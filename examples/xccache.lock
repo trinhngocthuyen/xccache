@@ -13,7 +13,8 @@
       "SDWebImage/SDWebImage",
       "SnapKit/SnapKit-Dynamic",
       "SwiftyBeaver/SwiftyBeaver",
-      "wizard/Wizard"
+      "wizard/Wizard",
+      "R.swift/RswiftLibrary"
     ],
     "EXMac" : [
       "SwiftyBeaver/SwiftyBeaver"
@@ -84,10 +85,28 @@
         "kind" : "upToNextMajorVersion",
         "minimumVersion" : "1.6.0"
       }
+    },
+    {
+      "repositoryURL" : "https://github.com/mac-cain13/R.swift",
+      "requirement" : {
+        "kind" : "upToNextMajorVersion",
+        "minimumVersion" : "7.8.0"
+      }
     }
   ],
   "platforms" : {
     "iOS" : "17.6",
     "macOS" : "15.4"
+  },
+  "plugins" : {
+    "EX" : [
+      "R.swift/RswiftGenerateInternalResources"
+    ],
+    "EXMac" : [
+
+    ],
+    "EXTests" : [
+
+    ]
   }
 }
