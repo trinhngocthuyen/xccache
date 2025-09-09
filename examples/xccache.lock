@@ -10,11 +10,11 @@
       "ios-maps-sdk/GoogleMaps",
       "KingfisherWebP/KingfisherWebP",
       "Moya/Moya",
+      "R.swift/RswiftLibrary",
       "SDWebImage/SDWebImage",
       "SnapKit/SnapKit-Dynamic",
       "SwiftyBeaver/SwiftyBeaver",
-      "wizard/Wizard",
-      "R.swift/RswiftLibrary"
+      "wizard/Wizard"
     ],
     "EXMac" : [
       "SwiftyBeaver/SwiftyBeaver"
