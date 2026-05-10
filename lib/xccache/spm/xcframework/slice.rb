@@ -93,7 +93,12 @@ module XCCache
 
       def copy_headers
         live_log.info("Copying headers")
-        swift_header_paths = products_dir.glob("#{module_name}.build/*-Swift.h")
+        # Modern Swift toolchains emit the generated `<Module>-Swift.h` into the
+        # `<Module>.build/include/` subdirectory rather than directly under
+        # `<Module>.build/`. Glob both locations so the @objc bridging header
+        # is picked up regardless of toolchain version.
+        swift_header_paths = products_dir.glob("#{module_name}.build/*-Swift.h") +
+                             products_dir.glob("#{module_name}.build/include/*-Swift.h")
         paths = swift_header_paths + pkg_target.header_paths
         paths.each { |p| process_header(p) }
 
@@ -142,6 +147,7 @@ module XCCache
         resolve_resource_symlinks
         live_log.info("Copying resource bundle to framework: #{resource_bundle_product_path.basename}")
         resource_bundle_product_path.copy(to_dir: path)
+        finalize_resource_bundle(path / resource_bundle_product_path.basename)
       end
 
       def resolve_resource_symlinks
@@ -152,6 +158,84 @@ module XCCache
           UI.message("Resolve resource symlink: #{p}")
           original = pkg_target.resource_paths.find { |rp| rp.symlink? && rp.readlink == p.readlink }
           original&.realpath&.copy(to: p)
+        end
+      end
+
+      # `swift build` does not invoke `actool` / `ibtool` (those are run only by Xcode IDE).
+      # As a result, the generated resource bundle ends up containing raw `.xcassets`
+      # directories with no compiled `Assets.car`, and no bundle `Info.plist` either.
+      # iOS at runtime will then fail in two distinct ways:
+      #   - `Bundle.init(url:)` returns nil if the bundle has no Info.plist
+      #   - `UIColor(named:in:)` / `UIImage(named:in:)` returns nil if there is no Assets.car
+      # which typically surfaces as a force-unwrap crash inside the consumer module.
+      #
+      # We finalize the bundle here by:
+      #   - invoking `actool` to compile every `*.xcassets` directory into `Assets.car`
+      #     and removing the source `.xcassets` afterwards
+      #   - writing a minimal Info.plist when the bundle does not yet have one
+      def finalize_resource_bundle(bundle_path)
+        return unless bundle_path.directory?
+        compile_xcassets_in_bundle(bundle_path)
+        write_bundle_info_plist(bundle_path) unless (bundle_path / "Info.plist").exist?
+      end
+
+      def compile_xcassets_in_bundle(bundle_path)
+        xcassets_paths = bundle_path.glob("**/*.xcassets")
+        return if xcassets_paths.empty?
+
+        live_log.info("Compiling xcassets in #{bundle_path.basename}: #{xcassets_paths.map(&:basename).join(', ')}")
+        Dir.create_tmpdir do |out_dir|
+          cmd = ["xcrun", "--sdk", sdk.name.to_s, "actool",
+                 "--output-format", "human-readable-text",
+                 "--notices", "--warnings",
+                 "--output-partial-info-plist", (out_dir / "partial.plist").to_s,
+                 "--compress-pngs",
+                 "--compile", out_dir.to_s,
+                 "--platform", sdk.name.to_s,
+                 "--minimum-deployment-target", (sdk.version || "16.0").to_s,
+                 "--target-device", "iphone", "--target-device", "ipad"]
+          cmd.concat(xcassets_paths.map(&:to_s))
+          # actool can exit non-zero for unrelated issues like a missing AppIcon /
+          # LaunchImage set even when the actual color/image catalogs compiled fine.
+          # We still consider compilation successful as long as Assets.car was produced.
+          begin
+            sh(cmd)
+          rescue StandardError => e
+            UI.warn("actool exited non-zero (ignored if unrelated to assets we need): #{e.message}")
+          end
+          assets_car = out_dir / "Assets.car"
+          if assets_car.exist?
+            assets_car.copy(to_dir: bundle_path)
+            xcassets_paths.each(&:rmtree)
+          else
+            UI.warn("actool did not produce Assets.car; skipping xcassets compilation")
+          end
+        end
+      end
+
+      def write_bundle_info_plist(bundle_path)
+        bundle_id = "#{module_name}-#{bundle_path.basename(".bundle")}-resources".gsub(/[^A-Za-z0-9._-]/, "-")
+        plist = <<~PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleDevelopmentRegion</key><string>en</string>
+              <key>CFBundleIdentifier</key><string>#{bundle_id}</string>
+              <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+              <key>CFBundleName</key><string>#{bundle_path.basename(".bundle")}</string>
+              <key>CFBundlePackageType</key><string>BNDL</string>
+              <key>CFBundleShortVersionString</key><string>1.0</string>
+              <key>CFBundleVersion</key><string>1</string>
+          </dict>
+          </plist>
+        PLIST
+        (bundle_path / "Info.plist").write(plist)
+        # Convert to binary plist when possible; fall back to XML on failure (Bundle init handles both).
+        begin
+          sh(["plutil", "-convert", "binary1", (bundle_path / "Info.plist").to_s])
+        rescue StandardError
+          # leave as XML
         end
       end
 
